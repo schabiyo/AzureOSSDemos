@@ -9,4 +9,4 @@ Concourse is used as Pipeline to automate the deployment of demos.
 * [demo3](demo3.md)
 
 
-If you found this guide lacking please submit an issue or PR
+If you found this guide lacking please submit an issue or PR through github. We appreciate your feedback.
