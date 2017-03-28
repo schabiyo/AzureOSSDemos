@@ -1,8 +1,9 @@
-# AzureOSSDemos : A series of concourse powered demos showcasing OSS on Azure 
+# AzureOSSDemos : A series of demos showcasing OSS on Azure 
+
+Concourse is used as Pipeline to automate the deployment of demos.
 
 ## Table of contents
 
-* [init](init.md)
 * [demo1](demo1.md)
 * [demo2](demo2.md)
 * [demo3](demo3.md)
