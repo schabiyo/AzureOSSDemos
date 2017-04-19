@@ -12,7 +12,7 @@ inputs:
   - name: azure-oss-demos
 
 outputs:
-  - name: ossdemos-utility
+  - name: ossdemo-utility
 
 run:
   path: azure-oss-demos/jumpbox/tasks/validate-input.sh
