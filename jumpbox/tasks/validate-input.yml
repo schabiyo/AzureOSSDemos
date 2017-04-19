@@ -8,7 +8,7 @@ params:
   MAVEN_CONFIG:
 
 outputs:
-  - name: ossdemos-utility
+  - name: azure-oss-demos
 
 run:
   path: azure-oss-demos/jumpbox/tasks/validate-input.sh

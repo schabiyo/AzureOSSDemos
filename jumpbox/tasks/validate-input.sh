@@ -1,5 +1,5 @@
 #!/bin/sh
 
-cd ossdemos
+cd azure-oss-demos
 
 ls
