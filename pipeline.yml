@@ -15,10 +15,10 @@ resources:
   type: git
   source:
     uri: https://github.com/schabiyo/azure-oss-demos.git
+    branch: master
 
 jobs:
 - name: validate-input
-  serial: true
   plan:
   - get: azure-oss-demos
   - task: validate-input
