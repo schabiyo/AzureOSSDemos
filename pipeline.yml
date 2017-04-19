@@ -5,6 +5,7 @@ groups:
   jobs:
   - validate-input
   - create-jumpbox
+   
 - name: Destroy Jumpbox
   jobs:
   - destroy-jumpbox
@@ -17,12 +18,35 @@ resources:
     uri: https://github.com/schabiyo/azure-oss-demos.git
     branch: master
 
+
+- name: email-notification
+    type: email-notification-resource
+    source:
+      smtp_host: "smtp.gmail.com"
+      smtp_port: "465"
+      smtp_username: {{smtp_user}}
+      smtp_password: {{smtp_password}}
+      default_recipient: "chabiyosani@gmail.com"
+
+resource_types:
+  - name: email-notification-resource
+    type: docker-image
+    source:
+      repository: santoshjpawar/concourse-email-notification
+      tag: latest
+
+
+
 jobs:
 - name: validate-input
   plan:
   - get: azure-oss-demos
   - task: validate-input
     file: azure-oss-demos/jumpbox/tasks/validate-input.yml
+  - put: email-notification
+        params:
+          input_dir: azure-oss-demos
+          email_body: {{email_body}}
 
 - name: create-jumpbox
   plan:
