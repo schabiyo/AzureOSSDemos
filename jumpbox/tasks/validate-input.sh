@@ -1,5 +1,6 @@
 #!/bin/sh
 
-cd azure-oss-demos
-
+echo "Validating the supplied parameters"
 ls
+
+
