@@ -1,0 +1,49 @@
+---
+
+groups:
+- name: Deploy Jumpbox
+  jobs:
+  - validate-input
+  - create-jumpbox
+- name: Destroy Jumpbox
+  jobs:
+  - destroy-jumpbox
+
+
+resources:
+- name: azure-oss-demos
+  type: git
+  source:
+    uri: https://github.com/schabiyo/azure-oss-demos.git
+
+jobs:
+- name: validate-input
+  serial: true
+  plan:
+  - get: azure-oss-demos
+  - task: validate-input
+    file: azure-oss-demos/jumpbox/tasks/validate-input.yml
+
+- name: create-jumpbox
+  plan:
+  - get: azure-oss-demos
+    passed: [validate-input]
+    trigger: true
+  - task: build-jumpbox
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: busybox}
+      inputs:
+        - name: resource-gist
+      run:
+        path: echo
+        args: ["Building the jumpbox"]
+
+- name: destroy-jumpbox
+  plan:
+  - get: azure-oss-demos
+    trigger: false
+  - task: destroy-jumpbox
+    file: azure-oss-demos/jumpbox/tasks/destroy-jumbox.yml

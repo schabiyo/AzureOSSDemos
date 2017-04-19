@@ -1,0 +1,21 @@
+---
+platform: linux
+
+image: docker:///java#8
+
+params:
+  MAVEN_OPTS:
+  MAVEN_CONFIG:
+
+inputs:
+  - name: boot-helloworld
+
+outputs:
+  - name: ossdemos-utility
+
+run:
+  path: azure-oss-demos/jumpbox/tasks/validate-input.sh
+  args: [
+    --input-dir, boot-helloworld,
+    --output-dir, ossdemos-utility,
+  ]
