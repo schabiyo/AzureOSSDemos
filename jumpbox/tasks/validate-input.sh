@@ -3,7 +3,8 @@ set -e -x
 
 echo "Validating the account name"
 
-storage_account_name = "$storage_account_prefix" + "-storage"
+storage_account_name = "$storage_account_prefix"
+storage_account_name+="-storage"
 
 az storage account check-name --name "$storage_account_name"
 
