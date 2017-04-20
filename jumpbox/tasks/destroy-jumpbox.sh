@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e -x
 
+GREEN='\033[0;32m'
+
 # 1-Login to Azure using the az command line
 echo "Logging in to Azure"
 
@@ -16,7 +18,6 @@ echo "Validation successfully completed"
 
 az group delete -n "$utility_rg" --yes
 
-
-ls
+echo -e " ${GREEN} Jumpbox successfully deleted!!!!"
 
 
