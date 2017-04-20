@@ -6,6 +6,8 @@ echo "Validating the account name"
 storage_account_name = "$storage_account_prefix"
 storage_account_name+="-storage"
 
+echo "Validating the account name $storage_account_name"
+
 az storage account check-name --name "$storage_account_name"
 
 # 1-Login to Azure using the az command line
