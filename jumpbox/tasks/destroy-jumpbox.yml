@@ -12,19 +12,11 @@ params:
   service_principal_secret:
   tenant_id:
   subscription_id:
+  utility_rg: 
 
 
 inputs:
   - name: azure-oss-demos
 
-outputs:
-  - name: ossdemo-utility
-
 run:
-  path: azure-oss-demos/jumpbox/tasks/validate-input.sh
-  args: [
-    --service-principal, service_principal_id,
-    --service-principal-pwd, service_principal_secret
-    --tenant-id, tenant_id,
-    --subscription_id, subscription_id,
-  ]
+  path: azure-oss-demos/jumpbox/tasks/destroy-jumpbox.sh
