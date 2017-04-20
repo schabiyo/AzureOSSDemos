@@ -6,13 +6,13 @@ echo "Logging in to Azure"
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
 
-echo "Validating the account name: $storage_account_prefix'storage'"
+echo "Validating the account name: ${storage_account_prefix}storage"
 
-isNameAvailable=$(az storage account check-name --name "$storage_account_prefix'storage'" | grep nameAvailable | cut -d ":" -f2 | cut -d "," -f1 | awk '{$1=$1};1')
+isNameAvailable=$(az storage account check-name --name "${storage_account_prefix}storage" | grep nameAvailable | cut -d ":" -f2 | cut -d "," -f1 | awk '{$1=$1};1')
 
 if [ "$isNameAvailable" = "false" ]
 then
-  echo "The storage account name ('$storage_account_prefix'storage'')   is not valid, please change your prefix and try again ''"
+  echo "The storage account name ('${storage_account_prefix}storage')   is not valid, please change your prefix and try again ''"
   exit 1
 fi
 
