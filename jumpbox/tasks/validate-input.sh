@@ -25,6 +25,10 @@ az account set --subscription "$subscription_id"
 echo "Validation successfully completed"
 
 # 3. Check the validity of the name (no dashes, spaces, less than 8 char, no special chars etc..)
+
+#TODO Also validate if the Service principal has the right access
+
+
 ls
 
 

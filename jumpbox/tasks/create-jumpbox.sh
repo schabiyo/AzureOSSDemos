@@ -42,9 +42,6 @@ echo $jumpbox_ssh_public_key >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub
 echo -e "Host=jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa\nUser=${jumpbox_admin}" >> ~/.ssh/config
 chmod 600 ~/.ssh/config
 chmod 600 ~/.ssh/jumpbox*
-#Delete the host name in case it already exists
-ssh-keygen -R "jumpbox-${jumpbox_prefix}.$location.cloudapp.azure.com"
-sshpubkey=$(< ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub)
 
  #CREATE UTILITY JUMPBOX SERVER
  echo ""
