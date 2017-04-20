@@ -12,13 +12,21 @@ params:
   service_principal_secret:
   tenant_id:
   subscription_id:
+  utility_rg: 
+  storage_account_prefix:
+  server_prefix:
+  location: eastus
 
 
 inputs:
+  - name: azure-oss-demos
   - name: azure-oss-demos-ci
 
+outputs:
+  - name: ossdemo-utility
+
 run:
-  path: azure-oss-demos-ci/jumpbox/tasks/validate-input.sh
+  path: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.sh
   args: [
     --service-principal, service_principal_id,
     --service-principal-pwd, service_principal_secret

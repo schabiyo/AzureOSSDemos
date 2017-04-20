@@ -1,22 +1,30 @@
 ---
 platform: linux
 
-image: docker:///java#8
+image_resource:
+  type: docker-image
+  source: 
+    repository: schabiyo/ossdemo 
+    tag: latest
 
 params:
-  MAVEN_OPTS:
-  MAVEN_CONFIG:
+  service_principal_id: 
+  service_principal_secret:
+  tenant_id:
+  subscription_id:
+
 
 inputs:
-  - name: boot-helloworld
+  - name: azure-oss-demos
 
 outputs:
-  - name: package
+  - name: ossdemo-utility
 
 run:
   path: azure-oss-demos/jumpbox/tasks/validate-input.sh
   args: [
-    --input-dir, boot-helloworld,
-    --output-dir, package,
-    --artifactId, boot-helloworld,
+    --service-principal, service_principal_id,
+    --service-principal-pwd, service_principal_secret
+    --tenant-id, tenant_id,
+    --subscription_id, subscription_id,
   ]
