@@ -8,7 +8,14 @@ az login --service-principal -u "$service_principal_id" -p "$service_principal_s
 
 echo "Validating the account name: $storage_account_prefix-storage"
 
-az storage account check-name --name "$storage_account_prefix-storage"
+isNameAvailable=$(az storage account check-name --name "$storage_account_prefix-storage" | grep nameAvailable | cut -d ":" -f2 | cut -d "," -f1)
+
+if [ "$isNameAvailable" == "false" ]; then
+  echo "The storage account name ('$storage_account_prefix-storage')   is not valid, please change your prefix and try again ''"
+  exit 1
+fi
+
+echo "The storage account is available to use"
 
 # 2. switchinh to the default subscription
 
