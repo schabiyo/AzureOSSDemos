@@ -49,7 +49,7 @@ chmod 600 ~/.ssh/jumpbox*
  echo ".Starting:"$(date)
  echo ".Reading ssh key information from local jumpbox_${jumpbox_prefix}_id_rsa file"
  echo ".--------------------------------------------"
- azcreatecommand="-g ossdemo-utility -n jumpbox-${jumpbox_prefix} --public-ip-address-dns-name jumpbox-${jumpbox_prefix} \
+ azcreatecommand="-g $utility_rg -n jumpbox-${jumpbox_prefix} --public-ip-address-dns-name jumpbox-${jumpbox_prefix} \
     --os-disk-name jumpbox-${jumpbox_prefix}-disk --image OpenLogic:CentOS:7.2:latest \
     --nsg NSG-ossdemo-utility  \
     --storage-sku Premium_LRS --size Standard_DS2_v2 \
