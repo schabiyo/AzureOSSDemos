@@ -10,7 +10,8 @@ echo "Validating the account name: $storage_account_prefix-storage"
 
 isNameAvailable=$(az storage account check-name --name "$storage_account_prefix-storage" | grep nameAvailable | cut -d ":" -f2 | cut -d "," -f1)
 
-if [ "$isNameAvailable" == "false" ]; then
+if [ "$isNameAvailable" = "false" ]
+then
   echo "The storage account name ('$storage_account_prefix-storage')   is not valid, please change your prefix and try again ''"
   exit 1
 fi
