@@ -3,12 +3,10 @@ set -e -x
 
 echo "Validating the account name..."
 
-storage_account_name = "$storage_account_prefix"
-storage_account_name +="-storage"
 
-echo "Validating the account name: $storage_account_name"
+echo "Validating the account name: $storage_account_prefix-storage"
 
-az storage account check-name --name "syoossdemo-storage"
+az storage account check-name --name "$storage_account_prefix-storage"
 
 # 1-Login to Azure using the az command line
 echo "Logging in to Azure"
