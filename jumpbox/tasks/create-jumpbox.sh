@@ -1,9 +1,7 @@
 #!/bin/sh
 set -e -x
 
-echo "Validating the account name"
-
-storage_account_name = "$storage_account_prefix" + "-storage"
+storage_account_name =  "${storage_account_prefix}storage"
 
 # 1-Login to Azure using the az command line
 echo "Logging in to Azure"
@@ -15,7 +13,7 @@ az login --service-principal -u "$service_principal_id" -p "$service_principal_s
 az account set --subscription "$subscription_id"
 
 # 3. Creating the resource group 
-echo "Creating the resource group:" "$utility_rg"
+echo "Creating the resource group: $utility_rg"
 
 #Make a copy of the template file
 cp azure-oss-demos/environment/ossdemo-utility-template.json azure-oss-demos/environment/ossdemo-utility.json -f
