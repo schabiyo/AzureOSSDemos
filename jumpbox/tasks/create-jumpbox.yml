@@ -14,7 +14,10 @@ params:
   subscription_id:
   utility_rg: 
   storage_account_prefix:
-  server_prefix:
+  jumpbox_prefix:
+  jumpbox_admin:
+  jumpbox_ssh_private_key:
+  jumpbox_ssh_public_key:
   location: eastus
 
 
@@ -27,9 +30,3 @@ outputs:
 
 run:
   path: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.sh
-  args: [
-    --service-principal, service_principal_id,
-    --service-principal-pwd, service_principal_secret
-    --tenant-id, tenant_id,
-    --subscription_id, subscription_id,
-  ]
