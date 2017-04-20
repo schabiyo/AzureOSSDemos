@@ -1,8 +1,14 @@
 #!/bin/sh
 set -e -x
 
+SERVICEPRINCIPAL= SERVICEPRINCIPAL_PWD= TENANT_ID= SUBSCRIPTION_ID=
+
+
+
 
 echo "Validating the supplied parameters"
+
+echo "$subscription_id"
 
 # 1-Login to Azure using the az command line
 echo "Logging in to Azure"

@@ -6,11 +6,12 @@ image_resource:
   source: 
     repository: schabiyo/ossdemo 
     tag: latest
-#image: docker:///java#8
 
 params:
-  MAVEN_OPTS:
-  MAVEN_CONFIG:
+  service_principal_id: 
+  service_principal_secret:
+  tenant_id:
+  subscription_id:
 
 
 inputs:
@@ -21,3 +22,9 @@ outputs:
 
 run:
   path: azure-oss-demos/jumpbox/tasks/validate-input.sh
+  args: [
+    --service-principal, service_principal_id,
+    --service-principal-pwd, service_principal_secret
+    --tenant-id, tenant_id,
+    --subscription_id, subscription_id,
+  ]
