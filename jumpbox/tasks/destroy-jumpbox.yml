@@ -16,7 +16,7 @@ params:
 
 
 inputs:
-  - name: azure-oss-demos
+  - name: azure-oss-demos-ci
 
 run:
-  path: azure-oss-demos/jumpbox/tasks/destroy-jumpbox.sh
+  path: azure-oss-demos-ci/jumpbox/tasks/destroy-jumpbox.sh
