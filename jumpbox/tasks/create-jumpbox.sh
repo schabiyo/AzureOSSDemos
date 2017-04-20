@@ -1,8 +1,6 @@
 #!/bin/sh
 set -e -x
 
-storage_account_name =  "${storage_account_prefix}storage"
-
 # 1-Login to Azure using the az command line
 echo "Logging in to Azure"
 
