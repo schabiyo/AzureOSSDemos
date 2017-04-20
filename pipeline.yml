@@ -1,10 +1,14 @@
 ---
-
 groups:
 - name: Deploy Jumpbox
   jobs:
   - validate-input
   - create-jumpbox
+  - ansible-configure-vs-code
+  - ansible-configure-rdp-tools
+  - ansible-configure-dotnet-core
+  - ansible-configure-additional-tools
+  - configure-jumpbox
    
 - name: Destroy Jumpbox
   jobs:
@@ -12,62 +16,121 @@ groups:
 
 
 resources:
-- name: azure-oss-demos
+- name: azure-oss-demos-ci
   type: git
   source:
     uri: https://github.com/schabiyo/azure-oss-demos.git
     branch: master
 
-
-- name: email-notification
-    type: email-notification-resource
-    source:
-      smtp_host: "smtp.gmail.com"
-      smtp_port: "465"
-      smtp_username: {{smtp_user}}
-      smtp_password: {{smtp_password}}
-      default_recipient: "chabiyosani@gmail.com"
-
-resource_types:
-  - name: email-notification-resource
-    type: docker-image
-    source:
-      repository: santoshjpawar/concourse-email-notification
-      tag: latest
-
-
+- name: azure-oss-demos
+  type: git
+  source:
+    uri: https://github.com/dansand71/OSSonAzure.git
+    branch: master
 
 jobs:
 - name: validate-input
   plan:
-  - get: azure-oss-demos
+  - get: azure-oss-demos-ci
   - task: validate-input
-    file: azure-oss-demos/jumpbox/tasks/validate-input.yml
-  - put: email-notification
-        params:
-          input_dir: azure-oss-demos
-          email_body: {{email_body}}
+    file: azure-oss-demos-ci/jumpbox/tasks/validate-input.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      storage_account_prefix: {{STORAGE_ACCOUNT_PREFIX}} 
 
 - name: create-jumpbox
   plan:
-  - get: azure-oss-demos
+  - get: azure-oss-demos-ci
     passed: [validate-input]
-    trigger: true
+    triggered: true
+  - get: azure-oss-demos
   - task: build-jumpbox
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source: {repository: busybox}
-      inputs:
-        - name: resource-gist
-      run:
-        path: echo
-        args: ["Building the jumpbox"]
+    file: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      storage_account_prefix: {{STORAGE_ACCOUNT_PREFIX}}
+      jumpbox_prefix: {{JUMPBOX_PREFIX}}
+      jumpbox_admin: {{JUMPBOX_ADMIN}}
+      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
+      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
+      utility_rg: {{RG_UTILITY}}
+      location: {{LOCATION}}
+
+- name: ansible-configure-dotnet-core
+  plan:
+  - get: azure-oss-demos-ci
+    passed: [create-jumpbox]
+  - task: ansible-configure-dotnet-core
+    file: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.yml
+    params:
+      jumpbox_prefix: {{JUMPBOX_PREFIX}}
+      jumpbox_admin: {{JUMPBOX_ADMIN}}
+      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
+      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
+
+- name: ansible-configure-rdp-tools
+  plan:
+  - get: azure-oss-demos-ci
+    passed: [create-jumpbox]
+  - task: ansible-configure-rdp-tools
+    file: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.yml
+    params:
+      jumpbox_prefix: {{JUMPBOX_PREFIX}}
+      jumpbox_admin: {{JUMPBOX_ADMIN}}
+      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
+      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
+
+- name: ansible-configure-vs-code
+  plan:
+  - get: azure-oss-demos-ci
+    passed: [create-jumpbox]
+  - task: ansible-configure-vs-code
+    file: azure-oss-demos-ci/jumpbox/tasks/configure-jumpbox.yml
+    params:
+      jumpbox_prefix: {{JUMPBOX_PREFIX}}
+      jumpbox_admin: {{JUMPBOX_ADMIN}}
+      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
+      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
+
+- name: ansible-configure-additional-tools
+  plan:
+  - get: azure-oss-demos-ci
+    passed: [create-jumpbox]
+  - task: ansible-configure-additional-tools
+    file: azure-oss-demos-ci/jumpbox/tasks/configure-jumpbox.yml
+    params:
+      jumpbox_prefix: {{JUMPBOX_PREFIX}}
+      jumpbox_admin: {{JUMPBOX_ADMIN}}
+      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
+      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
+
+
+- name: configure-jumpbox 
+  plan:
+    - get: azure-oss-demos-ci
+      passed: [ansible-configure-vs-code, ansible-configure-rdp-tools, ansible-configure-dotnet-core, ansible-configure-additional-tools]
+    - task: configure-jumpbox
+      file: azure-oss-demos-ci/jumpbox/tasks/configure-jumpbox.yml
 
 - name: destroy-jumpbox
   plan:
-  - get: azure-oss-demos
+  - get: azure-oss-demos-ci
     trigger: false
   - task: destroy-jumpbox
-    file: azure-oss-demos/jumpbox/tasks/destroy-jumbox.yml
+    file: azure-oss-demos-ci/jumpbox/tasks/destroy-jumpbox.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      utility_rg: {{RG_UTILITY}}
+
+
+
+
