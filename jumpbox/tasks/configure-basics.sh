@@ -16,6 +16,10 @@ echo "--------------------------------------------"
 echo -e "${BOLD}Configuring jumpbox server with ansible${RESET}"
 echo ".Starting:"$(date)
 
+
+mkdir  ~/.ssh/
+
+cp keys-folder/* ~/.ssh/
 cp -f ansible-configs/hosts azure-oss-demos-ci/ansible/hosts
 
 echo ""
