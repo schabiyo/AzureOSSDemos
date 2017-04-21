@@ -15,6 +15,7 @@ params:
 
 inputs:
   - name: azure-oss-demos-ci
+  - name: keys-folder
 
 run:
   path: azure-oss-demos-ci/jumpbox/tasks/configure-basics.sh

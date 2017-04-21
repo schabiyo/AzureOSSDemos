@@ -25,5 +25,8 @@ inputs:
   - name: azure-oss-demos
   - name: azure-oss-demos-ci
 
+output:
+  - name: keys-folder
+
 run:
   path: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.sh

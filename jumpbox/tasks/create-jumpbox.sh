@@ -6,8 +6,6 @@ RESET="\e[0m"
 # 1-Login to Azure using the az command line
 echo "Logging in to Azure"
 
-printf "%s\n" $jumpbox_ssh_private_key | tail -n +5 | head -n -4
-
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
 
 # 2. switchinh to the default subscription
@@ -53,6 +51,12 @@ echo -e "Host=jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com\nIdentity
 chmod 600 ~/.ssh/config
 chmod 600 ~/.ssh/jumpbox*
 
+#Copy in the output folder
+cp ~/.ssh/config keys-folder/
+cp ~/.ssh/jumpbox* keys-folder/
+
+
+
  #CREATE UTILITY JUMPBOX SERVER
  echo ""
  echo "Creating CENTOS JUMPBOX utility machine for RDP and ssh"
@@ -92,14 +96,14 @@ echo "DEMO_ADMIN_USER=${jumpbox_admin}" >> azure-oss-demos/vm-assets/DemoEnviron
 #Set the remote jumpbox passwords
 echo "Resetting ${jumpbox_admin} and root passwords based on script values."
 echo "Starting:"$(date)
-ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo '${jumpbox_admin}:${jumpbox_admin_password}' | sudo chpasswd"
-ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo 'root:${jumpbox_admin_password}' | sudo chpasswd"
+ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo '${jumpbox_admin}:${jumpbox_admin_password}' | sudo chpasswd"
+ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo 'root:${jumpbox_admin_password}' | sudo chpasswd"
 
 #Copy the SSH private & public keys up to the jumpbox server
 echo "Copying up the SSH Keys for demo purposes to the jumpbox ~/.ssh directories for ${jumpbox_admin} user."
 echo "Starting:"$(date)
-scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com:~/.ssh/id_rsa
-scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com:~/.ssh/id_rsa.pub
-ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa 'sudo chmod 600 ~/.ssh/id_rsa'
+scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com:~/.ssh/id_rsa
+scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com:~/.ssh/id_rsa.pub
+ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa 'sudo chmod 600 ~/.ssh/id_rsa'
 
 echo "Jumpbox successfully created"
