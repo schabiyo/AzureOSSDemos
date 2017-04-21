@@ -8,10 +8,9 @@ image_resource:
     tag: latest
 
 params:
-  service_principal_id: 
-  service_principal_secret:
-  tenant_id:
-  subscription_id:
+  jumpbox_prefix: 
+  jumpbox_admin:
+  location:
 
 
 inputs:
