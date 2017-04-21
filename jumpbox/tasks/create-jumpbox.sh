@@ -6,10 +6,6 @@ RESET="\e[0m"
 # 1-Login to Azure using the az command line
 echo "Logging in to Azure"
 
-printf $1
-
-printf $2
-
 printf "%s\n" $jumpbox_ssh_private_key | tail -n +5 | head -n -4
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
