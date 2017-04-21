@@ -6,6 +6,10 @@ RESET="\e[0m"
 # 1-Login to Azure using the az command line
 echo "Logging in to Azure"
 
+printf $1
+
+printf $2
+
 cat azure-oss-demos-ci/key
 
 printf  $jumpbox_ssh_private_key
