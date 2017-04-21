@@ -4,11 +4,7 @@ groups:
   jobs:
   - validate-input
   - create-jumpbox
-  - ansible-configure-vs-code
-  - ansible-configure-rdp-tools
-  - ansible-configure-dotnet-core
-  - ansible-configure-additional-tools
-  - configure-jumpbox
+  - validate-jumpbox
    
 - name: Destroy Jumpbox
   jobs:
@@ -57,66 +53,28 @@ jobs:
       storage_account_prefix: {{STORAGE_ACCOUNT_PREFIX}}
       jumpbox_prefix: {{JUMPBOX_PREFIX}}
       jumpbox_admin: {{JUMPBOX_ADMIN}}
+      jumpbox_admin_password: {{JUMPBOX_ADMIN_PASSWORD}}
       jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
       jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
       utility_rg: {{RG_UTILITY}}
       location: {{LOCATION}}
+  - aggregate:
+    - task: ansible-configure-dotnet-core
+      file: azure-oss-demos-ci/jumpbox/tasks/configure-dotnet-core.yml
+    - task: ansible-configure-vs-code
+      file: azure-oss-demos-ci/jumpbox/tasks/configure-vs-code.yml
+      params:
+        jumpbox_prefix: {{JUMPBOX_PREFIX}}
+        jumpbox_admin: {{JUMPBOX_ADMIN}}
+        jumpbox_admin_password: {{JUMPBOX_ADMIN_PASSWORD}}
+        location: {{LOCATION}}
 
-- name: ansible-configure-dotnet-core
-  plan:
-  - get: azure-oss-demos-ci
-    passed: [create-jumpbox]
-  - task: ansible-configure-dotnet-core
-    file: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.yml
-    params:
-      jumpbox_prefix: {{JUMPBOX_PREFIX}}
-      jumpbox_admin: {{JUMPBOX_ADMIN}}
-      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
-      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
-
-- name: ansible-configure-rdp-tools
-  plan:
-  - get: azure-oss-demos-ci
-    passed: [create-jumpbox]
-  - task: ansible-configure-rdp-tools
-    file: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.yml
-    params:
-      jumpbox_prefix: {{JUMPBOX_PREFIX}}
-      jumpbox_admin: {{JUMPBOX_ADMIN}}
-      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
-      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
-
-- name: ansible-configure-vs-code
-  plan:
-  - get: azure-oss-demos-ci
-    passed: [create-jumpbox]
-  - task: ansible-configure-vs-code
-    file: azure-oss-demos-ci/jumpbox/tasks/configure-jumpbox.yml
-    params:
-      jumpbox_prefix: {{JUMPBOX_PREFIX}}
-      jumpbox_admin: {{JUMPBOX_ADMIN}}
-      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
-      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
-
-- name: ansible-configure-additional-tools
-  plan:
-  - get: azure-oss-demos-ci
-    passed: [create-jumpbox]
-  - task: ansible-configure-additional-tools
-    file: azure-oss-demos-ci/jumpbox/tasks/configure-jumpbox.yml
-    params:
-      jumpbox_prefix: {{JUMPBOX_PREFIX}}
-      jumpbox_admin: {{JUMPBOX_ADMIN}}
-      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
-      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
-
-
-- name: configure-jumpbox 
+- name: validate-jumpbox 
   plan:
     - get: azure-oss-demos-ci
-      passed: [ansible-configure-vs-code, ansible-configure-rdp-tools, ansible-configure-dotnet-core, ansible-configure-additional-tools]
-    - task: configure-jumpbox
-      file: azure-oss-demos-ci/jumpbox/tasks/configure-jumpbox.yml
+      passed: [create-jumpbox]
+    - task: validate-jumpbox
+      file: azure-oss-demos-ci/jumpbox/tasks/validate-jumpbox.yml
 
 - name: destroy-jumpbox
   plan:
