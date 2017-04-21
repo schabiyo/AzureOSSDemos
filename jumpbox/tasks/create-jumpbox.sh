@@ -36,10 +36,10 @@ az group deployment create --resource-group "$utility_rg" --name InitialDeployme
 echo "Creating the Jumpbox VM"
 #Get the SSH key from the configs adn add it to the ssh folder
 mkdir ~/.ssh
-printf $jumpbox_ssh_private_key
+echo -e $jumpbox_ssh_private_key
 
 
-printf $jumpbox_ssh_private_key >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
+echo -e $jumpbox_ssh_private_key >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
 echo $jumpbox_ssh_public_key >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub
 # Add this to the config file
 echo -e "Host=jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa\nUser=${jumpbox_admin}" >> ~/.ssh/config
