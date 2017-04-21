@@ -96,10 +96,10 @@ ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${j
 ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo 'root:${jumpbox_admin_password}' | sudo chpasswd"
 
 #Copy the SSH private & public keys up to the jumpbox server
-echo "Copying up the SSH Keys for demo purposes to the jumpbox ~/.ssh directories for ${serverAdminName} user."
+echo "Copying up the SSH Keys for demo purposes to the jumpbox ~/.ssh directories for ${jumpbox_admin} user."
 echo "Starting:"$(date)
 scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com:~/.ssh/id_rsa
 scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com:~/.ssh/id_rsa.pub
-ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admi}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa 'sudo chmod 600 ~/.ssh/id_rsa'
+ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa 'sudo chmod 600 ~/.ssh/id_rsa'
 
-
+echo "Jumpbox successfully created"
