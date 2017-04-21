@@ -6,12 +6,7 @@ RESET="\e[0m"
 INPUT="\e[7m"
 BOLD="\e[4m"
 
-
-cp keys-folder/* ~/.ssh/
-
 echo "--------------------------------------------"
-echo -e "${BOLD}Configuring jumpbox server with ansible${RESET}"
-echo ".Starting:"$(date)
 
 echo "Creating ssh directory"
 mkdir  ~/.ssh/
