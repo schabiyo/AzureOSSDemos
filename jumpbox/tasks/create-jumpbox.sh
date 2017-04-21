@@ -62,5 +62,34 @@ echo -e "${BOLD}...Creating Jumpbox server...${RESET}"
 
 az vm create ${azcreatecommand}
 
+az vm get-instance-view -g $utility_rg -n jumpbox-${jumpbox_prefix}
+
+
+echo ""
+echo "---------------------------------------------"
+echo "Create demo template values file"
+
+echo "#Value of your jumpbox server name" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
+echo "JUMPBOX_SERVER_NAME=jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
+echo "DEMO_SERVER_PREFIX=${jumpbox_prefix}" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
+echo "#Name of your demo account for storage" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
+echo "DEMO_STORAGE_ACCOUNT=${storage_account_prefix}storage" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
+echo "DEMO_STORAGE_PREFIX=${storage_account_prefix}" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
+echo "#Value of your admin user name" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
+echo "DEMO_ADMIN_USER=" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
+
+
+#Set the remote jumpbox passwords
+echo "Resetting ${jumpbox_admin} and root passwords based on script values."
+echo "Starting:"$(date)
+ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo '${jumpbox_admin}:${jumpbox_admin_password}' | sudo chpasswd"
+ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo 'root:${jumpbox_admin_password}' | sudo chpasswd"
+
+#Copy the SSH private & public keys up to the jumpbox server
+echo "Copying up the SSH Keys for demo purposes to the jumpbox ~/.ssh directories for ${serverAdminName} user."
+echo "Starting:"$(date)
+scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com:~/.ssh/id_rsa
+scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com:~/.ssh/id_rsa.pub
+ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admi}@jumpbox-${jumpbox_prefix}.eastus.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa 'sudo chmod 600 ~/.ssh/id_rsa'
 
 
