@@ -15,7 +15,7 @@ cp keys-folder/* ~/.ssh/
 cp -f ansible-configs/hosts azure-oss-demos-ci/ansible/hosts
 
 echo ""
-ansiblecommand=" -i hosts ansible-configs/playbook-configure-basics.yml --private-key ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa"
+ansiblecommand=" -i hosts ../../ansible-configs/playbook-configure-basics.yml --private-key ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa"
 echo ".Calling command: ansible-playbook ${ansiblecommand}"
 #we need to run ansible-playbook in the same directory as the CFG file.  Go to that directory then back out...
 cd azure-oss-demos-ci/ansible
