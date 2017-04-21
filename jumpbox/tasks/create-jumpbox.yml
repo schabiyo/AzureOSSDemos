@@ -27,6 +27,7 @@ inputs:
 
 outputs:
   - name: keys-folder
+  - name: ansible-configs
 
 run:
   path: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.sh

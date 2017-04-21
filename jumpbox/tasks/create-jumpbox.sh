@@ -106,4 +106,12 @@ scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa ${jumpbox_admin}@jumpbox-${jumpbox_p
 scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com:~/.ssh/id_rsa.pub
 ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa 'sudo chmod 600 ~/.ssh/id_rsa'
 
+# Prepare the ANsible scripts
+sed -i -e "s@JUMPBOXSERVER-REPLACE.eastus.cloudapp.azure.com@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com@g" azure-oss-demos-ci/ansible/hosts
+sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-oss-demos-ci/ansible/playbook-configure-basics.yml
+
+cp azure-oss-demos-ci/ansible/hosts ansible-configs/
+cp azure-oss-demos-ci/ansible/playbook-configure-basics.yml ansible-configs/
+
+
 echo "Jumpbox successfully created"
