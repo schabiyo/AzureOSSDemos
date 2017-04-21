@@ -41,7 +41,7 @@ mkdir ~/.ssh
 
 
 #Had to do this as the key is being read in one single line
-printf "-----BEGIN RSA PRIVATE KEY-----" > ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
+printf "-----BEGIN RSA PRIVATE KEY-----" >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
 printf "%s\n" $jumpbox_ssh_private_key | tail -n +5 | head -n -4 >>  ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
 printf "-----END RSA PRIVATE KEY-----" >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
 
