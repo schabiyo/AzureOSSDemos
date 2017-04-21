@@ -1,26 +1,11 @@
 ---
 # This playbook installs .NET Core and related tools
-- name: Install .NET Core 
+- name: Install .NET Core et Developer Tools 
   hosts: buildbox
   remote_user: VALUEOF_DEMO_ADMIN_USER
   sudo : true 
 
   tasks: 
-  - name: update YUM
-    yum: name=* state=latest
-  
-  - name: Install epel
-    yum: name=epel-release state=latest
-
-  - name: Install python and pip
-    yum: name=python-pip state=latest
-  
-  - name: install Git
-    yum: name=git state=latest
-
-  - name: install Ansible
-    yum: name=ansible state=latest
-      
 # Install MS .NET Core - https://www.microsoft.com/net/core#linuxcentos
   - name: download the dotnet bits
     command: curl -sSL -o dotnet.tar.gz https://go.microsoft.com/fwlink/?linkid=843449

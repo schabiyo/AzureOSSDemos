@@ -6,21 +6,6 @@
   sudo : true 
 
   tasks: 
-  - name: update YUM
-    yum: name=* state=latest
-  
-  - name: Install epel
-    yum: name=epel-release state=latest
-
-  - name: Install python and pip
-    yum: name=python-pip state=latest
-  
-  - name: install Git
-    yum: name=git state=latest
-
-  - name: install Ansible
-    yum: name=ansible state=latest
-      
 # Install MS Visual Studio Code - https://code.visualstudio.com/docs/setup/linux
   - name: install vs code keys
     command: rpm --import https://packages.microsoft.com/keys/microsoft.asc

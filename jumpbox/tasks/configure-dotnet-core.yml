@@ -1,0 +1,22 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: 
+    repository: schabiyo/ossdemo 
+    tag: latest
+
+params:
+  jumpbox_prefix: 
+  jumpbox_admin:
+  location:
+
+
+inputs:
+  - name: azure-oss-demos-ci
+  - name: keys-folder
+  - name: ansible-configs
+
+run:
+  path: azure-oss-demos-ci/jumpbox/tasks/configure-dotnet-core.sh
