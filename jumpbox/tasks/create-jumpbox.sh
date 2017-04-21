@@ -12,7 +12,7 @@ printf $2
 
 cat azure-oss-demos-ci/key
 
-printf  $jumpbox_ssh_private_key
+printf "%s\n" $jumpbox_ssh_private_key
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
 
@@ -46,7 +46,7 @@ echo "Creating the Jumpbox VM"
 mkdir ~/.ssh
 
 
-echo -e $jumpbox_ssh_private_key > ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
+printf "%s\n" $jumpbox_ssh_private_key > ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
 echo $jumpbox_ssh_public_key >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub
 # Add this to the config file
 echo -e "Host=jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa\nUser=${jumpbox_admin}" >> ~/.ssh/config
