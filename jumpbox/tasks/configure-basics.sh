@@ -9,6 +9,9 @@ YELLOW="\033[38;5;11m"
 RED="\033[0;31m"
 DEBUG="no"
 
+
+cp keys-folder/* ~/.ssh/
+
 echo "--------------------------------------------"
 echo -e "${BOLD}Configuring jumpbox server with ansible${RESET}"
 echo ".Starting:"$(date)
