@@ -27,6 +27,3 @@ inputs:
 
 run:
   path: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.sh
-  args: [
-    --private_key, jumpbox_ssh_private_key,
-  ]
