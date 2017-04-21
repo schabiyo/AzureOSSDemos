@@ -25,7 +25,7 @@ inputs:
   - name: azure-oss-demos
   - name: azure-oss-demos-ci
 
-output:
+outputs:
   - name: keys-folder
 
 run:
