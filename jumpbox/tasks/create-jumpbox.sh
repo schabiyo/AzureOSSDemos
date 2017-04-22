@@ -3,8 +3,14 @@ set -e -x
 
 GREEN='\033[0;32m'
 RESET="\e[0m"
+
+# Including the utility for echo
+source azure-oss-demos-ci/utils/pretty-echo.sh
+
+
 # 1-Login to Azure using the az command line
-echo "Logging in to Azure"
+
+MESSAGE="Logging in to Azure" ; simple_blue_echo
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
 
@@ -13,7 +19,8 @@ az login --service-principal -u "$service_principal_id" -p "$service_principal_s
 az account set --subscription "$subscription_id"
 
 # 3. Creating the resource group 
-echo "Creating the resource group: $utility_rg"
+
+MESSAGE="Creating the resource group: $utility_rg" ; simple_blue_echo
 
 #Make a copy of the template file
 cp azure-oss-demos/environment/ossdemo-utility-template.json azure-oss-demos/environment/ossdemo-utility.json -f
@@ -22,18 +29,18 @@ sed -i -e "s@VALUEOF-UNIQUE-SERVER-PREFIX@${jumpbox_prefix}@g" azure-oss-demos/e
 sed -i -e "s@VALUEOF-UNIQUE-STORAGE-PREFIX@${storage_account_prefix}@g" azure-oss-demos/environment/ossdemo-utility.json
 
 #BUILD RESOURCE GROUPS
-echo ".BUILDING RESOURCE GROUPS"
-echo "..Starting:"$(date)
-echo '..create utility resource group'
 az group create --name "$utility_rg" --location "$location"
 
-#APPLY TEMPLATE
-echo ".APPLY JSON Template"
-echo "..Starting:"$(date)
-echo '..Applying Network Security Group for utility Resource Group'
+MESSAGE="Resource group successfully created" ; simple_green_echo
+
+MESSAGE="Applying a Network Security Group for the resource" ; simple_blue_echo
+  
 az group deployment create --resource-group "$utility_rg" --name InitialDeployment --template-file azure-oss-demos/environment/ossdemo-utility.json
 
-echo "Creating the Jumpbox VM"
+MESSAGE="Network Security Group successfully applied" ; simple_green_echo
+
+MESSAGE="Creating the Jumpbox VM" ; simple_blue_echo
+
 #Get the SSH key from the configs adn add it to the ssh folder
 mkdir ~/.ssh
 
@@ -58,11 +65,6 @@ cp ~/.ssh/jumpbox* keys-folder/
 
 
  #CREATE UTILITY JUMPBOX SERVER
- echo ""
- echo "Creating CENTOS JUMPBOX utility machine for RDP and ssh"
- echo ".Starting:"$(date)
- echo ".Reading ssh key information from local jumpbox_${jumpbox_prefix}_id_rsa file"
- echo ".--------------------------------------------"
  azcreatecommand="-g $utility_rg -n jumpbox-${jumpbox_prefix} --public-ip-address-dns-name jumpbox-${jumpbox_prefix} \
     --os-disk-name jumpbox-${jumpbox_prefix}-disk --image OpenLogic:CentOS:7.2:latest \
     --nsg NSG-ossdemo-utility  \
@@ -71,17 +73,13 @@ cp ~/.ssh/jumpbox* keys-folder/
     --admin-username ${jumpbox_admin} \
     --ssh-key-value ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub "
 
-echo "..Calling creation command: az vm create ${azcreatecommand}"
-echo -e "${BOLD}...Creating Jumpbox server...${RESET}"
-
 az vm create ${azcreatecommand}
+
+
+MESSAGE="Jumpbox successfully created" ; simple_green_echo
 
 az vm get-instance-view -g $utility_rg -n jumpbox-${jumpbox_prefix}
 
-
-echo ""
-echo "---------------------------------------------"
-echo "Create demo template values file"
 
 echo "#Value of your jumpbox server name" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
 echo "JUMPBOX_SERVER_NAME=jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com" >> azure-oss-demos/vm-assets/DemoEnvironmentValues
@@ -99,6 +97,7 @@ echo "Starting:"$(date)
 ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo '${jumpbox_admin}:${jumpbox_admin_password}' | sudo chpasswd"
 ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa "echo 'root:${jumpbox_admin_password}' | sudo chpasswd"
 
+
 #Copy the SSH private & public keys up to the jumpbox server
 echo "Copying up the SSH Keys for demo purposes to the jumpbox ~/.ssh directories for ${jumpbox_admin} user."
 echo "Starting:"$(date)
@@ -106,19 +105,22 @@ scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa ${jumpbox_admin}@jumpbox-${jumpbox_p
 scp ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com:~/.ssh/id_rsa.pub
 ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com -i ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa 'sudo chmod 600 ~/.ssh/id_rsa'
 
-# Prepare the ANsible scripts
+MESSAGE="SSH keys successfully copied to the jumpbox" ; simple_green_echo
+
+# Prepare the Ansible scripts
 sed -i -e "s@JUMPBOXSERVER-REPLACE.eastus.cloudapp.azure.com@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com@g" azure-oss-demos-ci/ansible/hosts
 sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-oss-demos-ci/ansible/playbook-configure-basics.yml
 sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-oss-demos-ci/ansible/playbook-configure-dotnet-core.yml
 sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-oss-demos-ci/ansible/playbook-configure-vs-code.yml
 
 
+MESSAGE="Installing and configuring Ansible on the Jumpbox" ; simple_blue_echo
+
 cp azure-oss-demos-ci/ansible/hosts ansible-configs/
 cp azure-oss-demos-ci/ansible/playbook-configure-basics.yml ansible-configs/
 cp azure-oss-demos-ci/ansible/playbook-configure-dotnet-core.yml ansible-configs/
 cp azure-oss-demos-ci/ansible/playbook-configure-vs-code.yml ansible-configs/
 
-echo ""
 ansiblecommand=" -i hosts ../../ansible-configs/playbook-configure-basics.yml --private-key ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa"
 echo ".Calling command: ansible-playbook ${ansiblecommand}"
 #we need to run ansible-playbook in the same directory as the CFG file.  Go to that directory then back out...
@@ -126,4 +128,5 @@ cd azure-oss-demos-ci/ansible
     ansible-playbook ${ansiblecommand}
 cd ..
 
-echo "Jumpbox successfully created"
+MESSAGE="Jumpbox successfully created and configured" ; simple_green_echo
+

@@ -8,7 +8,7 @@ MESSAGE="Logging in to Azure" ; blue_echo
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
 
-echo "Validating the account name: ${storage_account_prefix}storage"
+MESSAGE="Validating the account name: ${storage_account_prefix}storage" ; simple_blue_echo
 
 isNameAvailable=$(az storage account check-name --name "${storage_account_prefix}storage" | grep nameAvailable | cut -d ":" -f2 | cut -d "," -f1 | awk '{$1=$1};1')
 
@@ -18,7 +18,7 @@ then
   exit 1
 fi
 
-echo "The storage account is available to use"
+MESSAGE= "The storage account is available to use" ; simple_green_echo
 
 # 2. switchinh to the default subscription
 
@@ -30,7 +30,4 @@ MESSAGE="Validation successfully completed" ; simple_green_echo
 
 #TODO Also validate if the Service principal has the right access
 
-
-ls
-
-
+MESSAGE="TODO: We need to validate if the SP has the right access" ; simple_blue_echo
