@@ -18,7 +18,7 @@ then
   exit 1
 fi
 
-MESSAGE= "The storage account is available to use" ; simple_green_echo
+MESSAGE="The storage account is available to use" ; simple_green_echo
 
 # 2. switchinh to the default subscription
 
