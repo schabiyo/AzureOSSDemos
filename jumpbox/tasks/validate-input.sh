@@ -1,8 +1,10 @@
 #!/bin/sh
 set -e -x
 
+source azure-oss-demos-ci/utils/pretty-echo.sh
+
 # 1-Login to Azure using the az command line
-echo "Logging in to Azure"
+MESSAGE="Logging in to Azure" ; blue_echo
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
 
@@ -22,7 +24,7 @@ echo "The storage account is available to use"
 
 az account set --subscription "$subscription_id"
 
-echo "Validation successfully completed"
+MESSAGE="Validation successfully completed" ; simple_green_echo
 
 # 3. Check the validity of the name (no dashes, spaces, less than 8 char, no special chars etc..)
 
