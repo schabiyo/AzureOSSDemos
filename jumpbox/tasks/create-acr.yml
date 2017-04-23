@@ -18,4 +18,4 @@ inputs:
   - name: azure-oss-demos-ci
 
 run:
-  path: azure-oss-demos-ci/jumpbox/tasks/create-oms-workspace.sh
+  path: azure-oss-demos-ci/jumpbox/tasks/create-acr.sh
