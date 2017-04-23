@@ -32,6 +32,6 @@ getToken(){
  
 # call function 
 #echo "Calling getToken()"
-#getToken "72f988bf-86f1-41af-91ab-2d7cd011db47" "01277144-4fa7-48d6-ba56-450eb59cdbc5" "eoGF7TRTAWhYK" response
+getToken "72f988bf-86f1-41af-91ab-2d7cd011db47" "01277144-4fa7-48d6-ba56-450eb59cdbc5" "eoGF7TRTAWhYK" response
 
-#echo "response from function:" $response
+echo "response from function:" $response
