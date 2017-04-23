@@ -16,12 +16,10 @@ MESSAGE="Creating hte worksapce Workspace " ; simple_blue_echo
 
 NEW_CURL_COMMAND=$(sed  "s@OAUTH-TOKEN@${token}@g" <<< $CURL_COMMAND)
 NEW_CURL_COMMAND=$(sed  "s@TENANT-ID@${tenant_id}@g" <<< $NEW_CURL_COMMAND)
-NEW_CURL_COMMAND=$(sed  "s@CLIENT-ID@${client_id}@g" <<< $NEW_CURL_COMMAND)
-NEW_CURL_COMMAND=$(sed  "s@CLIENT-SECRET@${client_secret}@g" <<< $NEW_CURL_COMMAND)
 NEW_CURL_COMMAND=$(sed  "s@OMS-WORKSPACE-SKU@${oms_workspace_sku}@g" <<< $NEW_CURL_COMMAND)
-NEW_CURL_COMMAND=$(sed  "s@OMS-WORKSPACE-NAME@${oms_workspace_sku}@g" <<< $NEW_CURL_COMMAND)
+NEW_CURL_COMMAND=$(sed  "s@OMS-WORKSPACE-NAME@${oms_workspace_name}@g" <<< $NEW_CURL_COMMAND)
 NEW_CURL_COMMAND=$(sed  "s@RESOURCE-GROUP-NAME@${utility_rg}@g" <<< $NEW_CURL_COMMAND)
-NEW_CURL_COMMAND=$(sed  "s@RESOURCE-LOCATION@${client_id}@g" <<< $NEW_CURL_COMMAND)
+NEW_CURL_COMMAND=$(sed  "s@RESOURCE-LOCATION@${location}@g" <<< $NEW_CURL_COMMAND)
 NEW_CURL_COMMAND=$(sed  "s@SUBSCRIPTION-ID@${subscription_id}@g" <<< $NEW_CURL_COMMAND)
 
 echo $NEW_CURL_COMMAND
