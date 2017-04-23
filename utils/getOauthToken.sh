@@ -23,7 +23,7 @@ getToken(){
   result=$(eval curl $NEW_CURL_COMMAND)
   if [[ $result == *"error"* ]]; then
      echo $result
-     exit(1)
+     exit 1
   else
       access_token=$(jq .access_token <<< $result)
       eval $responsevar="'$access_token'"
