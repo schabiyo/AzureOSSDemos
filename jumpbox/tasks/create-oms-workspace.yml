@@ -12,6 +12,10 @@ params:
   service_principal_secret:
   tenant_id:
   subscription_id:
+  oms_workspace_name:
+  oms_workspace_sku:
+  location:
+  utility_rg:
 
 
 inputs:
