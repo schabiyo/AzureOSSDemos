@@ -26,7 +26,9 @@ getToken(){
      exit 1
   else
       access_token=$(jq .access_token <<< $result)
-      eval $responsevar="'$access_token'"
+      TRIMMED_RESULT="${access_token%\"}"
+      TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
+      eval $responsevar="'$TRIMMED_RESULT'"
   fi
 }
  
