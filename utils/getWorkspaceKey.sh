@@ -13,14 +13,12 @@ getWorkspaceKey() {
 
   MESSAGE="Creating the Workspace " ; simple_blue_echo
 
-  CURL_COMMAND=" -H 'Host: management.azure.com' -H 'Content-Type: application/json' -H 'Authorization: Bearer OAUTH-TOKEN' -X POST  https://management.azure.com/subscriptions/SUBSCRIPTION-ID/resourcegroups/RESOURCE-GROUP-NAME/providers/Microsoft.OperationalInsights/workspaces/OMS-WORKSPACE-NAME/sharedKeys?api-version=2015-11-01-preview"
+  CURL_COMMAND=" -H 'Content-Length: 0' -H 'Host: management.azure.com' -H 'Content-Type: application/json' -H 'Authorization: Bearer OAUTH-TOKEN' -X POST  https://management.azure.com/subscriptions/SUBSCRIPTION-ID/resourcegroups/RESOURCE-GROUP-NAME/providers/Microsoft.OperationalInsights/workspaces/OMS-WORKSPACE-NAME/sharedKeys?api-version=2015-11-01-preview"
 
   NEW_CURL_COMMAND=$(sed  "s@OAUTH-TOKEN@${token}@g" <<< $CURL_COMMAND)
   NEW_CURL_COMMAND=$(sed  "s@OMS-WORKSPACE-NAME@${workspace_name}@g" <<< $NEW_CURL_COMMAND)
   NEW_CURL_COMMAND=$(sed  "s@RESOURCE-GROUP-NAME@${resource_group}@g" <<< $NEW_CURL_COMMAND)
   NEW_CURL_COMMAND=$(sed  "s@SUBSCRIPTION-ID@${subscription_id}@g" <<< $NEW_CURL_COMMAND)
-
-  echo $NEW_CURL_COMMAND
 
   #Check if we got a 200 back
   result=$(eval curl $NEW_CURL_COMMAND)
