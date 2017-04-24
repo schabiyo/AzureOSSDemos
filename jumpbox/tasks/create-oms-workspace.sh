@@ -3,12 +3,14 @@ set -e -x
 
 source azure-oss-demos-ci/utils/pretty-echo.sh
 source azure-oss-demos-ci/utils/getOauthToken.sh
+source azure-oss-demos-ci/utils/getWorkspaceItem.sh
 
 MESSAGE="Getting an access token from AAD" ; simple_blue_echo
 
 getToken "72f988bf-86f1-41af-91ab-2d7cd011db47" "01277144-4fa7-48d6-ba56-450eb59cdbc5" "eoGF7TRTAWhYK" token
 
 echo "token:" $token
+
 
 MESSAGE="Creating hte worksapce Workspace " ; simple_blue_echo
 
@@ -32,6 +34,32 @@ if [[ $result == *"error"* ]]; then
    exit 1
 else
    #Get the state
-   workspace_state=$(jq .provisioningState <<< $result)
+   workspace_state=$(jq .properties.provisioningState <<< $result)
    echo "provisioningState:" $provisioningState
 fi
+
+MESSAGE="Waiting until Workspace is successfully created " ; simple_blue_echo
+
+#Try for a maximum of 5 minutes to check if the OMS Worskapce was successfull 
+## sleep in bash for loop ##
+for i in {1..5}
+do
+   #Get the Workspace Status
+   getWorkspaceItemStatus $token $oms_workspace_name $utility_rg $subscription_id provisioningState
+   echo "provisioningState:"$provisioningState
+   if [[ $provisioningState == "Succeeded" ]]; then
+      portal_url=$(jq .properties.portalUrl <<< $result)
+      MESSAGE="Worksapce was successully created and can be accessed using the following URL:"$portalUrl ; simple_green_echo
+     exit 0:
+   elif [[ $provisioningState == "Creating" ]]; then
+     sleep 1m
+   else
+     #The creation failes for a raison
+     echo "THe workspace create failed for a raison, please make sure the workspace name is unique and try again."
+     exit 1
+   fi
+done
+
+
+
+
