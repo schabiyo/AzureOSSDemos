@@ -18,18 +18,7 @@ getWorkspaceId $token $oms_workspace_name $utility_rg $subscription_id omsid
 #Get the Workspace Keys
 getWorkspaceKey $token $oms_workspace_name $utility_rg $subscription_id omskey
 
-
-
-#Check if we got a 200 back
-result=$(eval curl $NEW_CURL_COMMAND)
-echo result
-if [[ $result == *"error"* ]]; then
-   MESSAGE="==>The Workspace specified might not exist.." ; simple_red_echo
-   exit 1
-else
-   #Get the state
-   MESSAGE=" Workspace is successfully deleted " ; simple_green_echo
-fi
+az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
 
 # Create a resource group.
 az group create --name $iaas_rg --location $location
