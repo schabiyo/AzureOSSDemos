@@ -3,15 +3,13 @@ set -e -x
 
 source azure-oss-demos-ci/utils/pretty-echo.sh
 
-echo "token:" $token
-
 getWorkspaceItemStatus() {
 
   local token=$1
   local workspace_name=$2
   local resource_group=$3
   local subscription_id=$4
-  local provisioningState=$5
+  local responsevar=$5
 
   MESSAGE="Creating hte worksapce Workspace " ; simple_blue_echo
 
@@ -36,11 +34,8 @@ getWorkspaceItemStatus() {
     echo "provisioningState:" $workspace_state
     TRIMMED_RESULT="${workspace_state%\"}"
     TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
-    eval $provisioningState="'$TRIMMED_RESULT'"
+    eval $responsevar="'$TRIMMED_RESULT'"
   fi
 
 }
-
-
-
 
