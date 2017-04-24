@@ -3,7 +3,7 @@ set -e -x
 
 source azure-oss-demos-ci/utils/pretty-echo.sh
 
-getWorkspaceItemStatus() {
+getWorkspaceId() {
 
   local token=$1
   local workspace_name=$2
@@ -30,9 +30,9 @@ getWorkspaceItemStatus() {
     exit 1
   else
     #Get the state
-    workspace_state=$(jq .properties.provisioningState <<< $result)
-    echo "provisioningState:" $workspace_state
-    TRIMMED_RESULT="${workspace_state%\"}"
+    customer_id=$(jq .properties.customerId <<< $result)
+    echo "customerID:" $customer_id
+    TRIMMED_RESULT="${customer_id%\"}"
     TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
     eval $responsevar="'$TRIMMED_RESULT'"
   fi
