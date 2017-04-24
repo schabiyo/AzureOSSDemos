@@ -28,7 +28,7 @@ result=$(eval curl $NEW_CURL_COMMAND)
 echo result
 if [[ $result == *"error"* ]]; then
    echo $result
-   MESSAGE="MAke sure a Workspace with the same name does not exist and try again.." ; simple_red_echo
+   MESSAGE="==>Make sure a Workspace with the same name does not exist and try again.." ; simple_red_echo
    exit 1
 else
    #Get the state
@@ -49,12 +49,12 @@ do
       portal_url=$(jq .properties.portalUrl <<< $result)
       MESSAGE="Worksapce was successully created and can be accessed using the following URL:"$portalUrl ; simple_green_echo
      exit 0:
-   elif [[ $state == "Creating"]] || [[$state == "ProvisioningAccount" ]]; then
+   elif (( $state == "Creating" || $state == "ProvisioningAccount" )); then
      echo "Waiting..."
      sleep 1m
    else
      #The creation failes for a raison
-     MESSAGE="THe workspace create failed for a raison, please make sure the workspace name is unique and try again." ; simple_red_echo
+     MESSAGE="==>The workspace create failed for a raison, please make sure the workspace name is unique and try again." ; simple_red_echo
      exit 1
    fi
 done
