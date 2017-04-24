@@ -7,7 +7,7 @@ source azure-oss-demos-ci/utils/getWorkspaceItem.sh
 
 MESSAGE="Getting an access token from AAD" ; simple_blue_echo
 
-getToken $tenant_id $client_id $client_secret token
+getToken $tenant_id $service_principal_id $service_principal_secret token
 
 MESSAGE="Creating hte worksapce Workspace " ; simple_blue_echo
 
