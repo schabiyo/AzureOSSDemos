@@ -49,7 +49,7 @@ do
       portal_url=$(jq .properties.portalUrl <<< $result)
       MESSAGE="Worksapce was successully created and can be accessed using the following URL:"$portalUrl ; simple_green_echo
      exit 0:
-   elif [ $state == "Creating"] || [$state == "ProvisioningAccount" ]; then
+   elif [[ $state == "Creating"]] || [[$state == "ProvisioningAccount" ]]; then
      echo "Waiting..."
      sleep 1m
    else
