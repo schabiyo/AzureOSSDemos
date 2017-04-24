@@ -33,10 +33,10 @@ getWorkspaceItemStatus() {
   else
     #Get the state
     workspace_state=$(jq .properties.provisioningState <<< $result)
-    echo "provisioningState:" $provisioningState
-    TRIMMED_RESULT="${provisioningState%\"}"
+    echo "provisioningState:" $workspace_state
+    TRIMMED_RESULT="${workspace_state%\"}"
     TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
-    eval $responsevar="'$TRIMMED_RESULT'"
+    eval $provisioningState="'$TRIMMED_RESULT'"
   fi
 
 }
