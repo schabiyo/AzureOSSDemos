@@ -31,6 +31,7 @@ result=$(eval curl $NEW_CURL_COMMAND)
 echo result
 if [[ $result == *"error"* ]]; then
    echo $result
+   MESSAGE="MAke sure a Workspace with the same name does not exist and try again.." ; simple_red_echo
    exit 1
 else
    #Get the state
