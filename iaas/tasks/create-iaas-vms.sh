@@ -24,8 +24,8 @@ az login --service-principal -u "$service_principal_id" -p "$service_principal_s
 az group create --name $iaas_rg --location $location
 
 # Create a new virtual machine, this creates SSH keys if not present. 
-az vm create --resource-group $iaas_rg --name IaaSVM1 --image UbuntuLTS --generate-ssh-keys
-az vm create --resource-group $iaas_rg --name IaaSVM2 --image UbuntuLTS --generate-ssh-keys
+az vm create --resource-group $iaas_rg --name IaaSVM1 --image UbuntuLTS  --admin-password $jumpbox_admin --admin-username $jumpbox_admin_password 
+az vm create --resource-group $iaas_rg --name IaaSVM2 --image UbuntuLTS  --admin-password  --admin-username $jumpbox_admin $jumpbox_admin_password
 
 # Install and configure the OMS agent.
 az vm extension set \

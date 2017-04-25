@@ -16,6 +16,8 @@ params:
   location:
   utility_rg:
   iaas_rg:
+  jumpbox_admin_password:
+  jumpbox_admin:
 
 
 inputs:
