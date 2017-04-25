@@ -1,0 +1,27 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: 
+    repository: schabiyo/ossdemo 
+    tag: latest
+
+params:
+  service_principal_id: 
+  service_principal_secret:
+  tenant_id:
+  subscription_id:
+  location:
+  utility_rg:
+  registry_name:
+  registry_sku:
+  jumpbox_admin_password:
+  jumpbox_admin:
+
+
+inputs:
+  - name: azure-oss-demos-ci
+
+run:
+  path: azure-oss-demos-ci/acr/tasks/create-acr.sh
