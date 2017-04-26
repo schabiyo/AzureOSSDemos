@@ -26,4 +26,4 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-oss-demos-git/acr/tasks/create-acr.sh
+  path: azure-ossdemos-git/acr/tasks/create-acr.sh
