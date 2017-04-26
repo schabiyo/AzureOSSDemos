@@ -120,6 +120,7 @@ cp azure-oss-demos-ci/ansible/hosts ansible-configs/
 cp azure-oss-demos-ci/ansible/playbook-configure-basics.yml ansible-configs/
 cp azure-oss-demos-ci/ansible/playbook-configure-dotnet-core.yml ansible-configs/
 cp azure-oss-demos-ci/ansible/playbook-configure-vs-code.yml ansible-configs/
+cp azure-oss-demos-ci/ansible/playbook-configure-rdp-tools.yml ansible-configs/
 
 ansiblecommand=" -i hosts ../../ansible-configs/playbook-configure-basics.yml --private-key ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa"
 echo ".Calling command: ansible-playbook ${ansiblecommand}"
