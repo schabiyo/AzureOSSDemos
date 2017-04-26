@@ -20,6 +20,13 @@ params:
 
 inputs:
   - name: azure-oss-demos-ci
+  - name: keys-folder
+  - name: ansible-configs
+
+outputs:
+  - name: keys-folder
+  - name: ansible-configs
+
 
 run:
   path: azure-oss-demos-ci/oms/tasks/create-oms-workspace.sh

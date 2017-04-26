@@ -18,6 +18,8 @@ params:
   registry_sku:
   jumpbox_admin_password:
   jumpbox_admin:
+  registry_admin_username:
+  registry_admin_password:
 
 
 inputs:
