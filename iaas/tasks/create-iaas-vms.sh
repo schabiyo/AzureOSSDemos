@@ -7,7 +7,7 @@ source azure-oss-demos-ci/utils/getWorkspaceItem.sh
 source azure-oss-demos-ci/utils/getWorkspaceKey.sh
 source azure-oss-demos-ci/utils/getWorkspaceId.sh
 
-MESSAGE="Getting an access token from AAD" ; simple_blue_echo
+MESSAGE="Getting an access token" ; simple_blue_echo
 
 getToken $tenant_id $service_principal_id $service_principal_secret token
 
@@ -24,25 +24,31 @@ az login --service-principal -u "$service_principal_id" -p "$service_principal_s
 az group create --name $iaas_rg --location $location
 
 # Create a virtual network and a public IP address for the front-end IP pool
+MESSAGE="==>Resource group successfully created"; simple_green_echo
 az network vnet create -g $iaas_rg  -n ossdemo-iaas-vnet --address-prefix 10.0.0.0/16 --subnet-name WebSubnet --subnet-prefix 10.0.0.0/24 -l $location
+MESSAGE="==>VNET successfully created"; simple_green_echo
 #Create a Public IP  for web1
 az network public-ip create -g $iaas_rg -n web1pip --dns-name web1-$server_prefix --allocation-method Static -l $location
+MESSAGE="==>Public IP for Web Server 1 successfully created"; simple_green_echo
 #Create public IP for web
 az network public-ip create -g $iaas_rg -n web2pip --dns-name web2-$server_prefix --allocation-method Static -l $location
+MESSAGE="==>Public IP for Web Server 2 successfully created"; simple_green_echo
 #Create public IP for LB
 az network public-ip create -g $iaas_rg -n lbpip --dns-name $server_prefix"-iaas" --allocation-method Static -l $location
+MESSAGE="==>Public IP for the Load balancer successfully created"; simple_green_echo
 #Create a LB
 az network lb create -g $iaas_rg -n IaasLb --vnet-name ossdemo-iaas-vnet  --public-ip-address lbpip
+MESSAGE="==> Load balancer successfully created"; simple_green_echo
 #Create the Availability Set
 az vm availability-set create -n iaaswebas --platform-fault-domain-count 2 --platform-update-domain-count 5 -g $iaas_rg
-
+MESSAGE="==>Availability Set successfully created"; simple_green_echo
 #Create NAT RUles
 az network lb inbound-nat-rule create -g $iaas_rg --lb-name IaasLb --name ssh1 --protocol tcp --frontend-port 21 --backend-port 22  --frontend-ip-name LoadBalancerFrontEnd
 az network lb inbound-nat-rule create -g $iaas_rg --lb-name IaasLb --name ssh2 --protocol tcp --frontend-port 23 --backend-port 22  --frontend-ip-name LoadBalancerFrontEnd
-
+MESSAGE="==>Load Balancer NAT rules successfully created"; simple_green_echo
 # Create a NSG
 az network nsg create -g $iaas_rg -n nsg-iaas-demo -l $location
-
+MESSAGE="==>Network Security Group successfully created"; simple_green_echo
 #Create NSG Rules
 
 az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n ssh-rule --priority 110 \
@@ -50,13 +56,14 @@ az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n ssh-rule --pr
   --destination-address-prefix '*' --destination-port-range 22 --access Allow \
   --protocol Tcp --description "Allow SSH Accesss."
 
+MESSAGE="==>Network security rule for SSH successfully created"; simple_green_echo
 
-az network nsg rule create -g $iaas_rule --nsg-name nsg-iaas-demo -n http-aspnetcore-demo-rule --priority 120 \
+az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n http-aspnetcore-demo-rule --priority 120 \
   --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
   --destination-port-range 80 --access Allow --protocol Tcp --direction "Inbound"
 
 
-az network nsg rule create -g $iaas_rule --nsg-name nsg-iaas-demo -n http-eshop-demo-rule --priority 130 \
+az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n http-eshop-demo-rule --priority 130 \
   --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
   --destination-port-range "5100-5105" --access Allow --protocol Tcp --direction "Inbound"
 
@@ -125,7 +132,7 @@ az vm create \
   --nics web1-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \
   --storage-sku 'Premium_LRS' \
-  --ssh-key-value "~/.ssh/${jumpbox_prefix}_id_rsa.pub" 
+  --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" 
 
 az vm create \
   --resource-group $iaas_rg 
