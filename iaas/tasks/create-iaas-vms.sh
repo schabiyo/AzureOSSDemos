@@ -167,7 +167,7 @@ touch azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "[dockerhosts]" >> azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "web1-$server_prefix" >> azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "web2-$server_prefix" >> azure-ossdemos-git/ansible/docker-hosts
-printf "%s\n" "'[buildbox]'" >> azure-ossdemos-git/ansible/docker-hosts
+printf "%s\n" "[buildbox]" >> azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "localhost" >> azure-ossdemos-git/ansible/docker-hosts
 
 cd azure-ossdemos-git/ansible/ 
