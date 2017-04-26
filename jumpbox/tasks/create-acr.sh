@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e -x
 
-source azure-oss-demos-ci/utils/pretty-echo.sh
-source azure-oss-demos-ci/utils/getOauthToken.sh
-source azure-oss-demos-ci/utils/getWorkspaceItem.sh
+source azure-ossdemos-git/utils/pretty-echo.sh
+source azure-ossdemos-git/utils/getOauthToken.sh
+source azure-ossdemos-git/utils/getWorkspaceItem.sh
 
 MESSAGE="Getting an access token from AAD" ; simple_blue_echo
 

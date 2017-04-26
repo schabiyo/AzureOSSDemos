@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e -x
 
-source azure-oss-demos-ci/utils/pretty-echo.sh
-source azure-oss-demos-ci/utils/getOauthToken.sh
-source azure-oss-demos-ci/utils/getWorkspaceItem.sh
-source azure-oss-demos-ci/utils/getWorkspaceKey.sh
-source azure-oss-demos-ci/utils/getWorkspaceId.sh
+source azure-ossdemos-git/utils/pretty-echo.sh
+source azure-ossdemos-git/utils/getOauthToken.sh
+source azure-ossdemos-git/utils/getWorkspaceItem.sh
+source azure-ossdemos-git/utils/getWorkspaceKey.sh
+source azure-ossdemos-git/utils/getWorkspaceId.sh
 
 getToken $tenant_id $service_principal_id $service_principal_secret token
 # Get the Workspace IS

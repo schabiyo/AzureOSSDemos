@@ -23,11 +23,11 @@ params:
 
 inputs:
   - name: azure-oss-demos
-  - name: azure-oss-demos-ci
+  - name: azure-ossdemos-git
 
 outputs:
   - name: keys-folder
   - name: ansible-configs
 
 run:
-  path: azure-oss-demos-ci/jumpbox/tasks/create-jumpbox.sh
+  path: azure-ossdemos-git/jumpbox/tasks/create-jumpbox.sh

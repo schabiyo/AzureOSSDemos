@@ -15,10 +15,10 @@ params:
 
 
 inputs:
-  - name: azure-oss-demos-ci
+  - name: azure-ossdemos-git
 
 run:
-  path: azure-oss-demos-ci/jumpbox/tasks/validate-input.sh
+  path: azure-ossdemos-git/jumpbox/tasks/validate-input.sh
   args: [
     --service-principal, service_principal_id,
     --service-principal-pwd, service_principal_secret

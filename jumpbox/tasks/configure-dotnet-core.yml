@@ -14,9 +14,9 @@ params:
 
 
 inputs:
-  - name: azure-oss-demos-ci
+  - name: azure-ossdemos-git
   - name: keys-folder
   - name: ansible-configs
 
 run:
-  path: azure-oss-demos-ci/jumpbox/tasks/configure-dotnet-core.sh
+  path: azure-ossdemos-git/jumpbox/tasks/configure-dotnet-core.sh

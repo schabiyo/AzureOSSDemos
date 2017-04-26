@@ -9,10 +9,10 @@ BOLD="\e[4m"
 mkdir  ~/.ssh/
 
 cp keys-folder/* ~/.ssh/
-cp -f ansible-configs/hosts azure-oss-demos-ci/ansible/hosts
+cp -f ansible-configs/hosts azure-ossdemos-git/ansible/hosts
 
 ansiblecommand=" -i hosts ../../ansible-configs/playbook-configure-vs-code.yml --private-key ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa"
 #we need to run ansible-playbook in the same directory as the CFG file.  Go to that directory then back out...
-cd azure-oss-demos-ci/ansible
+cd azure-ossdemos-git/ansible
     ansible-playbook ${ansiblecommand}
 cd ..

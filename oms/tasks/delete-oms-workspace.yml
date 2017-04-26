@@ -17,7 +17,7 @@ params:
 
 
 inputs:
-  - name: azure-oss-demos-ci
+  - name: azure-ossdemos-git
 
 run:
-  path: azure-oss-demos-ci/oms/tasks/delete-oms-workspace.sh
+  path: azure-ossdemos-git/oms/tasks/delete-oms-workspace.sh

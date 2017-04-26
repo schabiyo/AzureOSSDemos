@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e -x
 
-source azure-oss-demos-ci/utils/pretty-echo.sh
+source azure-ossdemos-git/utils/pretty-echo.sh
 
 # 1-Login to Azure using the az command line
 MESSAGE="Logging in to Azure" ; blue_echo

@@ -24,7 +24,7 @@ params:
 
 
 inputs:
-  - name: azure-oss-demos-ci
+  - name: azure-ossdemos-git
 
 run:
-  path: azure-oss-demos-ci/iaas/tasks/create-iaas-vms.sh
+  path: azure-ossdemos-git/iaas/tasks/create-iaas-vms.sh
