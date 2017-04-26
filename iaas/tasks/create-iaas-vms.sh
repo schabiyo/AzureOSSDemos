@@ -113,6 +113,7 @@ chmod 600 ~/.ssh/*_id_rsa*
 az vm create \
   --resource-group $iaas_rg \
   --name "web1-${server_prefix}" \
+  --os-disk-name 'web1-disk' \
   --public-ip-address-dns-name "web1-${server_prefix}" \
   --availability-set iaaswebas \
   --size Standard_DS1_v2 \
@@ -126,6 +127,7 @@ MESSAGE="==>VM for the ASPNET Core App successfully created"; simple_green_echo
 az vm create \
   --resource-group $iaas_rg \ 
   --name "web2-${server_prefix}" \
+  --os-disk-name 'web2-disk' \
   --public-ip-address-dns-name "web2-${server_prefix}" \
   --availability-set iaaswebas \
   --size Standard_DS1_v2 \
@@ -149,7 +151,7 @@ az vm extension set \
 MESSAGE="==>VM successfully added to OMS Workspace"; simple_green_echo
 az vm extension set \
   --resource-group myResourceGroup \
-  --vm-name "web2${server_prefix} \
+  --vm-name "web2${server_prefix}" \
   --public-ip-address-dns-name "web2-${server_prefix}" \
   --name OmsAgentForLinux \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
