@@ -89,14 +89,14 @@ az network nic create -g $iaas_rg --name web1-nic-be --vnet-name  ossdemo-iaas-v
   --location $location \
   --public-ip-address web1pip \
   --lb-name IaasLb \
-  --network-security-group nsg-issa-demo
+  --network-security-group nsg-iaas-demo
 MESSAGE="==>NIC for the ASPNET Core Web App successfully created"; simple_green_echo
 az network nic create -g $iaas_rg --name web2-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
   --lb-address-pool "/subscriptions/$subscription_id/resourceGroups/$iaas_rg/providers/Microsoft.Network/loadBalancers/IaasLb/backendAddressPools/IaasLbbepool" \
   --location $location \
   --public-ip-address web2pip \
   --lb-name IaasLb \
-  --network-security-group nsg-issa-demo
+  --network-security-group nsg-iaas-demo
 MESSAGE="==>NIC for the eSHOP App successfully created"; simple_green_echo
 # Create a new virtual machine, this creates SSH keys if not present. 
 
@@ -166,11 +166,15 @@ az vm extension set \
   --settings '{"workspaceId": "'"$omsid"'"}'
 MESSAGE="==>VM successfully added to OMS WOrkspace"; simple_green_echo
 
-MESSAGE=" Insatalling Docker on the VMs using ansible" ; simple_blue_echo
+MESSAGE=" Installing Docker on the VMs using ansible" ; simple_blue_echo
 # Updatethe Host file with the 2 server host
 # we need to make sure we run the ansible playbook from this directory to pick up the cfg file
-cd azure-ossdemo-ci/ansible/environment/iaas/ 
- ansible-playbook -i iaas-hosts playbook-deploy-dockerengine.yml
+cd azure-oss-demos-ci/ansible
+    ansible-playbook ${ansiblecommand}
+cd ..
+
+cd azure-ossdemo-ci/ansible/ 
+ ansible-playbook -i iaas-hosts playbook-deploy-dockerengine.yml --private-key ~/.ssh/${server_prefix}_id_rsa
 cd ..
 
 
