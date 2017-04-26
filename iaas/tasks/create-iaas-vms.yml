@@ -17,14 +17,14 @@ params:
   utility_rg:
   iaas_rg:
   jumpbox_admin_password:
+  server_ssh_private_key:
+  server_ssh_public_key:
   server_admin_username:
   server_prefix:
 
 
 inputs:
   - name: azure-oss-demos-ci
-  - name: keys-folder
-  - name: ansible-configs
 
 run:
   path: azure-oss-demos-ci/iaas/tasks/create-iaas-vms.sh

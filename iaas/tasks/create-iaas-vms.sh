@@ -89,6 +89,31 @@ az network nic create -g $iaas_rg --name web2-nic-be --subnet WebSubnet \
   --network-security-group nsg-issa-demo
 
 # Create a new virtual machine, this creates SSH keys if not present. 
+
+# Init ssh folder and Copy ssh key file 
+#Get the SSH key from the configs adn add it to the ssh folder
+mkdir ~/.ssh
+
+
+#Had to do this as the key is being read in one single line
+printf "%s\n" "-----BEGIN RSA PRIVATE KEY-----" >> ~/.ssh/${server_prefix}_id_rsa
+printf "%s\n" $server_ssh_private_key | tail -n +5 | head -n -4 >>  ~/.ssh/${server_prefix}_id_rsa
+printf "%s" "-----END RSA PRIVATE KEY-----" >> ~/.ssh/jumpbox_${server_prefix}_id_rsa
+
+
+cat ~/.ssh/${server_prefix}_id_rsa
+echo $server_ssh_public_key >> ~/.ssh/${server_prefix}_id_rsa.pub
+# Add this to the config file
+echo -e "Host=web1-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
+chmod 600 ~/.ssh/config
+chmod 600 ~/.ssh/jumpbox*
+
+#Copy in the output folder
+cp ~/.ssh/config keys-folder/
+cp ~/.ssh/jumpbox* keys-folder/
+
+
+
 az vm create \
   --resource-group $iaas_rg \
   --authentication-type password \
@@ -100,7 +125,7 @@ az vm create \
   --nics web1-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \
   --storage-sku 'Premium_LRS' \
-  --ssh-key-value 
+  --ssh-key-value "~/.ssh/${jumpbox_prefix}_id_rsa.pub" 
 
 az vm create \
   --resource-group $iaas_rg 
@@ -113,7 +138,7 @@ az vm create \
   --nics web2-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \ 
   --storage-sku 'Premium_LRS' \ 
-  --ssh-key-value 
+  --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub"
 
 # Install and configure the OMS agent.
 az vm extension set \

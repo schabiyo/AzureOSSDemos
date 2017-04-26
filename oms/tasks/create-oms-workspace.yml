@@ -20,8 +20,6 @@ params:
 
 inputs:
   - name: azure-oss-demos-ci
-  - name: keys-folder
-  - name: ansible-configs
 
 
 run:
