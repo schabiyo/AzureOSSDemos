@@ -112,21 +112,21 @@ chmod 600 ~/.ssh/*_id_rsa*
 
 az vm create \
   --resource-group $iaas_rg \
-  --name "web1-$server_prefix" \
-  --public-ip-address-dns-name "web1-$server_prefix" \
+  --name "web1-${server_prefix}" \
+  --public-ip-address-dns-name "web1-${server_prefix}" \
   --availability-set iaaswebas \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
   --nics web1-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \
   --storage-sku 'Premium_LRS' \
-  --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" 
+  --ssh-key-value '~/.ssh/${server_prefix}_id_rsa.pub' 
 MESSAGE="==>VM for the ASPNET Core App successfully created"; simple_green_echo
 
 az vm create \
   --resource-group $iaas_rg \ 
-  --name "web2-$server_prefix" \
-  --public-ip-address-dns-name "web2-$server_prefix" \
+  --name "web2-${server_prefix}" \
+  --public-ip-address-dns-name "web2-${server_prefix}" \
   --availability-set iaaswebas \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
@@ -134,13 +134,13 @@ az vm create \
   --nics web2-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \ 
   --storage-sku 'Premium_LRS' \ 
-  --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub"
+  --ssh-key-value '~/.ssh/${server_prefix}_id_rsa.pub'
 MESSAGE="==>VM for the eSho App successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 az vm extension set \
   --resource-group myResourceGroup \
   --vm-name web1$server_prefix \
-  --public-ip-address-dns-name web1'-$server_prefix' \
+  --public-ip-address-dns-name "web1-${server_prefix}" \
   --name OmsAgentForLinux \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
@@ -150,7 +150,7 @@ MESSAGE="==>VM successfully added to OMS Workspace"; simple_green_echo
 az vm extension set \
   --resource-group myResourceGroup \
   --vm-name web2$server_prefix \
-  --public-ip-address-dns-name web2'-$server_prefix' \
+  --public-ip-address-dns-name "web2-${server_prefix}" \
   --name OmsAgentForLinux \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
