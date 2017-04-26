@@ -139,7 +139,7 @@ MESSAGE="==>VM for the eSho App successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 az vm extension set \
   --resource-group myResourceGroup \
-  --vm-name web1$server_prefix \
+  --vm-name "web1${server_prefix}" \
   --public-ip-address-dns-name "web1-${server_prefix}" \
   --name OmsAgentForLinux \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
@@ -149,7 +149,7 @@ az vm extension set \
 MESSAGE="==>VM successfully added to OMS Workspace"; simple_green_echo
 az vm extension set \
   --resource-group myResourceGroup \
-  --vm-name web2$server_prefix \
+  --vm-name "web2${server_prefix} \
   --public-ip-address-dns-name "web2-${server_prefix}" \
   --name OmsAgentForLinux \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
@@ -161,11 +161,11 @@ MESSAGE=" Installing Docker on the VMs using ansible" ; simple_blue_echo
 # Updatethe Host file with the 2 server host
 # we need to make sure we run the ansible playbook from this directory to pick up the cfg file
 #May be just create the hosts file on the fly
-printf "%s\n" "[dockerhosts]" >> azure-ossdemo-ci/docker-hosts
-printf "%s\n" "web1-$server_prefix" >> azure-ossdemo-ci/docker-hosts
-printf "%s\n" "web2-$server_prefix" >> azure-ossdemo-ci/docker-hosts
-printf "%s\n" "[buildbox]" >> azure-ossdemo-ci/docker-hosts
-printf "%s\n" "localhost" >> azure-ossdemo-ci/docker-hosts
+printf "%s\n" "[dockerhosts]" >> azure-ossdemo-ci/ansible/docker-hosts
+printf "%s\n" "web1-$server_prefix" >> azure-ossdemo-ci/ansible/docker-hosts
+printf "%s\n" "web2-$server_prefix" >> azure-ossdemo-ci/ansible/docker-hosts
+printf "%s\n" "[buildbox]" >> azure-ossdemo-ci/ansible/docker-hosts
+printf "%s\n" "localhost" >> azure-ossdemo-ci/ansible/docker-hosts
 
 cd azure-ossdemo-ci/ansible/ 
  ansible-playbook -i docker-hosts playbook-deploy-dockerengine.yml --private-key ~/.ssh/${server_prefix}_id_rsa
