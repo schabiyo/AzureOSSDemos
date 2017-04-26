@@ -111,7 +111,6 @@ printf "%s\n" $server_ssh_private_key | tail -n +5 | head -n -4 >>  ~/.ssh/${ser
 printf "%s" "-----END RSA PRIVATE KEY-----" >> ~/.ssh/jumpbox_${server_prefix}_id_rsa
 
 
-cat ~/.ssh/${server_prefix}_id_rsa
 echo $server_ssh_public_key >> ~/.ssh/${server_prefix}_id_rsa.pub
 # Add this to the config file
 echo -e "Host=web1-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
@@ -121,7 +120,6 @@ chmod 600 ~/.ssh/*_id_rsa*
 
 az vm create \
   --resource-group $iaas_rg \
-  --authentication-type password \
   --name web1'-$server_prefix' \
   --public-ip-address-dns-name web1'-$server_prefix' \
   --availability-set iaaswebas \
@@ -135,7 +133,6 @@ MESSAGE="==>VM for the ASPNET Core App successfully created"; simple_green_echo
 
 az vm create \
   --resource-group $iaas_rg 
-  --authentication-type password \
   --name web2'-$server_prefix' 
   --availability-set iaaswebas \
   --size Standard_DS1_v2 \
