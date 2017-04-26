@@ -22,7 +22,6 @@ az login --service-principal -u "$service_principal_id" -p "$service_principal_s
 
 # Create a resource group.
 az group create --name $iaas_rg --location $location
-
 # Create a virtual network and a public IP address for the front-end IP pool
 MESSAGE="==>Resource group successfully created"; simple_green_echo
 az network vnet create -g $iaas_rg  -n ossdemo-iaas-vnet --address-prefix 10.0.0.0/16 --subnet-name WebSubnet --subnet-prefix 10.0.0.0/24 -l $location
@@ -85,14 +84,14 @@ az network lb rule create -g $iaas_rg --lb-name IaasLb --name lb-web81-rule \
 MESSAGE="==>Load Balancer Rule for port 81 successfully created"; simple_green_echo
 
 #Create NICs for the 2 VMs
-az network nic create -g $iaas_rg --name web1-nic-be --subnet WebSubnet \
+az network nic create -g $iaas_rg --name web1-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
   --lb-address-pool "/subscriptions/$subscription_id/resourceGroups/$iaas_rg/providers/Microsoft.Network/loadBalancers/IaasLb/backendAddressPools/IaasLbbepool" \
   --location $location \
   --public-ip-address web1pip \
   --lb-name IaasLb \
   --network-security-group nsg-issa-demo
 MESSAGE="==>NIC for the ASPNET Core Web App successfully created"; simple_green_echo
-az network nic create -g $iaas_rg --name web2-nic-be --subnet WebSubnet \
+az network nic create -g $iaas_rg --name web2-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
   --lb-address-pool "/subscriptions/$subscription_id/resourceGroups/$iaas_rg/providers/Microsoft.Network/loadBalancers/IaasLb/backendAddressPools/IaasLbbepool" \
   --location $location \
   --public-ip-address web2pip \
@@ -117,13 +116,7 @@ echo $server_ssh_public_key >> ~/.ssh/${server_prefix}_id_rsa.pub
 # Add this to the config file
 echo -e "Host=web1-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
 chmod 600 ~/.ssh/config
-chmod 600 ~/.ssh/jumpbox*
-
-#Copy in the output folder
-cp ~/.ssh/config keys-folder/
-cp ~/.ssh/jumpbox* keys-folder/
-
-
+chmod 600 ~/.ssh/*_id_rsa*
 
 az vm create \
   --resource-group $iaas_rg \
