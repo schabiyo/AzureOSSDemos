@@ -7,7 +7,7 @@ az login --service-principal -u $service_principal_id -p $service_principal_secr
 
 az acr create -n $registry_name -g $utility_rg -l $location --sku $registry_sku --admin-enabled true
 
-az acr credential renew \
+az acr credential show \
   --name $registry_name \
   --resource-group $utility_rg
 
