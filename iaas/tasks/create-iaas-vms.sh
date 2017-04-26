@@ -142,7 +142,7 @@ az vm create \
 MESSAGE="==>VM for the eShop App successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 az vm extension set \
-  --resource-group myResourceGroup \
+  --resource-group $iaas_rg \
   --vm-name "web1${server_prefix}" \
   --public-ip-address-dns-name "web1-${server_prefix}" \
   --name OmsAgentForLinux \
@@ -152,7 +152,7 @@ az vm extension set \
 
 MESSAGE="==>VM successfully added to OMS Workspace"; simple_green_echo
 az vm extension set \
-  --resource-group myResourceGroup \
+  --resource-group $iaas_rg \
   --vm-name "web2${server_prefix}" \
   --public-ip-address-dns-name "web2-${server_prefix}" \
   --name OmsAgentForLinux \
