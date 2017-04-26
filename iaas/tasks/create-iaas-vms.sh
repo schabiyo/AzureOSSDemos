@@ -46,18 +46,18 @@ az network nsg create -g $iaas_rg -n nsg-iaas-demo -l $location
 #Create NSG Rules
 
 az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n ssh-rule --priority 110 \
-  --source-address-prefix "Internet" --source-port-range * \
-  --destination-address-prefix * --destination-port-range 22 --access Allow \
+  --source-address-prefix "Internet" --source-port-range '*' \
+  --destination-address-prefix '*' --destination-port-range 22 --access Allow \
   --protocol Tcp --description "Allow SSH Accesss."
 
 
 az network nsg rule create -g $iaas_rule --nsg-name nsg-iaas-demo -n http-aspnetcore-demo-rule --priority 120 \
-  --source-address-prefix "Internet" --source-port-range * --destination-address-prefix * \
+  --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
   --destination-port-range 80 --access Allow --protocol Tcp --direction "Inbound"
 
 
 az network nsg rule create -g $iaas_rule --nsg-name nsg-iaas-demo -n http-eshop-demo-rule --priority 130 \
-  --source-address-prefix "Internet" --source-port-range * --destination-address-prefix * \
+  --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
   --destination-port-range "5100-5105" --access Allow --protocol Tcp --direction "Inbound"
 
 #Create LB Probes
