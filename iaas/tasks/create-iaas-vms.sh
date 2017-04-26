@@ -123,7 +123,7 @@ az vm create \
   --authentication-type password \
   --name web1'-$server_prefix' \
   --public-ip-address-dns-name web1'-$server_prefix' \
-  --availability-set iaas-web-as \
+  --availability-set iaaswebas \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
   --nics web1-nic-be \
@@ -136,7 +136,7 @@ az vm create \
   --resource-group $iaas_rg 
   --authentication-type password \
   --name web2'-$server_prefix' 
-  --availability-set iaas-web-as \
+  --availability-set iaaswebas \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
   --location $location \
@@ -169,12 +169,15 @@ MESSAGE="==>VM successfully added to OMS WOrkspace"; simple_green_echo
 MESSAGE=" Installing Docker on the VMs using ansible" ; simple_blue_echo
 # Updatethe Host file with the 2 server host
 # we need to make sure we run the ansible playbook from this directory to pick up the cfg file
-cd azure-oss-demos-ci/ansible
-    ansible-playbook ${ansiblecommand}
-cd ..
+#May be just create the hosts file on the fly
+printf "%s\n" "[dockerhosts]" >> azure-ossdemo-ci/docker-hosts
+printf "%s\n" "web1-$server_prefix" >> azure-ossdemo-ci/docker-hosts
+printf "%s\n" "web2-$server_prefix" >> azure-ossdemo-ci/docker-hosts
+printf "%s\n" "[buildbox]" >> azure-ossdemo-ci/docker-hosts
+printf "%s\n" "localhost" >> azure-ossdemo-ci/docker-hosts
 
 cd azure-ossdemo-ci/ansible/ 
- ansible-playbook -i iaas-hosts playbook-deploy-dockerengine.yml --private-key ~/.ssh/${server_prefix}_id_rsa
+ ansible-playbook -i docker-hosts playbook-deploy-dockerengine.yml --private-key ~/.ssh/${server_prefix}_id_rsa
 cd ..
 
 
