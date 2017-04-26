@@ -163,7 +163,8 @@ MESSAGE=" Installing Docker on the VMs using ansible" ; simple_blue_echo
 # Updatethe Host file with the 2 server host
 # we need to make sure we run the ansible playbook from this directory to pick up the cfg file
 #May be just create the hosts file on the fly
-printf "%s\n" "'[dockerhosts']" >> azure-ossdemo-git/ansible/docker-hosts
+touch azure-ossdemo-git/ansible/docker-hosts
+printf "%s\n" "[dockerhosts]" >> azure-ossdemo-git/ansible/docker-hosts
 printf "%s\n" "web1-$server_prefix" >> azure-ossdemo-git/ansible/docker-hosts
 printf "%s\n" "web2-$server_prefix" >> azure-ossdemo-git/ansible/docker-hosts
 printf "%s\n" "'[buildbox]'" >> azure-ossdemo-git/ansible/docker-hosts
