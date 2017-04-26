@@ -137,7 +137,7 @@ az vm create \
   --image "OpenLogic:CentOS:7.2:latest" \ 
   --storage-sku 'Premium_LRS' \ 
   --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub"
-MESSAGE="==>VM for the eSho App successfully created"; simple_green_echo
+MESSAGE="==>VM for the eShop App successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 az vm extension set \
   --resource-group myResourceGroup \
@@ -157,7 +157,7 @@ az vm extension set \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
   --settings '{"workspaceId": "'"$omsid"'"}'
-MESSAGE="==>VM successfully added to OMS WOrkspace"; simple_green_echo
+MESSAGE="==>OMS agent successfully added to the VMs"; simple_green_echo
 
 MESSAGE=" Installing Docker on the VMs using ansible" ; simple_blue_echo
 # Updatethe Host file with the 2 server host
