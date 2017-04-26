@@ -120,7 +120,7 @@ az vm create \
   --nics web1-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \
   --storage-sku 'Premium_LRS' \
-  --ssh-key-value '~/.ssh/${server_prefix}_id_rsa.pub' 
+  --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" 
 MESSAGE="==>VM for the ASPNET Core App successfully created"; simple_green_echo
 
 az vm create \
@@ -134,7 +134,7 @@ az vm create \
   --nics web2-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \ 
   --storage-sku 'Premium_LRS' \ 
-  --ssh-key-value '~/.ssh/${server_prefix}_id_rsa.pub'
+  --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub"
 MESSAGE="==>VM for the eSho App successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 az vm extension set \
