@@ -120,8 +120,8 @@ chmod 600 ~/.ssh/*_id_rsa*
 
 az vm create \
   --resource-group $iaas_rg \
-  --name web1'-$server_prefix' \
-  --public-ip-address-dns-name web1'-$server_prefix' \
+  --name "web1-$server_prefix" \
+  --public-ip-address-dns-name "web1-$server_prefix" \
   --availability-set iaaswebas \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
@@ -133,7 +133,8 @@ MESSAGE="==>VM for the ASPNET Core App successfully created"; simple_green_echo
 
 az vm create \
   --resource-group $iaas_rg 
-  --name web2'-$server_prefix' 
+  --name "web2-$server_prefix" \
+  --public-ip-address-dns-name "web2-$server_prefix" \
   --availability-set iaaswebas \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
