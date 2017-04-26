@@ -144,7 +144,6 @@ MESSAGE="==>VM for the eShop App successfully created"; simple_green_echo
 az vm extension set \
   --resource-group $iaas_rg \
   --vm-name "web1-${server_prefix}" \
-  --public-ip-address-dns-name "web1-${server_prefix}" \
   --name OmsAgentForLinux \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
@@ -154,7 +153,6 @@ MESSAGE="==>VM successfully added to OMS Workspace"; simple_green_echo
 az vm extension set \
   --resource-group $iaas_rg \
   --vm-name "web2-${server_prefix}" \
-  --public-ip-address-dns-name "web2-${server_prefix}" \
   --name OmsAgentForLinux \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
