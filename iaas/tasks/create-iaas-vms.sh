@@ -62,23 +62,27 @@ az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n http-aspnetco
   --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
   --destination-port-range 80 --access Allow --protocol Tcp --direction "Inbound"
 
+MESSAGE="==>Network Security rule for the ASPNET Core Web App successfully created"; simple_green_echo
 
 az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n http-eshop-demo-rule --priority 130 \
   --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
   --destination-port-range "5100-5105" --access Allow --protocol Tcp --direction "Inbound"
 
+MESSAGE="==>Network Security rule for the eShop App successfully created"; simple_green_echo
 #Create LB Probes
 az network lb probe create -g $iaas_rg --lb-name IaasLb  --name healthprobe --protocol "tcp" --port 80 --interval 15
-
+MESSAGE="==>Load Balancer Probe successfully created"; simple_green_echo
 #Create LB Rules
 az network lb rule create -g $iaas_rg --lb-name IaasLb --name lb-web80-rule \
   --protocol tcp --frontend-port 80 --backend-port 80 \
   --frontend-ip-name LoadBalancerFrontEnd --backend-pool-name IaasLbbepool
 
+MESSAGE="==>Load Balancer Rule for port 80 successfully created"; simple_green_echo
 
 az network lb rule create -g $iaas_rg --lb-name IaasLb --name lb-web81-rule \
   --protocol tcp --frontend-port 81 --backend-port 81 \
   --frontend-ip-name LoadBalancerFrontEnd --backend-pool-name IaasLbbepool
+MESSAGE="==>Load Balancer Rule for port 81 successfully created"; simple_green_echo
 
 #Create NICs for the 2 VMs
 az network nic create -g $iaas_rg --name web1-nic-be --subnet WebSubnet \
@@ -87,14 +91,14 @@ az network nic create -g $iaas_rg --name web1-nic-be --subnet WebSubnet \
   --public-ip-address web1pip \
   --lb-name IaasLb \
   --network-security-group nsg-issa-demo
-
+MESSAGE="==>NIC for the ASPNET Core Web App successfully created"; simple_green_echo
 az network nic create -g $iaas_rg --name web2-nic-be --subnet WebSubnet \
   --lb-address-pool "/subscriptions/$subscription_id/resourceGroups/$iaas_rg/providers/Microsoft.Network/loadBalancers/IaasLb/backendAddressPools/IaasLbbepool" \
   --location $location \
   --public-ip-address web2pip \
   --lb-name IaasLb \
   --network-security-group nsg-issa-demo
-
+MESSAGE="==>NIC for the eSHOP App successfully created"; simple_green_echo
 # Create a new virtual machine, this creates SSH keys if not present. 
 
 # Init ssh folder and Copy ssh key file 
@@ -133,6 +137,7 @@ az vm create \
   --image "OpenLogic:CentOS:7.2:latest" \
   --storage-sku 'Premium_LRS' \
   --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" 
+MESSAGE="==>VM for the ASPNET Core App successfully created"; simple_green_echo
 
 az vm create \
   --resource-group $iaas_rg 
@@ -146,7 +151,7 @@ az vm create \
   --image "OpenLogic:CentOS:7.2:latest" \ 
   --storage-sku 'Premium_LRS' \ 
   --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub"
-
+MESSAGE="==>VM for the eSho App successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 az vm extension set \
   --resource-group myResourceGroup \
@@ -157,7 +162,7 @@ az vm extension set \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
   --settings '{"workspaceId": "'"$omsid"'"}'
 
-
+MESSAGE="==>VM successfully added to OMS Workspace"; simple_green_echo
 az vm extension set \
   --resource-group myResourceGroup \
   --vm-name web2$server_prefix \
@@ -166,8 +171,7 @@ az vm extension set \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
   --settings '{"workspaceId": "'"$omsid"'"}'
-
-
+MESSAGE="==>VM successfully added to OMS WOrkspace"; simple_green_echo
 
 MESSAGE=" Insatalling Docker on the VMs using ansible" ; simple_blue_echo
 # Updatethe Host file with the 2 server host
