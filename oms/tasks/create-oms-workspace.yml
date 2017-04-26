@@ -23,10 +23,6 @@ inputs:
   - name: keys-folder
   - name: ansible-configs
 
-outputs:
-  - name: keys-folder
-  - name: ansible-configs
-
 
 run:
   path: azure-oss-demos-ci/oms/tasks/create-oms-workspace.sh
