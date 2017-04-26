@@ -122,10 +122,11 @@ az vm create \
   --image "OpenLogic:CentOS:7.2:latest" \
   --storage-sku 'Premium_LRS' \
   --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" 
+
 MESSAGE="==>VM for the ASPNET Core App successfully created"; simple_green_echo
 
 az vm create \
-  --resource-group $iaas_rg \ 
+  --resource-group $iaas_rg \
   --name "web2-${server_prefix}" \
   --os-disk-name 'web2-disk' \
   --public-ip-address-dns-name "web2-${server_prefix}" \
@@ -134,9 +135,10 @@ az vm create \
   --admin-username $server_admin_username \
   --location $location \
   --nics web2-nic-be \
-  --image "OpenLogic:CentOS:7.2:latest" \ 
-  --storage-sku 'Premium_LRS' \ 
+  --image "OpenLogic:CentOS:7.2:latest" \
+  --storage-sku 'Premium_LRS' \
   --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub"
+
 MESSAGE="==>VM for the eShop App successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 az vm extension set \
