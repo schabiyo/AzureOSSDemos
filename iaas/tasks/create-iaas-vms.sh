@@ -7,19 +7,12 @@ source azure-oss-demos-ci/utils/getWorkspaceItem.sh
 source azure-oss-demos-ci/utils/getWorkspaceKey.sh
 source azure-oss-demos-ci/utils/getWorkspaceId.sh
 
-MESSAGE="Getting an access token" ; simple_blue_echo
-
 getToken $tenant_id $service_principal_id $service_principal_secret token
-
 # Get the Workspace IS
 getWorkspaceId $token $oms_workspace_name $utility_rg $subscription_id omsid
-
-
 #Get the Workspace Keys
 getWorkspaceKey $token $oms_workspace_name $utility_rg $subscription_id omskey
-
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
-
 # Create a resource group.
 az group create --name $iaas_rg --location $location
 # Create a virtual network and a public IP address for the front-end IP pool
@@ -49,7 +42,6 @@ MESSAGE="==>Load Balancer NAT rules successfully created"; simple_green_echo
 az network nsg create -g $iaas_rg -n nsg-iaas-demo -l $location
 MESSAGE="==>Network Security Group successfully created"; simple_green_echo
 #Create NSG Rules
-
 az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n ssh-rule --priority 110 \
   --source-address-prefix "Internet" --source-port-range '*' \
   --destination-address-prefix '*' --destination-port-range 22 --access Allow \
@@ -132,7 +124,7 @@ az vm create \
 MESSAGE="==>VM for the ASPNET Core App successfully created"; simple_green_echo
 
 az vm create \
-  --resource-group $iaas_rg 
+  --resource-group $iaas_rg \ 
   --name "web2-$server_prefix" \
   --public-ip-address-dns-name "web2-$server_prefix" \
   --availability-set iaaswebas \
