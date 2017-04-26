@@ -28,7 +28,7 @@ az network vnet create -g $iaas_rg  -n ossdemo-iaas-vnet --address-prefix 10.0.0
 #Create a Public IP  for web1
 az network public-ip create -g $iaas_rg -n web1pip --dns-name web1-$server_prefix --allocation-method Static -l $location
 #Create public IP for web
-az network public-ip create -g $iaas_rg -n web2pip --dns-name web2-$server_prefixs --allocation-method Static -l $location
+az network public-ip create -g $iaas_rg -n web2pip --dns-name web2-$server_prefix --allocation-method Static -l $location
 #Create public IP for LB
 az network public-ip create -g $iaas_rg -n lbpip --dns-name $server_prefix"-iaas" --allocation-method Static -l $location
 #Create a LB
