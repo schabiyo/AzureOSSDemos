@@ -4,6 +4,7 @@ set -e -x
 source azure-ossdemos-git/utils/pretty-echo.sh
 source azure-ossdemos-git/utils/getOauthToken.sh
 source azure-ossdemos-git/utils/getWorkspaceItem.sh
+source azure-ossdemos-git/utils/getWorkspaceUrl.sh
 
 MESSAGE="Getting an access token from AAD" ; simple_blue_echo
 
@@ -29,7 +30,10 @@ echo result
 if [[ $result == *"error"* ]]; then
    echo $result
    if [[ $result == *"The value provided for Id is invalid"* ]]; then
-   	MESSAHE="==>Looks like te WOrkspace already exist"; simple_blue_echo
+   	MESSAGE="==>Looks like te WOrkspace already exist"; simple_blue_echo
+        #Get the Workspace
+        GetWorspaceUrl $token $oms_workspace_name $utility_rg $subscription_id portal_url
+        MESSAGE="Workspace was successully created and can be accessed using the following URL:${portal_url}" ; simple_blue_echo
         exit 0
    fi
    MESSAGE="==>Make sure a Workspace with the same name does not exist and try again.." ; simple_red_echo
@@ -51,7 +55,7 @@ do
    echo "provisioningState:"$state
    if [[ $state == "Succeeded" ]]; then
      portal_url=$(jq .properties.portalUrl <<< $result)
-     MESSAGE="Worksapce was successully created and can be accessed using the following URL:${portalUrl}" ; simple_green_echo
+     MESSAGE="Workspace was successully created and can be accessed using the following URL:${portal_url}" ; simple_green_echo
      exit 0
    elif (( $state == "Creating" || $state == "ProvisioningAccount" )); then
      echo "Waiting..."
