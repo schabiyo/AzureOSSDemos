@@ -2,9 +2,6 @@
 set -e -x
 
 #Script Formatting
-RESET="\e[0m"
-INPUT="\e[7m"
-BOLD="\e[4m"
 
 source azure-ossdemos-git/utils/pretty-echo.sh
 
