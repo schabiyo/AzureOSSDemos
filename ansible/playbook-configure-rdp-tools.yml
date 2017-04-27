@@ -44,4 +44,4 @@
 
 # Install desktop tools
   - name: Gnome
-    command: yum -y groupinstall "GNOME Desktop" "Graphical Administration 
+    command: yum -y groupinstall "GNOME Desktop" "Graphical Administration Tools"
