@@ -167,8 +167,7 @@ touch azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "[dockerhosts]" >> azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "web1-${server_prefix}.${location}.cloudapp.azure.com" >> azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "web2-${server_prefix}.${location}.cloudapp.azure.com" >> azure-ossdemos-git/ansible/docker-hosts
-printf "%s\n" "[buildbox]" >> azure-ossdemos-git/ansible/docker-hosts
-printf "%s\n" "localhost" >> azure-ossdemos-git/ansible/docker-hosts
+sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${server_admin_username}@g" azure-ossdemos-git/ansible/playbook-deploy-dockerengine.yml
 
 cd azure-ossdemos-git/ansible/ 
  ansible-playbook -i docker-hosts playbook-deploy-dockerengine.yml --private-key ~/.ssh/${server_prefix}_id_rsa
