@@ -5,5 +5,8 @@ source azure-ossdemos-git/utils/pretty-echo.sh
 
 az login --service-principal -u $service_principal_id -p $service_principal_secret --tenant $tenant_id
 
-az acr create -n $registry_name -g $utility_rg -l $location --sku $registry_sku --admin-enabled true
+az acr delete -n $registry_name
+
+MESSAGE="==>Azure Container Registry Successfully deleted" ; simple_green_echo
+
 
