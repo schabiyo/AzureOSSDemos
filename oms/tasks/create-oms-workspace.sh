@@ -33,7 +33,7 @@ if [[ $result == *"error"* ]]; then
    	MESSAGE="==>Looks like te WOrkspace already exist"; simple_blue_echo
         #Get the Workspace
         getWorkspaceUrl $token $oms_workspace_name $utility_rg $subscription_id portal_url
-        MESSAGE="Workspace was successully created and can be accessed using the following URL:${portal_url}" ; simple_blue_echo
+        MESSAGE="==>Please access the workspace using the following URL:${portal_url}" ; simple_blue_echo
         exit 0
    fi
    MESSAGE="==>Make sure a Workspace with the same name does not exist and try again.." ; simple_red_echo
