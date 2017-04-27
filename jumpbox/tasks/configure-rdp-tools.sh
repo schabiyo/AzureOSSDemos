@@ -6,7 +6,7 @@ set -e -x
 source azure-ossdemos-git/utils/pretty-echo.sh
 
 
-MESSAGE="Installing RDP tools on the Jumpbox " ; simple_blue_echo
+MESSAGE="Installing RDP tools " ; simple_blue_echo
 
 mkdir  ~/.ssh/
 
