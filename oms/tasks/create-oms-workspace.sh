@@ -32,7 +32,7 @@ if [[ $result == *"error"* ]]; then
    if [[ $result == *"The value provided for Id is invalid"* ]]; then
    	MESSAGE="==>Looks like te WOrkspace already exist"; simple_blue_echo
         #Get the Workspace
-        GetWorspaceUrl $token $oms_workspace_name $utility_rg $subscription_id portal_url
+        GetWorkspaceUrl $token $oms_workspace_name $utility_rg $subscription_id portal_url
         MESSAGE="Workspace was successully created and can be accessed using the following URL:${portal_url}" ; simple_blue_echo
         exit 0
    fi
