@@ -112,7 +112,7 @@ sed -i -e "s@JUMPBOXSERVER-REPLACE.eastus.cloudapp.azure.com@jumpbox-${jumpbox_p
 sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/ansible/playbook-configure-basics.yml
 sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/ansible/playbook-configure-dotnet-core.yml
 sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/ansible/playbook-configure-vs-code.yml
-
+sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/ansible/playbook-configure-rdp-tools.yml
 
 MESSAGE="Installing and configuring Ansible on the Jumpbox" ; simple_blue_echo
 
