@@ -165,8 +165,8 @@ MESSAGE=" Installing Docker on the VMs using ansible" ; simple_blue_echo
 #May be just create the hosts file on the fly
 touch azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "[dockerhosts]" >> azure-ossdemos-git/ansible/docker-hosts
-printf "%s\n" "web1-$server_prefix" >> azure-ossdemos-git/ansible/docker-hosts
-printf "%s\n" "web2-$server_prefix" >> azure-ossdemos-git/ansible/docker-hosts
+printf "%s\n" "web1-${server_prefix}.${location}.cloudapp.azure.com" >> azure-ossdemos-git/ansible/docker-hosts
+printf "%s\n" "web2-${server_prefix}.${location}.cloudapp.azure.com" >> azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "[buildbox]" >> azure-ossdemos-git/ansible/docker-hosts
 printf "%s\n" "localhost" >> azure-ossdemos-git/ansible/docker-hosts
 
