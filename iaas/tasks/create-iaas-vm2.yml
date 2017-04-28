@@ -25,10 +25,8 @@ params:
 
 inputs:
   - name: azure-ossdemos-git
-
-outputs:
   - name: keys-out
   - name: ansible-out
 
 run:
-  path: azure-ossdemos-git/iaas/tasks/create-networking-resources.sh
+  path: azure-ossdemos-git/iaas/tasks/create-iaas-vm2.sh
