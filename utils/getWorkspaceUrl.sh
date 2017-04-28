@@ -26,7 +26,7 @@ getWorkspaceUrl() {
   else
     #Get the state
     workspace_url=$(jq .properties.portalUrl <<< $result)
-    echo "Portal Url:" $workspace_url
+    #echo "Portal Url:" $workspace_url
     TRIMMED_RESULT="${workspace_url%\"}"
     TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
     eval $responsevar="'$TRIMMED_RESULT'"

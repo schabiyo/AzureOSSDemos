@@ -26,7 +26,6 @@ getWorkspaceKey() {
   else
     #Get the state
     key=$(jq .primarySharedKey <<< $result)
-    echo "key:" $key
     TRIMMED_RESULT="${key%\"}"
     TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
     eval $responsevar="'$TRIMMED_RESULT'"

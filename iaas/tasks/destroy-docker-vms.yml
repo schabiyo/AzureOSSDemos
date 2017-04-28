@@ -19,4 +19,4 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/jumpbox/tasks/destroy-docker-vms.sh
+  path: azure-ossdemos-git/iaas/tasks/destroy-docker-vms.sh

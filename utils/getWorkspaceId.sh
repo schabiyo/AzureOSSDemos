@@ -26,7 +26,6 @@ getWorkspaceId() {
   else
     #Get the state
     customer_id=$(jq .properties.customerId <<< $result)
-    echo "customerID:" $customer_id
     TRIMMED_RESULT="${customer_id%\"}"
     TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
     eval $responsevar="'$TRIMMED_RESULT'"
