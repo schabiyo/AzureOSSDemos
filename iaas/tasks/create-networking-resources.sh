@@ -101,7 +101,7 @@ cp ~/.ssh/* keys-out/
 
 touch parameters-out/oms-workspace
 printf "%s\n" "{" >> parameters-out/oms-workspace
-printf "%s\n" "  \"workspaceid\": \"$omsid\"" >> parameters-out/oms-workspace
+printf "%s\n" "  \"workspaceid\": \"$omsid\"," >> parameters-out/oms-workspace
 printf "%s\n" "  \"workspacekey\": \"$omskey\"" >> parameters-out/oms-workspace
 printf "%s\n" "}" >> parameters-out/oms-workspace
 MESSAGE="==>Initial Networking configuation successfully completed"; simple_green_echo
