@@ -2,10 +2,6 @@
 set -e -x
 
 source azure-ossdemos-git/utils/pretty-echo.sh
-source azure-ossdemos-git/utils/getOauthToken.sh
-source azure-ossdemos-git/utils/getWorkspaceItem.sh
-source azure-ossdemos-git/utils/getWorkspaceKey.sh
-source azure-ossdemos-git/utils/getWorkspaceId.sh
 
 omsid=$(cat parameters-out/oms-workspace | jq '.workspaceid')
 omsid=( $(eval echo ${omsid[@]}) )
@@ -16,11 +12,13 @@ omskey=( $(eval echo ${omskey[@]}) )
 echo $omskey
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id" &> /dev/null
+az account set --subscription "$subscription_id"  &> /dev/null
+
 # Create a resource group.
 az group create --name $iaas_rg --location $location &> /dev/null
 #Create public IP for VM2
 az network public-ip create -g $iaas_rg -n web1pip --dns-name web1-$server_prefix --allocation-method Static -l $location &> /dev/null
-MESSAGE="==>Public IP for Web Server 2 successfully created"; simple_green_echo
+MESSAGE="==>Public IP for VM1 successfully created"; simple_green_echo
 #Create NICs for the VM2
 az network nic create -g $iaas_rg --name web1-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
   --lb-address-pool "/subscriptions/$subscription_id/resourceGroups/$iaas_rg/providers/Microsoft.Network/loadBalancers/IaasLb/backendAddressPools/IaasLbbepool" \

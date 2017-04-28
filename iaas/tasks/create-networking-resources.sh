@@ -12,67 +12,69 @@ getToken $tenant_id $service_principal_id $service_principal_secret token
 getWorkspaceId $token $oms_workspace_name $utility_rg $subscription_id omsid
 #Get the Workspace Keys
 getWorkspaceKey $token $oms_workspace_name $utility_rg $subscription_id omskey
-az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
+az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"  &> /dev/null
+az account set --subscription "$subscription_id"  &> /dev/null
 # Create a resource group.
-az group create --name $iaas_rg --location $location
+az group create --name $iaas_rg --location $location  &> /dev/null
 # Create a virtual network and a public IP address for the front-end IP pool
 MESSAGE="==>Resource group successfully created"; simple_green_echo
-az network vnet create -g $iaas_rg  -n ossdemo-iaas-vnet --address-prefix 10.0.0.0/16 --subnet-name WebSubnet --subnet-prefix 10.0.0.0/24 -l $location
+az network vnet create -g $iaas_rg  -n ossdemo-iaas-vnet --address-prefix 10.0.0.0/16 --subnet-name WebSubnet --subnet-prefix 10.0.0.0/24 -l $location &> /dev/null
 MESSAGE="==>VNET successfully created"; simple_green_echo
 #Create a Public IP  for web1
-az network public-ip create -g $iaas_rg -n web1pip --dns-name web1-$server_prefix --allocation-method Static -l $location
+az network public-ip create -g $iaas_rg -n web1pip --dns-name web1-$server_prefix --allocation-method Static -l $location &> /dev/null
 MESSAGE="==>Public IP for Web Server 1 successfully created"; simple_green_echo
 #Create public IP for web
-az network public-ip create -g $iaas_rg -n web2pip --dns-name web2-$server_prefix --allocation-method Static -l $location
+az network public-ip create -g $iaas_rg -n web2pip --dns-name web2-$server_prefix --allocation-method Static -l $location &> /dev/null
 MESSAGE="==>Public IP for Web Server 2 successfully created"; simple_green_echo
 #Create public IP for LB
-az network public-ip create -g $iaas_rg -n lbpip --dns-name $server_prefix"-iaas" --allocation-method Static -l $location
+az network public-ip create -g $iaas_rg -n lbpip --dns-name $server_prefix"-iaas" --allocation-method Static -l $location &> /dev/null
 MESSAGE="==>Public IP for the Load balancer successfully created"; simple_green_echo
 #Create a LB
-az network lb create -g $iaas_rg -n IaasLb --vnet-name ossdemo-iaas-vnet  --public-ip-address lbpip
+az network lb create -g $iaas_rg -n IaasLb --vnet-name ossdemo-iaas-vnet  --public-ip-address lbpip &> /dev/null
 MESSAGE="==> Load balancer successfully created"; simple_green_echo
 #Create the Availability Set
-az vm availability-set create -n iaaswebas --platform-fault-domain-count 2 --platform-update-domain-count 5 -g $iaas_rg
+az vm availability-set create -n iaaswebas --platform-fault-domain-count 2 --platform-update-domain-count 5 -g $iaas_rg &> /dev/null
 MESSAGE="==>Availability Set successfully created"; simple_green_echo
 #Create NAT RUles
-az network lb inbound-nat-rule create -g $iaas_rg --lb-name IaasLb --name ssh1 --protocol tcp --frontend-port 21 --backend-port 22  --frontend-ip-name LoadBalancerFrontEnd
-az network lb inbound-nat-rule create -g $iaas_rg --lb-name IaasLb --name ssh2 --protocol tcp --frontend-port 23 --backend-port 22  --frontend-ip-name LoadBalancerFrontEnd
+az network lb inbound-nat-rule create -g $iaas_rg --lb-name IaasLb --name ssh1 --protocol tcp --frontend-port 21 --backend-port 22  --frontend-ip-name LoadBalancerFrontEnd &> /dev/null
+az network lb inbound-nat-rule create -g $iaas_rg --lb-name IaasLb --name ssh2 --protocol tcp --frontend-port 23 --backend-port 22  --frontend-ip-name LoadBalancerFrontEnd &> /dev/null
+
 MESSAGE="==>Load Balancer NAT rules successfully created"; simple_green_echo
 # Create a NSG
-az network nsg create -g $iaas_rg -n nsg-iaas-demo -l $location
+az network nsg create -g $iaas_rg -n nsg-iaas-demo -l $location &> /dev/null
 MESSAGE="==>Network Security Group successfully created"; simple_green_echo
 #Create NSG Rules
 az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n ssh-rule --priority 110 \
   --source-address-prefix "Internet" --source-port-range '*' \
   --destination-address-prefix '*' --destination-port-range 22 --access Allow \
-  --protocol Tcp --description "Allow SSH Accesss."
+  --protocol Tcp --description "Allow SSH Accesss." &> /dev/null
 
 MESSAGE="==>Network security rule for SSH successfully created"; simple_green_echo
 
 az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n http-aspnetcore-demo-rule --priority 120 \
   --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
-  --destination-port-range 80 --access Allow --protocol Tcp --direction "Inbound"
+  --destination-port-range 80 --access Allow --protocol Tcp --direction "Inbound" &> /dev/null
 
 MESSAGE="==>Network Security rule for the ASPNET Core Web App successfully created"; simple_green_echo
 
 az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n http-eshop-demo-rule --priority 130 \
   --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
-  --destination-port-range "5100-5105" --access Allow --protocol Tcp --direction "Inbound"
+  --destination-port-range "5100-5105" --access Allow --protocol Tcp --direction "Inbound" &> /dev/null
 
 MESSAGE="==>Network Security rule for the eShop App successfully created"; simple_green_echo
 #Create LB Probes
-az network lb probe create -g $iaas_rg --lb-name IaasLb  --name healthprobe --protocol "tcp" --port 80 --interval 15
+az network lb probe create -g $iaas_rg --lb-name IaasLb  --name healthprobe --protocol "tcp" --port 80 --interval 15 &> /dev/null
 MESSAGE="==>Load Balancer Probe successfully created"; simple_green_echo
 #Create LB Rules
 az network lb rule create -g $iaas_rg --lb-name IaasLb --name lb-web80-rule \
   --protocol tcp --frontend-port 80 --backend-port 80 \
-  --frontend-ip-name LoadBalancerFrontEnd --backend-pool-name IaasLbbepool
+  --frontend-ip-name LoadBalancerFrontEnd --backend-pool-name IaasLbbepool &> /dev/null
 
 MESSAGE="==>Load Balancer Rule for port 80 successfully created"; simple_green_echo
 
 az network lb rule create -g $iaas_rg --lb-name IaasLb --name lb-web81-rule \
   --protocol tcp --frontend-port 81 --backend-port 81 \
-  --frontend-ip-name LoadBalancerFrontEnd --backend-pool-name IaasLbbepool
+  --frontend-ip-name LoadBalancerFrontEnd --backend-pool-name IaasLbbepool &> /dev/null
 MESSAGE="==>Load Balancer Rule for port 81 successfully created"; simple_green_echo
 
 # Init ssh folder and Copy ssh key file 
