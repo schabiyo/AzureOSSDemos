@@ -6,6 +6,13 @@ source azure-ossdemos-git/utils/getOauthToken.sh
 source azure-ossdemos-git/utils/getWorkspaceItem.sh
 source azure-ossdemos-git/utils/getWorkspaceUrl.sh
 
+
+
+az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
+az account set --subscription "$subscription_id"  &> /dev/null
+# Create a resource group if it does not exist.
+az group create --name $utility_rg --location $location &> /dev/null
+
 MESSAGE="Getting an access token from AAD" ; simple_blue_echo
 
 getToken $tenant_id $service_principal_id $service_principal_secret token

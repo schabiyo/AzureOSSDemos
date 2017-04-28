@@ -23,7 +23,7 @@ az network nic create -g $iaas_rg --name web2-nic-be --vnet-name  ossdemo-iaas-v
   --location $location \
   --public-ip-address web2pip \
   --lb-name IaasLb \
-  --network-security-group nsg-iaas-demo
+  --network-security-group nsg-iaas-demo  &> /dev/null
 MESSAGE="==>NIC for the VM2 successfully created"; simple_green_echo
 # Create a new virtual machine, this creates SSH keys if not present. 
 
@@ -48,7 +48,7 @@ az vm create \
   --nics web2-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \
   --storage-sku 'Premium_LRS' \
-  --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub"
+  --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" &> /dev/null
 
 MESSAGE="==>VM2 successfully created"; simple_green_echo
 # Install and configure the OMS agent.
