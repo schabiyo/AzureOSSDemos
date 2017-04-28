@@ -8,13 +8,16 @@ source azure-ossdemos-git/utils/getWorkspaceKey.sh
 source azure-ossdemos-git/utils/getWorkspaceId.sh
 
 omsid=$(cat parameters-out/oms-workspace | jq '.workspaceid')
+omsid=( $(eval echo ${omsid[@]}) )
+
 omskey=$(cat parameters-out/oms-workspace | jq '.workspacekey')
+omskey=( $(eval echo ${omskey[@]}) )
 
 echo $omskey
 
-az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
+az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id" &> /dev/null
 # Create a resource group.
-az group create --name $iaas_rg --location $location
+az group create --name $iaas_rg --location $location &> /dev/null
 #Create public IP for VM2
 az network public-ip create -g $iaas_rg -n web1pip --dns-name web1-$server_prefix --allocation-method Static -l $location &> /dev/null
 MESSAGE="==>Public IP for Web Server 2 successfully created"; simple_green_echo

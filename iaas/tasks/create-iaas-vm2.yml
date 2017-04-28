@@ -26,7 +26,7 @@ params:
 inputs:
   - name: azure-ossdemos-git
   - name: keys-out
-  - name: ansible-out
+  - name: parameters-out
 
 run:
   path: azure-ossdemos-git/iaas/tasks/create-iaas-vm2.sh
