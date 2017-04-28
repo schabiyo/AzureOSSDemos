@@ -7,11 +7,11 @@ source azure-ossdemos-git/utils/getWorkspaceItem.sh
 source azure-ossdemos-git/utils/getWorkspaceKey.sh
 source azure-ossdemos-git/utils/getWorkspaceId.sh
 
-getToken $tenant_id $service_principal_id $service_principal_secret token
-# Get the Workspace IS
-getWorkspaceId $token $oms_workspace_name $utility_rg $subscription_id omsid
-#Get the Workspace Keys
-getWorkspaceKey $token $oms_workspace_name $utility_rg $subscription_id omskey
+omsid=$(cat parameters-out/oms-workspace | jq '.workspaceid')
+omskey=$(cat parameters-out/oms-workspace | jq '.workspacekey')
+
+echo $omskey
+
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id"
 # Create a resource group.
 az group create --name $iaas_rg --location $location
