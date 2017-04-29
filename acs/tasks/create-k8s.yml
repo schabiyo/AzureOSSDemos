@@ -12,10 +12,19 @@ params:
   service_principal_secret:
   tenant_id:
   subscription_id:
+  location:
+  acs_rg:
   registry_name:
+  jumpbox_admin_password:
+  server_admin_username:
+  registry_admin_username:
+  registry_admin_password:
+  server_prefix:
+  demo_admn_email:
+
 
 inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/acr/tasks/delete-acr.sh
+  path: azure-ossdemos-git/acs/tasks/create-k8s.sh
