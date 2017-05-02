@@ -3,7 +3,11 @@
 set -e -x
 
 source azure-ossdemos-git/utils/pretty-echo.sh
-
+source azure-ossdemos-git/utils/getOauthToken.sh
+source azure-ossdemos-git/utils/getWorkspaceItem.sh
+source azure-ossdemos-git/utils/getWorkspaceKey.sh
+source azure-ossdemos-git/utils/getWorkspaceId.sh
+source azure-ossdemos-git/utils/getACRCredentials.sh
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id" &> /dev/null
 az account set --subscription "$subscription_id"  &> /dev/null
@@ -34,11 +38,14 @@ az acs kubernetes get-credentials \
         --resource-group $acs_rg \
         --name k8s-$server_prefix
 
-echo "create secret to login to the private registry"
+MESSAGE="==> Creating secret to login to the private registry" ; simple_blue_echo
+
+getACRCredentials acr_username acr_password
+
 kubectl create secret docker-registry ossdemoregistrykey \
-        --docker-server=VALUEOF-REGISTRY-SERVER-NAME \
-        --docker-username=VALUEOF-REGISTRY-USER-NAME \
-        --docker-password=VALUEOF-REGISTRY-PASSWORD \
+        --docker-server=$registry_name \
+        --docker-username=$acr_username \
+        --docker-password=$acr_password \
         --docker-email=$demo_admin_email
 
 echo "create storage account for persistent volumes"
@@ -50,12 +57,13 @@ az storage account create --location $location \
 
 MESSAGE="Deploy the OMS Daemonset to k8s for monitoring"; simple_blue_echo
 
-#Use sed to insert the OMS Key and Id
-omsid=$(cat parameters-out/oms-workspace | jq '.workspaceid')
-omsid=( $(eval echo ${omsid[@]}) )
+#Get OMS ID and Key
+getToken $tenant_id $service_principal_id $service_principal_secret token
+# Get the Workspace IS
+getWorkspaceId $token $oms_workspace_name $utility_rg $subscription_id omsid
+#Get the Workspace Keys
+getWorkspaceKey $token $oms_workspace_name $utility_rg $subscription_id omskey
 
-omskey=$(cat parameters-out/oms-workspace | jq '.workspacekey')
-omskey=( $(eval echo ${omskey[@]}) )
 
 echo $omskey
 

@@ -20,7 +20,7 @@ params:
   registry_admin_username:
   registry_admin_password:
   server_prefix:
-  demo_admn_email:
+  demo_admin_email:
 
 
 inputs:
