@@ -15,6 +15,8 @@ az account set --subscription "$subscription_id"  &> /dev/null
 # Create a resource group.
 az group create --name $acs_rg --location $location &> /dev/null
 
+
+mkdir ~/.ssh
 #Had to do this as the key is being read in one single line
 printf "%s\n" "-----BEGIN RSA PRIVATE KEY-----" >> ~/.ssh/${server_prefix}_id_rsa
 printf "%s\n" $server_ssh_private_key | tail -n +5 | head -n -4 >>  ~/.ssh/${server_prefix}_id_rsa
