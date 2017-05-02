@@ -35,8 +35,7 @@ MESSAGE="Kubernetes cluster successfully created." ; simple_green_echo
 MESSAGE="Attempting to install the kubernetes client within the Azure CLI tools.  This can fail due to user rights.  Try to resolve and re-run: sudo az acs kubernetes install-cli" ; simple_blue_echo
 az acs kubernetes install-cli --install-location ~/kubectl
 
-echo "Login to the K8S environment"
-#az account set --subscription "Microsoft Azure Internal Consumption"
+MESSAGE="Login to the K8S environment" ; simple_blue_echo
 az acs kubernetes get-credentials \
         --resource-group $acs_rg \
         --name k8s-$server_prefix \
