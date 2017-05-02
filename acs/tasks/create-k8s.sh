@@ -72,6 +72,8 @@ getWorkspaceKey $token $oms_workspace_name $utility_rg $subscription_id omskey
 
 
 echo $omskey
+sed -i -e "s@VALUEOF-REPLACE-OMS-WORKSPACE@${omsid}@g" azure-ossdemos-git/acs/config/OMSDaemonset.yml
+sed -i -e "s@VALUEOF-REPLACE-OMS-PRIMARYKEY@${omskey}@g" azure-ossdemos-git/acs/config/OMSDaemonset.yml
 
-~/bin/kubectl create -f azure-ossdemos-git/acs/config/OMSDaemonset.yml
+kubectl create -f azure-ossdemos-git/acs/config/OMSDaemonset.yml
  
