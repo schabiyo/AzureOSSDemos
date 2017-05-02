@@ -28,10 +28,11 @@ az acs create --orchestrator-type=kubernetes --resource-group=$acs_rg \
         --name=k8s-$server_prefix --dns-prefix=k8s-$server_prefix \
         --agent-vm-size Standard_DS1_v2 \
         --admin-username $server_admin_username --master-count 1 \
+        --service-principal $service_principal_id  --client-secret $servcie_client_secret
         --ssh-key-value="~/.ssh/${server_prefix}_id_rsa.pub"
 
 MESSAGE="Kubernetes cluster successfully created." ; simple_green_echo
-echo "Attempting to install the kubernetes client within the Azure CLI tools.  This can fail due to user rights.  Try to resolve and re-run: sudo az acs kubernetes install-cli"
+MESSAGE="Attempting to install the kubernetes client within the Azure CLI tools.  This can fail due to user rights.  Try to resolve and re-run: sudo az acs kubernetes install-cli" ; simple_blue_echo
 az acs kubernetes install-cli --install-location ~/bin/kubectl
 
 echo "Login to the K8S environment"
