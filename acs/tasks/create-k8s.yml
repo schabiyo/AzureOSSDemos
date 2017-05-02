@@ -20,6 +20,8 @@ params:
   registry_admin_username:
   registry_admin_password:
   server_prefix:
+  server_ssh_private_key:
+  server_ssh_public_key:
   demo_admin_email:
 
 

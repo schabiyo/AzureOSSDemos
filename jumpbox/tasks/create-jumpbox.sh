@@ -51,7 +51,7 @@ printf "%s\n" $jumpbox_ssh_private_key | tail -n +5 | head -n -4 >>  ~/.ssh/jump
 printf "%s" "-----END RSA PRIVATE KEY-----" >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
 
 
-cat ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
+#cat ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa
 echo $jumpbox_ssh_public_key >> ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa.pub
 # Add this to the config file
 echo -e "Host=jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa\nUser=${jumpbox_admin}" >> ~/.ssh/config

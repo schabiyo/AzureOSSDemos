@@ -21,7 +21,7 @@ mkdir ~/.ssh
 printf "%s\n" "-----BEGIN RSA PRIVATE KEY-----" >> ~/.ssh/${server_prefix}_id_rsa
 printf "%s\n" $server_ssh_private_key | tail -n +5 | head -n -4 >>  ~/.ssh/${server_prefix}_id_rsa
 printf "%s" "-----END RSA PRIVATE KEY-----" >> ~/.ssh/${server_prefix}_id_rsa
-
+echo $server_ssh_public_key >> ~/.ssh/${server_prefix}_id_rsa.pub
 
 MESSAGE="Creating Kubernetes cluster." ; simple_blue_echo
 az acs create --orchestrator-type=kubernetes --resource-group=$acs_rg \
