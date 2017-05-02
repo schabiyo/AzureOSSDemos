@@ -28,7 +28,7 @@ az acs create --orchestrator-type=kubernetes --resource-group=$acs_rg \
         --name=k8s-$server_prefix --dns-prefix=k8s-$server_prefix \
         --agent-vm-size Standard_DS1_v2 \
         --admin-username $server_admin_username --master-count 1 \
-        --service-principal $service_principal_id  --client-secret $service_principal_secret
+        --service-principal $service_principal_id  --client-secret $service_principal_secret \
         --ssh-key-value="~/.ssh/${server_prefix}_id_rsa.pub"
 
 MESSAGE="Kubernetes cluster successfully created." ; simple_green_echo
