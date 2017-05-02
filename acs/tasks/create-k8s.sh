@@ -39,7 +39,7 @@ MESSAGE="Login to the K8S environment" ; simple_blue_echo
 az acs kubernetes get-credentials \
         --resource-group $acs_rg \
         --name k8s-$server_prefix \
-        --ssh-key-file="~/.ssh/${server_prefix}_id_rsa"
+        --ssh-key-file=~/.ssh/$server_prefix_id_rsa
 
 MESSAGE="==> Creating secret to login to the private registry" ; simple_blue_echo
 
