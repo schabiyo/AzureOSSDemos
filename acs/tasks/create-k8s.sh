@@ -39,11 +39,14 @@ echo "Login to the K8S environment"
 #az account set --subscription "Microsoft Azure Internal Consumption"
 az acs kubernetes get-credentials \
         --resource-group $acs_rg \
-        --name k8s-$server_prefix
+        --name k8s-$server_prefix \
+        --ssh-key-file="~/.ssh/${server_prefix}_id_rsa"
 
 MESSAGE="==> Creating secret to login to the private registry" ; simple_blue_echo
 
 getACRCredentials acr_username acr_password
+
+echo $acr_username $acr_password
 
 kubectl create secret docker-registry ossdemoregistrykey \
         --docker-server=$registry_name \
