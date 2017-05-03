@@ -11,9 +11,9 @@ az login --service-principal -u "$service_principal_id" -p "$service_principal_s
 az account set --subscription "$subscription_id"
 
 #BUILD RESOURCE GROUPS
-az group create --name $paas_rg --location "$location" &>/dev/null
+az group create --name $paas_rg --location $location &>/dev/null
 
-az appservice plan create -g ossdemo-appdev-paas -n webtier-plan --is-linux --number-of-workers 1 --sku S1 -l $location
+az appservice plan create -g $paas_rg -n webtier-plan --is-linux --number-of-workers 1 --sku S1 -l $location
 MESSAGE="==> App Service plan successfully created" ; simple_green_echo
 ## Create the Web app
 az appservice web create -g $paas_rg -p webtier-plan -n $server_prefix-aspnet-core-linux
