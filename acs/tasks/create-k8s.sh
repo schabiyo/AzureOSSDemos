@@ -46,7 +46,7 @@ getACRCredentials acr_username acr_password
 
 echo $acr_username $acr_password
 
-kubectl create secret docker-registry ossdemoregistrykey \
+~/kubectl create secret docker-registry ossdemoregistrykey \
         --docker-server=$registry_name \
         --docker-username=$acr_username \
         --docker-password=$acr_password \
@@ -73,5 +73,5 @@ echo $omskey
 sed -i -e "s@VALUEOF-REPLACE-OMS-WORKSPACE@${omsid}@g" azure-ossdemos-git/acs/config/OMSDaemonset.yml
 sed -i -e "s@VALUEOF-REPLACE-OMS-PRIMARYKEY@${omskey}@g" azure-ossdemos-git/acs/config/OMSDaemonset.yml
 
-kubectl create -f azure-ossdemos-git/acs/config/OMSDaemonset.yml
+~/kubectl create -f azure-ossdemos-git/acs/config/OMSDaemonset.yml
  

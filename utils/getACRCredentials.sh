@@ -18,13 +18,13 @@ else
   echo "password:" $password
   TRIMMED_RESULT="${password%\"}"
   TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
-  eval $responsevar="'$TRIMMED_RESULT'"
+  eval $responsevar2="'$TRIMMED_RESULT'"
 
   username=$(jq .username <<< $result)
   echo "username:" $username
   TRIMMED_RESULT="${username%\"}"
   TRIMMED_RESULT="${TRIMMED_RESULT#\"}"
-  eval $responsevar2="'$TRIMMED_RESULT'"
+  eval $responsevar="'$TRIMMED_RESULT'"
 
 
 fi
