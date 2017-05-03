@@ -18,10 +18,10 @@ az group create --name $acs_rg --location $location &> /dev/null
 
 mkdir ~/.ssh
 #Had to do this as the key is being read in one single line
-printf "%s\n" "-----BEGIN RSA PRIVATE KEY-----" >> ~/.ssh/${server_prefix}_id_rsa
-printf "%s\n" $server_ssh_private_key | tail -n +5 | head -n -4 >>  ~/.ssh/${server_prefix}_id_rsa
-printf "%s" "-----END RSA PRIVATE KEY-----" >> ~/.ssh/${server_prefix}_id_rsa
-echo $server_ssh_public_key >> ~/.ssh/${server_prefix}_id_rsa.pub
+printf "%s\n" "-----BEGIN RSA PRIVATE KEY-----" >> ~/.ssh/id_rsa
+printf "%s\n" $server_ssh_private_key | tail -n +5 | head -n -4 >>  ~/.ssh/id_rsa
+printf "%s" "-----END RSA PRIVATE KEY-----" >> ~/.ssh/id_rsa
+echo $server_ssh_public_key >> ~/.ssh/id_rsa.pub
 
 MESSAGE="Creating Kubernetes cluster." ; simple_blue_echo
 az acs create --orchestrator-type=kubernetes --resource-group=$acs_rg \
@@ -29,7 +29,7 @@ az acs create --orchestrator-type=kubernetes --resource-group=$acs_rg \
         --agent-vm-size Standard_DS1_v2 \
         --admin-username $server_admin_username --master-count 1 \
         --service-principal $service_principal_id  --client-secret $service_principal_secret \
-        --ssh-key-value="~/.ssh/${server_prefix}_id_rsa.pub"
+        --ssh-key-value="~/.ssh/id_rsa.pub"
 
 MESSAGE="Kubernetes cluster successfully created." ; simple_green_echo
 MESSAGE="Attempting to install the kubernetes client within the Azure CLI tools.  This can fail due to user rights.  Try to resolve and re-run: sudo az acs kubernetes install-cli" ; simple_blue_echo
@@ -38,8 +38,7 @@ az acs kubernetes install-cli --install-location ~/kubectl
 MESSAGE="Login to the K8S environment" ; simple_blue_echo
 az acs kubernetes get-credentials \
         --resource-group $acs_rg \
-        --name k8s-$server_prefix \
-        --ssh-key-file=~/.ssh/$server_prefix_id_rsa
+        --name k8s-$server_prefix
 
 MESSAGE="==> Creating secret to login to the private registry" ; simple_blue_echo
 
