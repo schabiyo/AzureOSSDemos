@@ -60,11 +60,11 @@ jobs:
       tenant_id: {{TENANT_ID}}
       subscription_id: {{SUBSCRIPTION_ID}}
       storage_account_prefix: {{STORAGE_ACCOUNT_PREFIX}}
-      jumpbox_prefix: {{JUMPBOX_PREFIX}}
-      jumpbox_admin: {{JUMPBOX_ADMIN}}
-      jumpbox_admin_password: {{JUMPBOX_ADMIN_PASSWORD}}
-      jumpbox_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
-      jumpbox_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
+      jumpbox_prefix: {{SERVER_PREFIX}}
+      jumpbox_admin: {{SERVER_ADMIN_USERNAME}}
+      jumpbox_admin_password: {{SERVER_ADMIN_PASSWORD}}
+      jumpbox_ssh_private_key: {{SERVER_SSH_PRIVATE_KEY}}
+      jumpbox_ssh_public_key: {{SERVER_SSH_PUBLIC_KEY}}
       utility_rg: {{RG_UTILITY}}
       location: {{LOCATION}}
   - aggregate:
@@ -73,16 +73,16 @@ jobs:
     - task: ansible-configure-vs-code
       file: azure-ossdemos-git/jumpbox/tasks/configure-vs-code.yml
       params:
-        jumpbox_prefix: {{JUMPBOX_PREFIX}}
-        jumpbox_admin: {{JUMPBOX_ADMIN}}
-        jumpbox_admin_password: {{JUMPBOX_ADMIN_PASSWORD}}
+        jumpbox_prefix: {{SERVER_PREFIX}}
+        jumpbox_admin: {{SERVER_ADMIN_USERNAME}}
+        jumpbox_admin_password: {{SERVER_ADMIN_PASSWORD}}
         location: {{LOCATION}}
     - task: ansible-configure-rdp-tools
       file: azure-ossdemos-git/jumpbox/tasks/configure-rdp-tools.yml
       params:
-        jumpbox_prefix: {{JUMPBOX_PREFIX}}
-        jumpbox_admin: {{JUMPBOX_ADMIN}}
-        jumpbox_admin_password: {{JUMPBOX_ADMIN_PASSWORD}}
+        jumpbox_prefix: {{SERVER_PREFIX}}
+        jumpbox_admin: {{SERVER_ADMIN_USERNAME}}
+        jumpbox_admin_password: {{SERVER_ADMIN_PASSWORD}}
         location: {{LOCATION}} 
 
 - name: create-oms-workspace
@@ -130,7 +130,7 @@ jobs:
     - get: azure-ossdemos-git
       passed:
       - create-oms-workspace
-    - task: create-iaa-vms
+    - task: create-iaa-vms-init
       file: azure-ossdemos-git/iaas/tasks/create-iaas-vms.yml
       params:
         service_principal_id: {{SERVICE_PRINCIPAL_ID}}
@@ -141,12 +141,44 @@ jobs:
         utility_rg: {{RG_UTILITY}}
         oms_workspace_name: {{OMS_WORKSPACE_NAME}}
         iaas_rg: {{RG_APPDEV_IAAS}}
-        server_admin_username: {{JUMPBOX_ADMIN}}
-        jumpbox_admin_password: {{JUMPBOX_ADMIN_PASSWORD}}
-        server_ssh_private_key: {{JUMPBOX_SSH_PRIVATE_KEY}}
-        server_ssh_public_key: {{JUMPBOX_SSH_PUBLIC_KEY}}
-        server_prefix: {{JUMPBOX_PREFIX}}
-
+        server_admin_username: {{SERVER_ADMIN_USERNAME}}
+        jumpbox_admin_password: {{SERVER_ADMIN_PASSWORD}}
+        server_ssh_private_key: {{SERVER_SSH_PRIVATE_KEY}}
+        server_ssh_public_key: {{SERVER_SSH_PUBLIC_KEY}}
+        server_prefix: {{SERVER_PREFIX}}
+    - aggregate:
+      - task: create-iaas-vm1
+        file: azure-ossdemos-git/iaas/tasks/create-iaas-vm1.yml
+        params:
+          service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+          service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+          tenant_id: {{TENANT_ID}}
+          subscription_id: {{SUBSCRIPTION_ID}}
+          location: {{LOCATION}}
+          utility_rg: {{RG_UTILITY}}
+          oms_workspace_name: {{OMS_WORKSPACE_NAME}}
+          iaas_rg: {{RG_APPDEV_IAAS}}
+          server_admin_username: {{SERVER_ADMIN_USERNAME}}
+          jumpbox_admin_password: {{SERVER_ADMIN_PASSWORD}}
+          server_ssh_private_key: {{SERVER_SSH_PRIVATE_KEY}}
+          server_ssh_public_key: {{SERVER_SSH_PUBLIC_KEY}}
+          server_prefix: {{SERVER_PREFIX}}
+      - task: create-iaas-vm2
+        file:  azure-ossdemos-git/iaas/tasks/create-iaas-vm2.yml
+        params:
+          service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+          service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+          tenant_id: {{TENANT_ID}}
+          subscription_id: {{SUBSCRIPTION_ID}}
+          location: {{LOCATION}}
+          utility_rg: {{RG_UTILITY}}
+          oms_workspace_name: {{OMS_WORKSPACE_NAME}}
+          iaas_rg: {{RG_APPDEV_IAAS}}
+          server_admin_username: {{SERVER_ADMIN_USERNAME}}
+          jumpbox_admin_password: {{SERVER_ADMIN_PASSWORD}}
+          server_ssh_private_key: {{SERVER_SSH_PRIVATE_KEY}}
+          server_ssh_public_key: {{SERVER_SSH_PUBLIC_KEY}}
+          server_prefix: {{SERVER_PREFIX}}
 
 - name: create-acs-kubernetes
   serial: true
@@ -154,8 +186,9 @@ jobs:
     - get: azure-ossdemos-git
       passed:
       - create-oms-workspace
+      - create-container-registry
     - task: create-kubernetes-cluster
-      file: azure-ossdemos-git/jumpbox/tasks/create-kubernetes-cluster.yml
+      file: azure-ossdemos-git/acs/tasks/create-k8s.yml
       params:
         service_principal_id: {{SERVICE_PRINCIPAL_ID}}
         service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -164,7 +197,13 @@ jobs:
         location: {{LOCATION}}
         utility_rg: {{RG_UTILITY}}
         oms_workspace_name: {{OMS_WORKSPACE_NAME}}
-        acs_rg: {{RG_APPDEV_ACS}}
+        acs_rg: {{RG_ACS_K8S}}
+        server_admin_username: {{SERVER_ADMIN_USERNAME}}
+        server_prefix: {{SERVER_PREFIX}}
+        server_ssh_private_key: {{SERVER_SSH_PRIVATE_KEY}}
+        server_ssh_public_key: {{SERVER_SSH_PUBLIC_KEY}}
+        registry_name: {{ACR_NAME}}
+        demo_admin_email: {{ADMIN_EMAIL}}
 
 
 - name: create-paas-webplan
@@ -173,8 +212,8 @@ jobs:
     - get: azure-ossdemos-git
       passed:
       - create-oms-workspace
-    - task: create-paas-webplan
-      file: azure-ossdemos-git/jumpbox/tasks/create-paas-webplan.yml
+    - task: create-configure-webplan
+      file: azure-ossdemos-git/paas/tasks/create-webplan.yml
       params:
         service_principal_id: {{SERVICE_PRINCIPAL_ID}}
         service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -183,7 +222,8 @@ jobs:
         location: {{LOCATION}}
         utility_rg: {{RG_UTILITY}}
         oms_workspace_name: {{OMS_WORKSPACE_NAME}}
-        acs_rg: {{RG_APPDEV_ACS}}
+        paas_rg: {{RG_PAAS}}
+        server_prefix: {{SERVER_PREFIX}}
 
 
 
@@ -204,6 +244,7 @@ jobs:
   plan:
   - get: azure-ossdemos-git
     trigger: false
+    passed: [ delete-oms-workspace, delete-azure-container-registry ]
   - task: destroy-jumpbox
     file: azure-ossdemos-git/jumpbox/tasks/destroy-jumpbox.yml
     params:
@@ -233,9 +274,8 @@ jobs:
   plan:
   - get: azure-ossdemos-git
     trigger: false
-    passed: [delete-docker-vms, delete-kubernetes-cluster ]
   - task: delete-azure-container-registry
-    file: azure-ossdemos-git/jumpbox/tasks/delete-acr.yml
+    file: azure-ossdemos-git/acr/tasks/delete-acr.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -249,13 +289,13 @@ jobs:
   - get: azure-ossdemos-git
     trigger: false
   - task: delete-docker-vms
-    file: azure-ossdemos-git/iaas/tasks/delete-docker-vms.yml
+    file: azure-ossdemos-git/iaas/tasks/destroy-docker-vms.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
       tenant_id: {{TENANT_ID}}
       subscription_id: {{SUBSCRIPTION_ID}}
-      iaas_rg: {{RG_UTILITY}}
+      iaas_rg: {{RG_APPDEV_IAAS}}
 
 
 
@@ -265,11 +305,12 @@ jobs:
   - get: azure-ossdemos-git
     trigger: false
   - task: delete-kubernetes-cluster
-    file: azure-ossdemos-git/jumpbox/tasks/delete-acr.yml
+    file: azure-ossdemos-git/acs/tasks/delete-k8s.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
       tenant_id: {{TENANT_ID}}
       subscription_id: {{SUBSCRIPTION_ID}}
-      acs_rg: {{RG_UTILITY}}
+      acs_rg: {{RG_ACS_K8S}}
+      server_prefix: {{SERVER_PREFIX}}
 
