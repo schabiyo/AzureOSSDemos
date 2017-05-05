@@ -5,7 +5,7 @@ GREEN='\033[0;32m'
 RESET="\e[0m"
 
 # Including the utility for echo
-source azure-ossdemos-git/utils/pretty-echo.sh
+source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
 
 
 # 1-Login to Azure using the az command line

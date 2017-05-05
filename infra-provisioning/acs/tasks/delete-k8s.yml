@@ -20,4 +20,4 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/acs/tasks/delete-k8s.sh
+  path: azure-ossdemos-git/infra-provisioning/acs/tasks/delete-k8s.sh

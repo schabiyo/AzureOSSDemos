@@ -19,4 +19,4 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/jumpbox/tasks/destroy-jumpbox.sh
+  path: azure-ossdemos-git/infra-provisioning/jumpboxg/tasks/destroy-jumpbox.sh

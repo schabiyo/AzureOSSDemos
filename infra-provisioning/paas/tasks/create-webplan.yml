@@ -27,4 +27,4 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/paas/tasks/create-webplan.sh
+  path: azure-ossdemos-git/infra-provisioning/paas/tasks/create-webplan.sh

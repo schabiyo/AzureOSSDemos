@@ -6,7 +6,7 @@ RESET="\e[0m"
 INPUT="\e[7m"
 BOLD="\e[4m"
 
-source azure-ossdemos-git/utils/pretty-echo.sh
+source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
 
 
 MESSAGE="Installing basics tools on the Jumpbox " ; simple_blue_echo

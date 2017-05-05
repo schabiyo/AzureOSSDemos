@@ -2,12 +2,12 @@
 
 set -e -x
 
-source azure-ossdemos-git/utils/pretty-echo.sh
-source azure-ossdemos-git/utils/getOauthToken.sh
-source azure-ossdemos-git/utils/getWorkspaceItem.sh
-source azure-ossdemos-git/utils/getWorkspaceKey.sh
-source azure-ossdemos-git/utils/getWorkspaceId.sh
-source azure-ossdemos-git/utils/getACRCredentials.sh
+source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
+source azure-ossdemos-git/infra-provisioning/utils/getOauthToken.sh
+source azure-ossdemos-git/infra-provisioning/utils/getWorkspaceItem.sh
+source azure-ossdemos-git/infra-provisioning/utils/getWorkspaceKey.sh
+source azure-ossdemos-git/infra-provisioning/utils/getWorkspaceId.sh
+source azure-ossdemos-git/infra-provisioning/utils/getACRCredentials.sh
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id" &> /dev/null
 az account set --subscription "$subscription_id"  &> /dev/null
@@ -70,8 +70,8 @@ getWorkspaceKey $token $oms_workspace_name $utility_rg $subscription_id omskey
 
 
 echo $omskey
-sed -i -e "s@VALUEOF-REPLACE-OMS-WORKSPACE@${omsid}@g" azure-ossdemos-git/acs/config/OMSDaemonset.yml
-sed -i -e "s@VALUEOF-REPLACE-OMS-PRIMARYKEY@${omskey}@g" azure-ossdemos-git/acs/config/OMSDaemonset.yml
+sed -i -e "s@VALUEOF-REPLACE-OMS-WORKSPACE@${omsid}@g" azure-ossdemos-git/infra-provisioning/acs/config/OMSDaemonset.yml
+sed -i -e "s@VALUEOF-REPLACE-OMS-PRIMARYKEY@${omskey}@g" azure-ossdemos-git/infra-provisioning/acs/config/OMSDaemonset.yml
 
-~/kubectl create -f azure-ossdemos-git/acs/config/OMSDaemonset.yml
+~/kubectl create -f azure-ossdemos-git/infra-provisioning/acs/config/OMSDaemonset.yml
  

@@ -3,7 +3,7 @@ set -e -x
 
 #Script Formatting
 
-source azure-ossdemos-git/utils/pretty-echo.sh
+source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
 
 
 MESSAGE="Installing RDP tools " ; simple_blue_echo

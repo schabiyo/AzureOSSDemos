@@ -18,4 +18,4 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/jumpbox/tasks/create-acr.sh
+  path: azure-ossdemos-git/infra-provisioning/jumpboxg/tasks/create-acr.sh

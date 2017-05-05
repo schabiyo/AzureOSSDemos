@@ -29,4 +29,4 @@ inputs:
   - name: parameters-out
 
 run:
-  path: azure-ossdemos-git/iaas/tasks/create-iaas-vm2.sh
+  path: azure-ossdemos-git/infra-provisioning/iaas/tasks/create-iaas-vm2.sh

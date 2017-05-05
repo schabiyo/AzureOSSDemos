@@ -31,4 +31,4 @@ outputs:
   - name: parameters-out
 
 run:
-  path: azure-ossdemos-git/iaas/tasks/create-networking-resources.sh
+  path: azure-ossdemos-git/infra-provisioning/iaas/tasks/create-networking-resources.sh

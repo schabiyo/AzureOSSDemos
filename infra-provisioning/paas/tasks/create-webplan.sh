@@ -2,7 +2,7 @@
 set -e -x
 
 # Including the utility for echo
-source azure-ossdemos-git/utils/pretty-echo.sh
+source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
 
 
 az login --service-principal -u "$service_principal_id" -p "$service_principal_secret" --tenant "$tenant_id" &>/dev/null

@@ -20,4 +20,4 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/oms/tasks/delete-oms-workspace.sh
+  path: azure-ossdemos-git/infra-provisioning/oms/tasks/delete-oms-workspace.sh
