@@ -1,0 +1,20 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: schabiyo/ossdemo
+    tag: latest
+
+params:
+  acr_repository:
+  acr_username:
+  acr_password:
+
+
+inputs:
+  - name: azure-ossdemos-git
+
+run:
+  path: ossdemos-devops/tasks/create-acr.sh

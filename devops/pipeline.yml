@@ -1,0 +1,218 @@
+---
+resources:
+ - name: api-nodejs
+   type: git
+   source:
+    uri: {{API-NODEJS-URL}}
+
+ - name: web-nodejs
+   type: git
+   source:
+    uri: {{WEB-NODEJS-URL}}
+
+ - name: api-version
+   type: semver
+   source:
+    driver: git
+    uri: {{API-NODEJS-URL}}
+    branch: version
+    file: version
+    username: schabiyo
+    password: {{GIT-PASSWORD}}
+    initial_version: 1.0.0
+
+ - name: web-version
+   type: semver
+   source:
+    driver: git
+    uri: {{WEB-NODEJS-URL}}
+    branch: version
+    file: version
+    username: schabiyo
+    password: {{GIT-PASSWORD}}
+    initial_version: 1.0.0
+ 
+ - name: api-nodejs-image
+   type: docker-image
+   source:
+     repository: syoossdemoacr.azurecr.io:443/ossdemo/api-nodejs
+     username: {{ACR-USERNAME}}
+     password: {{ACR-PASSWORD}} 
+
+ - name: web-nodejs-image
+   type: docker-image
+   source:
+     repository: syoossdemoacr.azurecr.io:443/ossdemo/web-nodejs
+     username: {{ACR-USERNAME}}
+     password: {{ACR-PASSWORD}}
+
+ - name: sqlserver
+   type: docker-image
+   source:
+     repository: microsoft/mssql-server-linux
+    
+
+jobs:
+  - name: build-and-test
+    serial: true
+    public: false
+    plan:
+      - aggregate:
+        - get: api-nodejs
+        - get: api-version
+          resource: api-version
+          trigger: true
+      - task: build-and-test
+        file: api-nodejs/ci/tasks/build-and-test.yml
+        params:
+          - GIT_EMAIL: {{git-email}}
+          - GIT_NAME: {{git-name}}
+
+  - name: web-unit-test
+    serial: true
+    public: false
+    plan:
+      - aggregate:
+        - get: web-nodejs
+        - get: web-version
+          resource: web-version
+          trigger: true
+      - task: unit-test
+        file: web-nodejs/ci/tasks/build-and-test.yml
+        params:
+          - GIT_EMAIL: {{git-email}}
+          - GIT_NAME: {{git-name}}
+
+  - name: release-dev-deploy
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs
+        passed: [build-and-test]
+        trigger: true
+      - get: api-version
+        param: {pre: rc}
+      - task: build-artifact
+        file: api-nodejs/ci/tasks/build-rc.yml
+      - put: api-nodejs-image
+        params:
+          - build: api-nodejs
+          - tag: api-version/number
+      - put: api-version
+        params: {file: api-version/number}
+      - task: deploy-to-dev
+        file: api-nodejs/ci/tasks/deploy-to-dev.yml
+        
+  - name: web-dev-deploy
+    serial_groups: [version]
+    plan:
+      - get: web-nodejs
+        passed: [web-unit-test]
+        trigger: true
+      - get: web-version
+        param: {pre: rc}
+      - task: build-artifact
+        file: web-nodejs/ci/tasks/build-rc.yml
+      - put: web-nodejs-image
+        params:
+          - build: web-nodejs
+          - tag: web-version/number
+      - put: web-version
+        params: {file: web-version/number}
+      - task: deploy-to-dev
+        file: web-nodejs/ci/tasks/deploy-to-dev.yml
+       
+  - name: integration
+    serial: true
+    plan: 
+      - get: api-nodejs-image
+        trigger: true
+        passsed: [release-dev-deploy]
+      - get: api-nodejs
+        passed: [release-dev-deploy]
+      - task: integration
+        file: api-nodejs/ci/tasks/integration.yml
+        params:
+
+  - name: web-integration
+    serial: true
+    plan:
+      - get: web-nodejs-image
+        trigger: true
+        passsed: [web-dev-deploy]
+      - get: web-nodejs
+        passed: [web-dev-deploy]
+      - task: integration
+        file: web-nodejs/ci/tasks/integration.yml
+
+       
+  - name: release-stage-deploy
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs-image
+        passed: [integration]
+      - get: api-nodejs
+        passed: [integration]
+      - get: api-version
+        params: {bump: rc}
+      - put: api-nodejs-image
+        params:
+          - build: api-nodejs
+          - tag: api-version/number
+  
+  - name: stage-e2e
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs-image
+        passed: [release-stage-deploy]
+      - get: api-nodejs
+        passed: [release-stage-deploy]
+      - get: sqlserver
+      - get: api-version
+        params: {bump: rc}
+      - put: api-nodejs-image
+        params:
+          - build: api-nodejs
+          - tag: api-version/number
+
+
+  - name: release-production-deploy
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs-image
+        passed: [stage-e2e]
+      - get: api-nodejs
+        passed: [stage-e2e]
+      - get: api-version
+        params: {bump: final}
+      - put: api-nodejs-image
+        params: 
+          - build: api-nodejs
+          - tag_as_latest: true
+
+
+#Utilities to bump versions
+
+  - name: api-major
+    serial_groups: [version]
+    plan:
+    - put: api-version
+      params: {bump: major, pre: rc}
+
+  - name: api-minor
+    serial_groups: [version]
+    plan:
+    - put: api-version
+      params: {bump: minor, pre: rc} 
+
+
+  - name: web-major
+    serial_groups: [version]
+    plan:
+    - put: web-version
+      params: {bump: major, pre: rc}
+
+  - name: web-minor
+    serial_groups: [version]
+    plan:
+    - put: web-version
+      params: {bump: minor, pre: rc}
