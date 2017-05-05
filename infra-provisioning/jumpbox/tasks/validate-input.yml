@@ -18,7 +18,7 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/infra-provisioning/jumpboxg/tasks/validate-input.sh
+  path: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/validate-input.sh
   args: [
     --service-principal, service_principal_id,
     --service-principal-pwd, service_principal_secret
