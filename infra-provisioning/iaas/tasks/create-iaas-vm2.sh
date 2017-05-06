@@ -32,8 +32,6 @@ mkdir ~/.ssh
 #Get the keys generate by previous task instead of regenerating them
 cp keys-out/* ~/.ssh/
 
-MESSAGE="==>VM for the STAGING environment successfully created"; simple_green_echo
-
 az vm create \
   --resource-group $iaas_rg \
   --name "staging-${server_prefix}" \
@@ -47,7 +45,7 @@ az vm create \
   --storage-sku 'Premium_LRS' \
   --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" &> /dev/null
 
-MESSAGE="==>VM2 successfully created"; simple_green_echo
+MESSAGE="==>VM for Staging successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 
 az vm extension set \
