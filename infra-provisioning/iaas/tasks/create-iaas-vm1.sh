@@ -39,7 +39,6 @@ az vm create \
   --name "dev-${server_prefix}" \
   --os-disk-name 'dev-disk' \
   --public-ip-address-dns-name "dev-${server_prefix}" \
-  --availability-set iaaswebas \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
   --location $location \

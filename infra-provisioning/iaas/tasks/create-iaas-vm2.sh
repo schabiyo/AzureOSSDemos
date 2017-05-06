@@ -39,7 +39,6 @@ az vm create \
   --name "staging-${server_prefix}" \
   --os-disk-name 'staging-disk' \
   --public-ip-address-dns-name "staging-${server_prefix}" \
-  --availability-set iaaswebas \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
   --location $location \
