@@ -20,12 +20,6 @@ az group create --name $iaas_rg --location $location  &> /dev/null
 MESSAGE="==>Resource group successfully created"; simple_green_echo
 az network vnet create -g $iaas_rg  -n ossdemo-iaas-vnet --address-prefix 10.0.0.0/16 --subnet-name WebSubnet --subnet-prefix 10.0.0.0/24 -l $location &> /dev/null
 MESSAGE="==>VNET successfully created"; simple_green_echo
-#Create a Public IP  for DEV
-az network public-ip create -g $iaas_rg -n devpip --dns-name dev-$server_prefix --allocation-method Static -l $location &> /dev/null
-MESSAGE="==>Public IP for Web Server 1 successfully created"; simple_green_echo
-#Create public IP for web
-az network public-ip create -g $iaas_rg -n stagingpip --dns-name staging-$server_prefix --allocation-method Static -l $location &> /dev/null
-MESSAGE="==>Public IP for Web Server 2 successfully created"; simple_green_echo
 #Create public IP for LB
 az network public-ip create -g $iaas_rg -n lbpip --dns-name $server_prefix"-iaas" --allocation-method Static -l $location &> /dev/null
 MESSAGE="==>Public IP for the Load balancer successfully created"; simple_green_echo
@@ -55,13 +49,13 @@ az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n http-aspnetco
   --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
   --destination-port-range 80 --access Allow --protocol Tcp --direction "Inbound" &> /dev/null
 
-MESSAGE="==>Network Security rule for the ASPNET Core Web App successfully created"; simple_green_echo
+MESSAGE="==>Network Security rule for port 80 successfully created"; simple_green_echo
 
 az network nsg rule create -g $iaas_rg --nsg-name nsg-iaas-demo -n http-eshop-demo-rule --priority 130 \
   --source-address-prefix "Internet" --source-port-range '*' --destination-address-prefix '*' \
-  --destination-port-range "5100-5105" --access Allow --protocol Tcp --direction "Inbound" &> /dev/null
+  --destination-port-range 81 --access Allow --protocol Tcp --direction "Inbound" &> /dev/null
 
-MESSAGE="==>Network Security rule for the eShop App successfully created"; simple_green_echo
+MESSAGE="==>Network Security rule for port 81  successfully created"; simple_green_echo
 #Create LB Probes
 az network lb probe create -g $iaas_rg --lb-name IaasLb  --name healthprobe --protocol "tcp" --port 80 --interval 15 &> /dev/null
 MESSAGE="==>Load Balancer Probe successfully created"; simple_green_echo

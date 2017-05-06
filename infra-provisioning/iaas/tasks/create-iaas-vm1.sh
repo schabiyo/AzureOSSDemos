@@ -66,15 +66,15 @@ MESSAGE=" Installing Docker on the DEV VM using ansible" ; simple_blue_echo
 # Updatethe Host file with the 2 server host
 # we need to make sure we run the ansible playbook from this directory to pick up the cfg file
 #May be just create the hosts file on the fly
-touch azure-ossdemos-git/ansible/docker-host-vm2
-printf "%s\n" "[dockerhosts]" >> azure-ossdemos-git/ansible/docker-host-vm1
-printf "%s\n" "dev-${server_prefix}.${location}.cloudapp.azure.com" >> azure-ossdemos-git/ansible/docker-host-vm1
+touch azure-ossdemos-git/infra-provisioning/ansible/docker-host-vm2
+printf "%s\n" "[dockerhosts]" >> azure-ossdemos-git/infra-provisioning/ansible/docker-host-vm1
+printf "%s\n" "dev-${server_prefix}.${location}.cloudapp.azure.com" >> azure-ossdemos-git/infra-provisioning/ansible/docker-host-vm1
 
-sed -i -e "s@VALUEOF-DEMO-ADMIN-USER-NAME@${server_admin_username}@g" azure-ossdemos-git/ansible/playbook-deploy-dockerengine.yml
-sed -i -e "s@WORKSPACE-KEY@${omskey}@g" azure-ossdemos-git/ansible/playbook-deploy-dockerengine.yml
-sed -i -e "s@WORKSPACE-ID@${omsid}@g" azure-ossdemos-git/ansible/playbook-deploy-dockerengine.yml
+sed -i -e "s@VALUEOF-DEMO-ADMIN-USER-NAME@${server_admin_username}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-deploy-dockerengine.yml
+sed -i -e "s@WORKSPACE-KEY@${omskey}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-deploy-dockerengine.yml
+sed -i -e "s@WORKSPACE-ID@${omsid}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-deploy-dockerengine.yml
 
-cd azure-ossdemos-git/ansible/ 
+cd azure-ossdemos-git/infra-provisioning/ansible/ 
  ansible-playbook -i docker-host-vm1 playbook-deploy-dockerengine.yml --private-key ~/.ssh/${server_prefix}_id_rsa
 cd ..
 
