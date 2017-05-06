@@ -32,8 +32,6 @@ az appservice web deployment slot create -n  $server_prefix-api-nodejs -g $paas_
 MESSAGE="==>Deployment slot successfully created for Dev" ; simple_green_echo
 az appservice web deployment slot create -n  $server_prefix-api-nodejs -g $paas_rg -s staging
 MESSAGE="==>Deployment slot successfully created for Staging" ; simple_green_echo
-az appservice web deployment slot create -n  $server_prefix-api-nodejs -g $paas_rg -s production
-MESSAGE="==>Deployment slot successfully created for Production" ; simple_green_echo
 
 
 # Configure the deployment slots for dev staging and production

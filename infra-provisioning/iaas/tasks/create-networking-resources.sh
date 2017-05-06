@@ -20,11 +20,11 @@ az group create --name $iaas_rg --location $location  &> /dev/null
 MESSAGE="==>Resource group successfully created"; simple_green_echo
 az network vnet create -g $iaas_rg  -n ossdemo-iaas-vnet --address-prefix 10.0.0.0/16 --subnet-name WebSubnet --subnet-prefix 10.0.0.0/24 -l $location &> /dev/null
 MESSAGE="==>VNET successfully created"; simple_green_echo
-#Create a Public IP  for web1
-az network public-ip create -g $iaas_rg -n web1pip --dns-name web1-$server_prefix --allocation-method Static -l $location &> /dev/null
+#Create a Public IP  for DEV
+az network public-ip create -g $iaas_rg -n devpip --dns-name dev-$server_prefix --allocation-method Static -l $location &> /dev/null
 MESSAGE="==>Public IP for Web Server 1 successfully created"; simple_green_echo
 #Create public IP for web
-az network public-ip create -g $iaas_rg -n web2pip --dns-name web2-$server_prefix --allocation-method Static -l $location &> /dev/null
+az network public-ip create -g $iaas_rg -n stagingpip --dns-name staging-$server_prefix --allocation-method Static -l $location &> /dev/null
 MESSAGE="==>Public IP for Web Server 2 successfully created"; simple_green_echo
 #Create public IP for LB
 az network public-ip create -g $iaas_rg -n lbpip --dns-name $server_prefix"-iaas" --allocation-method Static -l $location &> /dev/null
@@ -90,8 +90,8 @@ printf "%s" "-----END RSA PRIVATE KEY-----" >> ~/.ssh/${server_prefix}_id_rsa
 
 echo $server_ssh_public_key >> ~/.ssh/${server_prefix}_id_rsa.pub
 # Add this to the config file
-echo -e "Host=web1-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
-echo -e "Host=web2-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
+echo -e "Host=dev-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
+echo -e "Host=staging-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
 chmod 600 ~/.ssh/config
 chmod 600 ~/.ssh/*_id_rsa*
 
