@@ -21,10 +21,8 @@ az network public-ip create -g $iaas_rg -n devpip --dns-name dev-$server_prefix 
 MESSAGE="==>Public IP for DEV successfully created"; simple_green_echo
 #Create NICs for the VM2
 az network nic create -g $iaas_rg --name dev-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
-  --lb-address-pool "/subscriptions/$subscription_id/resourceGroups/$iaas_rg/providers/Microsoft.Network/loadBalancers/IaasLb/backendAddressPools/IaasLbbepool" \
   --location $location \
   --public-ip-address devpip \
-  --lb-name IaasLb \
   --network-security-group nsg-iaas-demo &> /dev/null
 MESSAGE="==>NIC for the DEV VM successfully created"; simple_green_echo
 # Init ssh folder and Copy ssh key file 
@@ -73,6 +71,7 @@ printf "%s\n" "dev-${server_prefix}.${location}.cloudapp.azure.com" >> azure-oss
 sed -i -e "s@VALUEOF-DEMO-ADMIN-USER-NAME@${server_admin_username}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-deploy-dockerengine.yml
 sed -i -e "s@WORKSPACE-KEY@${omskey}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-deploy-dockerengine.yml
 sed -i -e "s@WORKSPACE-ID@${omsid}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-deploy-dockerengine.yml
+sed -i -e "s@DOCKER-HOSTNAME@dev-${server_prefix}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-deploy-dockerengine.yml
 
 cd azure-ossdemos-git/infra-provisioning/ansible/ 
  ansible-playbook -i docker-host-vm1 playbook-deploy-dockerengine.yml --private-key ~/.ssh/${server_prefix}_id_rsa

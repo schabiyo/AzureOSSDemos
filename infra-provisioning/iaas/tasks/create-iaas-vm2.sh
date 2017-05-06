@@ -19,10 +19,8 @@ az network public-ip create -g $iaas_rg -n stagingpip --dns-name staging-$server
 MESSAGE="==>Public IP for the STAGING VM successfully created"; simple_green_echo
 #Create NICs for the VM2
 az network nic create -g $iaas_rg --name staging-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
-  --lb-address-pool "/subscriptions/$subscription_id/resourceGroups/$iaas_rg/providers/Microsoft.Network/loadBalancers/IaasLb/backendAddressPools/IaasLbbepool" \
   --location $location \
   --public-ip-address stagingpip \
-  --lb-name IaasLb \
   --network-security-group nsg-iaas-demo  &> /dev/null
 MESSAGE="==>NIC for the STAGING VM successfully created"; simple_green_echo
 # Create a new virtual machine, this creates SSH keys if not present. 
