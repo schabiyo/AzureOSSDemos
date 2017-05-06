@@ -1,4 +1,32 @@
 ---
+groups:
+
+- name: FrontEnd-ASP.NET Core
+  jobs:
+  - web-unit-test
+  - web-dev-deploy
+  - web-integration
+  - web-major
+  - web-minor
+
+- name: Backend-NodeJS
+  jobs:
+  - unit-test
+  - dev-rc
+  - dev-deploy-iaas
+  - dev-deploy-paas
+  - dev-deploy-k8s
+  - staging-deploy-iaas
+  - staging-deploy-paas
+  - staging-deploy-k8s
+  - integration
+  - staging-rc
+  - stage-e2e
+  - shipit
+  - api-major
+  - api-minor
+   
+
 resources:
  - name: api-nodejs
    type: git
@@ -35,7 +63,7 @@ resources:
  - name: api-nodejs-image
    type: docker-image
    source:
-     repository: syoossdemoacr.azurecr.io:443/ossdemo/api-nodejs
+     repository: {{ACR-API-REPOSITORY}}
      username: {{ACR-USERNAME}}
      password: {{ACR-PASSWORD}} 
 
@@ -53,7 +81,7 @@ resources:
     
 
 jobs:
-  - name: build-and-test
+  - name: unit-test
     serial: true
     public: false
     plan:
@@ -83,11 +111,11 @@ jobs:
           - GIT_EMAIL: {{git-email}}
           - GIT_NAME: {{git-name}}
 
-  - name: release-dev-deploy
+  - name: dev-rc
     serial_groups: [version]
     plan:
       - get: api-nodejs
-        passed: [build-and-test]
+        passed: [unit-test]
         trigger: true
       - get: api-version
         param: {pre: rc}
@@ -99,9 +127,61 @@ jobs:
           - tag: api-version/number
       - put: api-version
         params: {file: api-version/number}
-      - task: deploy-to-dev
+
+  - name: dev-deploy-iaas
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs
+        passed: [dev-rc]
+        trigger: false
+      - get: api-version
+      - put: api-version
+        params: {file: api-version/number}
+      - task: deploy-to-dev-iaas
+        file: api-nodejs/ci/tasks/deploy-to-dev-iaas.yml
+        params:
+          - server_admin_username: {{SERVER-ADMIN-USERNAME}}
+          - server_prefix: {{SERVER-PREFIX}}
+          - acr_username: {{ACR-USERNAME}}
+          - acr_password: {{ACR-PASSWORD}}
+          - acr_endpoint: {{ACR-ENDPOINT}}
+          - server_location: {{SERVER-LOCATION}}
+          - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
+          - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
+
+
+  - name: dev-deploy-paas
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs
+        passed: [dev-rc]
+        trigger: yes
+      - get: api-version
+      - task: deploy-to-dev-paas
+        file: api-nodejs/ci/tasks/deploy-to-dev-paas.yml
+        params:
+          - service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+          - service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+          - tenant_id: {{TENANT_ID}}
+          - subscription_id: {{SUBSCRIPTION_ID}}
+          - paas_rg: {{RG_PAAS}}
+          - server_prefix: {{SERVER-PREFIX}}
+          - acr_username: {{ACR-USERNAME}}
+          - acr_password: {{ACR-PASSWORD}}
+          - acr_endpoint: {{ACR-ENDPOINT}}
+
+  - name: dev-deploy-k8s
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs
+        passed: [dev-rc]
+        trigger: false
+      - get: api-version
+      - put: api-version
+        params: {file: api-version/number}
+      - task: deploy-to-dev-k8s
         file: api-nodejs/ci/tasks/deploy-to-dev.yml
-        
+      
   - name: web-dev-deploy
     serial_groups: [version]
     plan:
@@ -126,9 +206,9 @@ jobs:
     plan: 
       - get: api-nodejs-image
         trigger: true
-        passsed: [release-dev-deploy]
+        passsed: [dev-deploy-paas]
       - get: api-nodejs
-        passed: [release-dev-deploy]
+        passed: [dev-deploy-paas]
       - task: integration
         file: api-nodejs/ci/tasks/integration.yml
         params:
@@ -145,7 +225,7 @@ jobs:
         file: web-nodejs/ci/tasks/integration.yml
 
        
-  - name: release-stage-deploy
+  - name: staging-rc
     serial_groups: [version]
     plan:
       - get: api-nodejs-image
@@ -159,13 +239,70 @@ jobs:
           - build: api-nodejs
           - tag: api-version/number
   
+  - name: staging-deploy-iaas
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs
+        passed: [staging-rc]
+        trigger: false
+      - get: api-version
+      - put: api-version
+        params: {file: api-version/number}
+      - task: deploy-to-staging-iaas
+        file: api-nodejs/ci/tasks/deploy-to-staging-iaas.yml
+        params:
+          - server_admin_username: {{SERVER-ADMIN-USERNAME}}
+          - server_prefix: {{SERVER-PREFIX}}
+          - acr_username: {{ACR-USERNAME}}
+          - acr_password: {{ACR-PASSWORD}}
+          - acr_endpoint: {{ACR-ENDPOINT}}
+          - server_location: {{SERVER-LOCATION}}
+          - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
+          - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
+
+
+  - name: staging-deploy-paas
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs
+        passed: [staging-rc]
+        trigger: false
+      - get: api-nodejs-image
+        trigger: true
+        passsed: [staging-rc]
+      - get: api-version
+      - task: deploy-to-staging-paas
+        file: api-nodejs/ci/tasks/deploy-to-staging-paas.yml
+        params:
+          - service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+          - service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+          - tenant_id: {{TENANT_ID}}
+          - subscription_id: {{SUBSCRIPTION_ID}}
+          - paas_rg: {{RG_PAAS}}
+          - server_prefix: {{SERVER-PREFIX}}
+          - acr_username: {{ACR-USERNAME}}
+          - acr_password: {{ACR-PASSWORD}}
+          - acr_endpoint: {{ACR-ENDPOINT}}
+  
+  - name: staging-deploy-k8s
+    serial_groups: [version]
+    plan:
+      - get: api-nodejs
+        passed: [staging-rc]
+        trigger: false
+      - get: api-version
+      - put: api-version
+        params: {file: api-version/number}
+      - task: deploy-to-staging-k8s
+        file: api-nodejs/ci/tasks/deploy-to-dev.yml
+
   - name: stage-e2e
     serial_groups: [version]
     plan:
       - get: api-nodejs-image
-        passed: [release-stage-deploy]
+        passed: [staging-deploy-paas]
       - get: api-nodejs
-        passed: [release-stage-deploy]
+        passed: [staging-deploy-paas]
       - get: sqlserver
       - get: api-version
         params: {bump: rc}
@@ -175,7 +312,7 @@ jobs:
           - tag: api-version/number
 
 
-  - name: release-production-deploy
+  - name: shipit
     serial_groups: [version]
     plan:
       - get: api-nodejs-image
@@ -187,7 +324,7 @@ jobs:
       - put: api-nodejs-image
         params: 
           - build: api-nodejs
-          - tag_as_latest: true
+          - tag: api-version/number
 
 
 #Utilities to bump versions
