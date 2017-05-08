@@ -1,7 +1,7 @@
 # AzureOSSDemos : A series of demos showcasing OSS on Azure 
 
 Concourse is used as Pipeline to automate the deployment of the demos. If you are not familir with Concourse (http://concourse.ci), do not worry, the actual demo scripts
-has no dependency with concource and can be ran using your favorite CICD pipeline tool. These demo are based on the Skylab project by Microsoft that can be found here:
+has no dependency with concource and can be ran using your favorite CICD pipeline tool. Some parts of these demos are based on the Skylab project by Microsoft that can be found here:
 https://blogs.technet.microsoft.com/msuspartner/2017/04/13/open-source-partners-open-source-demos-microsoft-azure/
 
 Follow the instruction on that page for a manual deployment.
