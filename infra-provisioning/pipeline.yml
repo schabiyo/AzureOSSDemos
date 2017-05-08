@@ -38,7 +38,7 @@ jobs:
   - get: azure-ossdemos-git
     triggered: true
   - task: validate-input
-    file: azure-ossdemos-git/jumpbox/tasks/validate-input.yml
+    file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/validate-input.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -53,7 +53,7 @@ jobs:
     triggered: true
   - get: azure-oss-demos
   - task: build-jumpbox
-    file: azure-ossdemos-git/jumpbox/tasks/create-jumpbox.yml
+    file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/create-jumpbox.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -69,16 +69,16 @@ jobs:
       location: {{LOCATION}}
   - aggregate:
     - task: ansible-configure-dotnet-core
-      file: azure-ossdemos-git/jumpbox/tasks/configure-dotnet-core.yml
+      file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/configure-dotnet-core.yml
     - task: ansible-configure-vs-code
-      file: azure-ossdemos-git/jumpbox/tasks/configure-vs-code.yml
+      file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/configure-vs-code.yml
       params:
         jumpbox_prefix: {{SERVER_PREFIX}}
         jumpbox_admin: {{SERVER_ADMIN_USERNAME}}
         jumpbox_admin_password: {{SERVER_ADMIN_PASSWORD}}
         location: {{LOCATION}}
     - task: ansible-configure-rdp-tools
-      file: azure-ossdemos-git/jumpbox/tasks/configure-rdp-tools.yml
+      file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/configure-rdp-tools.yml
       params:
         jumpbox_prefix: {{SERVER_PREFIX}}
         jumpbox_admin: {{SERVER_ADMIN_USERNAME}}
@@ -92,7 +92,7 @@ jobs:
       triggered: true
       passed: [validate-input]
     - task: create-oms-workspace
-      file: azure-ossdemos-git/oms/tasks/create-oms-workspace.yml
+      file: azure-ossdemos-git/infra-provisioning/oms/tasks/create-oms-workspace.yml
       params:
         service_principal_id: {{SERVICE_PRINCIPAL_ID}}
         service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -110,7 +110,7 @@ jobs:
       passed:
       - validate-input
     - task: create-container-registry
-      file: azure-ossdemos-git/acr/tasks/create-acr.yml
+      file: azure-ossdemos-git/infra-provisioning/acr/tasks/create-acr.yml
       params:
         service_principal_id: {{SERVICE_PRINCIPAL_ID}}
         service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -131,7 +131,7 @@ jobs:
       passed:
       - create-oms-workspace
     - task: create-iaa-vms-init
-      file: azure-ossdemos-git/iaas/tasks/create-iaas-vms.yml
+      file: azure-ossdemos-git/infra-provisioning/iaas/tasks/create-networking-resources.yml
       params:
         service_principal_id: {{SERVICE_PRINCIPAL_ID}}
         service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -148,7 +148,7 @@ jobs:
         server_prefix: {{SERVER_PREFIX}}
     - aggregate:
       - task: create-iaas-vm1
-        file: azure-ossdemos-git/iaas/tasks/create-iaas-vm1.yml
+        file: azure-ossdemos-git/infra-provisioning/iaas/tasks/create-iaas-vm1.yml
         params:
           service_principal_id: {{SERVICE_PRINCIPAL_ID}}
           service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -164,7 +164,7 @@ jobs:
           server_ssh_public_key: {{SERVER_SSH_PUBLIC_KEY}}
           server_prefix: {{SERVER_PREFIX}}
       - task: create-iaas-vm2
-        file:  azure-ossdemos-git/iaas/tasks/create-iaas-vm2.yml
+        file:  azure-ossdemos-git/infra-provisioning/iaas/tasks/create-iaas-vm2.yml
         params:
           service_principal_id: {{SERVICE_PRINCIPAL_ID}}
           service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -188,7 +188,7 @@ jobs:
       - create-oms-workspace
       - create-container-registry
     - task: create-kubernetes-cluster
-      file: azure-ossdemos-git/acs/tasks/create-k8s.yml
+      file: azure-ossdemos-git/infra-provisioning/acs/tasks/create-k8s.yml
       params:
         service_principal_id: {{SERVICE_PRINCIPAL_ID}}
         service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -213,7 +213,7 @@ jobs:
       passed:
       - create-oms-workspace
     - task: create-configure-webplan
-      file: azure-ossdemos-git/paas/tasks/create-webplan.yml
+      file: azure-ossdemos-git/infra-provisioning/paas/tasks/create-webplan.yml
       params:
         service_principal_id: {{SERVICE_PRINCIPAL_ID}}
         service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -234,9 +234,9 @@ jobs:
     - get: azure-ossdemos-git
       passed: [create-container-registry]
     - task: build-docker-images
-      file: azure-ossdemos-git/jumpbox/tasks/create-acr.yml
+      file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/create-acr.yml
     - task: publish-docker-images
-      file: azure-ossdemos-git/jumpbox/tasks/create-acr.yml
+      file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/create-acr.yml
 
 
 - name: delete-jumpbox
@@ -246,7 +246,7 @@ jobs:
     trigger: false
     passed: [ delete-oms-workspace, delete-azure-container-registry ]
   - task: destroy-jumpbox
-    file: azure-ossdemos-git/jumpbox/tasks/destroy-jumpbox.yml
+    file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/destroy-jumpbox.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -260,7 +260,7 @@ jobs:
   - get: azure-ossdemos-git
     trigger: false
   - task: delete-oms-workspace
-    file: azure-ossdemos-git/oms/tasks/delete-oms-workspace.yml
+    file: azure-ossdemos-git/infra-provisioning/oms/tasks/delete-oms-workspace.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -275,7 +275,7 @@ jobs:
   - get: azure-ossdemos-git
     trigger: false
   - task: delete-azure-container-registry
-    file: azure-ossdemos-git/acr/tasks/delete-acr.yml
+    file: azure-ossdemos-git/infra-provisioning/acr/tasks/delete-acr.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -289,7 +289,7 @@ jobs:
   - get: azure-ossdemos-git
     trigger: false
   - task: delete-docker-vms
-    file: azure-ossdemos-git/iaas/tasks/destroy-docker-vms.yml
+    file: azure-ossdemos-git/infra-provisioning/iaas/tasks/destroy-docker-vms.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
@@ -305,7 +305,7 @@ jobs:
   - get: azure-ossdemos-git
     trigger: false
   - task: delete-kubernetes-cluster
-    file: azure-ossdemos-git/acs/tasks/delete-k8s.yml
+    file: azure-ossdemos-git/infra-provisioning/acs/tasks/delete-k8s.yml
     params:
       service_principal_id: {{SERVICE_PRINCIPAL_ID}}
       service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}

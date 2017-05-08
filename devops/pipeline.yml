@@ -33,7 +33,7 @@ resources:
    source:
     uri: {{API-NODEJS-URL}}
 
- - name: web-nodejs
+ - name: web-asp-dotnet
    type: git
    source:
     uri: {{WEB-NODEJS-URL}}
@@ -53,7 +53,7 @@ resources:
    type: semver
    source:
     driver: git
-    uri: {{WEB-NODEJS-URL}}
+    uri: {{WEB-ASP-DOTNET-URL}}
     branch: version
     file: version
     username: schabiyo
@@ -67,10 +67,10 @@ resources:
      username: {{ACR-USERNAME}}
      password: {{ACR-PASSWORD}} 
 
- - name: web-nodejs-image
+ - name: web-asp-dotnet-image
    type: docker-image
    source:
-     repository: syoossdemoacr.azurecr.io:443/ossdemo/web-nodejs
+     repository: syoossdemoacr.azurecr.io:443/ossdemo/web-asp-dotnet
      username: {{ACR-USERNAME}}
      password: {{ACR-PASSWORD}}
 
@@ -87,7 +87,9 @@ jobs:
     plan:
       - aggregate:
         - get: api-nodejs
+          trigger: true
         - get: api-version
+          param: {pre: rc}
           resource: api-version
           trigger: true
       - task: build-and-test
@@ -101,12 +103,12 @@ jobs:
     public: false
     plan:
       - aggregate:
-        - get: web-nodejs
+        - get: web-asp-dotnet
         - get: web-version
           resource: web-version
           trigger: true
       - task: unit-test
-        file: web-nodejs/ci/tasks/build-and-test.yml
+        file: web-asp-dotnet/ci/tasks/build-and-test.yml
         params:
           - GIT_EMAIL: {{git-email}}
           - GIT_NAME: {{git-name}}
@@ -114,19 +116,22 @@ jobs:
   - name: dev-rc
     serial_groups: [version]
     plan:
+#      - aggregate:
       - get: api-nodejs
         passed: [unit-test]
         trigger: true
       - get: api-version
-        param: {pre: rc}
+        resource: api-version
+        passed: [unit-test]
+        trigger: true
       - task: build-artifact
         file: api-nodejs/ci/tasks/build-rc.yml
       - put: api-nodejs-image
         params:
           - build: api-nodejs
-          - tag: api-version/number
-      - put: api-version
-        params: {file: api-version/number}
+          - tag_as_latest: true
+#      - put: api-version
+#        params: {file: api-version/number}
 
   - name: dev-deploy-iaas
     serial_groups: [version]
@@ -153,10 +158,14 @@ jobs:
   - name: dev-deploy-paas
     serial_groups: [version]
     plan:
-      - get: api-nodejs
-        passed: [dev-rc]
-        trigger: yes
-      - get: api-version
+      - aggregate:
+         - get: api-nodejs
+           passed: [dev-rc]
+           trigger: true
+         - get: api-version
+           resource: api-version
+           passed: [dev-rc]
+           trigger: true
       - task: deploy-to-dev-paas
         file: api-nodejs/ci/tasks/deploy-to-dev-paas.yml
         params:
@@ -177,38 +186,45 @@ jobs:
         passed: [dev-rc]
         trigger: false
       - get: api-version
-      - put: api-version
-        params: {file: api-version/number}
+      - get: api-nodejs-image
+        trigger: true
+        passed: [dev-rc]
       - task: deploy-to-dev-k8s
-        file: api-nodejs/ci/tasks/deploy-to-dev.yml
+        file: api-nodejs/ci/tasks/deploy-to-dev-k8s.yml
       
   - name: web-dev-deploy
     serial_groups: [version]
     plan:
-      - get: web-nodejs
+      - get: web-asp-dotnet
         passed: [web-unit-test]
         trigger: true
       - get: web-version
         param: {pre: rc}
       - task: build-artifact
-        file: web-nodejs/ci/tasks/build-rc.yml
-      - put: web-nodejs-image
+        file: web-asp-dotnet/ci/tasks/build-rc.yml
+      - put: web-asp-dotnet-image
         params:
-          - build: web-nodejs
+          - build: web-asp-dotnet
           - tag: web-version/number
       - put: web-version
         params: {file: web-version/number}
       - task: deploy-to-dev
-        file: web-nodejs/ci/tasks/deploy-to-dev.yml
+        file: web-asp-dotnet/ci/tasks/deploy-to-dev.yml
        
   - name: integration
     serial: true
-    plan: 
-      - get: api-nodejs-image
-        trigger: true
-        passsed: [dev-deploy-paas]
-      - get: api-nodejs
-        passed: [dev-deploy-paas]
+    plan:
+      - aggregate: 
+    #  - get: api-nodejs-image
+    #    trigger: true
+    #    passed: [dev-deploy-paas]
+        - get: api-nodejs
+          passed: [dev-deploy-paas]
+          trigger: true
+        - get: api-version
+          resource: api-version
+          passed: [dev-deploy-paas]
+          trigger: true
       - task: integration
         file: api-nodejs/ci/tasks/integration.yml
         params:
@@ -216,24 +232,29 @@ jobs:
   - name: web-integration
     serial: true
     plan:
-      - get: web-nodejs-image
+      - get: web-asp-dotnet-image
         trigger: true
-        passsed: [web-dev-deploy]
-      - get: web-nodejs
+        passed: [web-dev-deploy]
+      - get: web-asp-dotnet
         passed: [web-dev-deploy]
       - task: integration
-        file: web-nodejs/ci/tasks/integration.yml
+        file: web-asp-dotnet/ci/tasks/integration.yml
 
        
   - name: staging-rc
     serial_groups: [version]
     plan:
-      - get: api-nodejs-image
-        passed: [integration]
-      - get: api-nodejs
-        passed: [integration]
-      - get: api-version
-        params: {bump: rc}
+      - aggregate:
+        - get: api-nodejs
+          passed: [integration]
+          trigger: true
+        - get: api-version
+          resource: api-version
+          passed: [integration]
+          params: {bump: rc}
+          trigger: true
+      - put: api-version
+        params: {file: api-version/number}
       - put: api-nodejs-image
         params:
           - build: api-nodejs
@@ -264,13 +285,14 @@ jobs:
   - name: staging-deploy-paas
     serial_groups: [version]
     plan:
-      - get: api-nodejs
-        passed: [staging-rc]
-        trigger: false
-      - get: api-nodejs-image
-        trigger: true
-        passsed: [staging-rc]
-      - get: api-version
+      - aggregate:
+         - get: api-nodejs
+           passed: [staging-rc]
+           trigger: true
+         - get: api-version
+           resource: api-version
+           passed: [staging-rc]
+           trigger: true
       - task: deploy-to-staging-paas
         file: api-nodejs/ci/tasks/deploy-to-staging-paas.yml
         params:
@@ -290,41 +312,49 @@ jobs:
       - get: api-nodejs
         passed: [staging-rc]
         trigger: false
+      - get: api-nodejs-image
+        trigger: true
+        passed: [staging-rc]
       - get: api-version
       - put: api-version
         params: {file: api-version/number}
       - task: deploy-to-staging-k8s
-        file: api-nodejs/ci/tasks/deploy-to-dev.yml
+        file: api-nodejs/ci/tasks/deploy-to-staging-k8s.yml
 
   - name: stage-e2e
     serial_groups: [version]
     plan:
-      - get: api-nodejs-image
-        passed: [staging-deploy-paas]
-      - get: api-nodejs
-        passed: [staging-deploy-paas]
+      - aggregate:
+        - get: api-nodejs
+          passed: [staging-deploy-paas]
+          trigger: true
+        - get: api-version
+          resource: api-version
+          passed: [staging-deploy-paas]
+          trigger: true
+          params: {bump: rc}
       - get: sqlserver
-      - get: api-version
-        params: {bump: rc}
-      - put: api-nodejs-image
-        params:
-          - build: api-nodejs
-          - tag: api-version/number
 
 
   - name: shipit
     serial_groups: [version]
     plan:
-      - get: api-nodejs-image
-        passed: [stage-e2e]
-      - get: api-nodejs
-        passed: [stage-e2e]
-      - get: api-version
-        params: {bump: final}
+      - aggregate:
+#      - get: api-nodejs-image
+#        passed: [stage-e2e]
+        - get: api-nodejs
+          passed: [stage-e2e]
+          trigger: true
+        - get: api-version
+          resource: api-version
+          passed: [stage-e2e]
+          params: {bump: final}
       - put: api-nodejs-image
         params: 
           - build: api-nodejs
           - tag: api-version/number
+      - put: api-version
+        params: {file: api-version/number}
 
 
 #Utilities to bump versions
