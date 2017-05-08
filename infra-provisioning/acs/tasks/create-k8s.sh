@@ -45,9 +45,9 @@ MESSAGE="==> Creating secret to login to the private registry" ; simple_blue_ech
 getACRCredentials acr_username acr_password
 
 echo $acr_username $acr_password
-
+docker_server="${registry_name}.azurerc.io"
 ~/kubectl create secret docker-registry ossdemoregistrykey \
-        --docker-server=$registry_name \
+        --docker-server="${registry_name}.azurecr.io:443" \
         --docker-username=$acr_username \
         --docker-password=$acr_password \
         --docker-email=$demo_admin_email
