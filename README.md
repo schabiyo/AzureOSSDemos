@@ -4,6 +4,8 @@ Concourse is used as Pipeline to automate the deployment of the demos. If you ar
 has no dependency with concource and can be ran using your favorite CICD pipeline tool. Some parts of these demos are based on the Skylab project by Microsoft that can be found here:
 https://blogs.technet.microsoft.com/msuspartner/2017/04/13/open-source-partners-open-source-demos-microsoft-azure/
 
+My pipelines are hosted here if you want to take look: http://ci.syolab.io/
+
 Follow the instruction on that page for a manual deployment.
 
 
