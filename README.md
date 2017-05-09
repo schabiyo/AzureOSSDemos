@@ -11,12 +11,16 @@ Follow the instruction on that page for a manual deployment.
 
 ## Table of contents
 
-* [01- jumbox](jumpbox.md)
+* [01 - Environment setup](jumpbox.md)
 
 
-* [02- demo1](demo1.md)
+
+![Boostrap](/doc/Utility1.PNG "Boostrap")
+
+A second pipeline existe as well to unprovision the envionment. More details on the environment provision/unprovision HERE
+
+* [02- DevOps pipeline](demo1.md)
 * [03- demo2](demo2.md)
-* [04 demo3](demo3.md)
 
 
 
