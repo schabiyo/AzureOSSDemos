@@ -1,4 +1,4 @@
-# A series of demos showcasing OSS on Azure 
+# A series of demos showcasing OSS, DevOps and Container on Azure 
 
 Concourse is used as Pipeline to automate the deployment of the demos. If you are not familir with Concourse (http://concourse.ci), do not worry, the actual demo scripts
 has no dependency with concource and can be ran using your favorite CICD pipeline tool. Some parts of these demos are based on the Skylab project by Microsoft that can be found here:
