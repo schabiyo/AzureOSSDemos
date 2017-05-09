@@ -4,6 +4,9 @@ set -e -x
 source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
 
 az login --service-principal -u $service_principal_id -p $service_principal_secret --tenant $tenant_id
+az account set --subscription "$subscription_id"  &> /dev/null
+#Create th eRG is it does not exist
+az group create --name "$utility_rg" --location "$location"
 
 #CHeck if the ACR already exist
 
