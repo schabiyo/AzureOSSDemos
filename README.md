@@ -15,7 +15,7 @@ Follow the instruction on that page for a manual deployment.
 
 
 
-![Boostrap](/doc/Utility1.PNG "Boostrap")
+![Boostrap](/docs/Utility1.PNG "Boostrap")
 
 A second pipeline existe as well to unprovision the envionment. More details on the environment provision/unprovision HERE
 
