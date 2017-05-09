@@ -18,4 +18,4 @@ inputs:
   - name: azure-ossdemos-git
 
 run:
-  path: azure-ossdemos-git/acr/tasks/delete-acr.sh
+  path: azure-ossdemos-git/infra-provisioning/acr/tasks/delete-acr.sh
