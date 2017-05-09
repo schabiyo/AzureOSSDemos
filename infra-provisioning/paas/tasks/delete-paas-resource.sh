@@ -11,5 +11,5 @@ az login --service-principal -u "$service_principal_id" -p "$service_principal_s
 az account set --subscription "$subscription_id"
 
 #BUILD RESOURCE GROUPS
-az group delete --name $paas_rg  &>/dev/null
+az group delete --name $paas_rg  --yes &>/dev/null
 
