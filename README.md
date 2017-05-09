@@ -11,7 +11,7 @@ Follow the instruction on that page for a manual deployment.
 
 ## Table of contents
 
-* [01 - Environment setup](jumpbox.md)
+* [Environment setup pipeline](jumpbox.md)
 
 
 ![Boostrap](/docs/Utility1.PNG "Boostrap")
@@ -22,7 +22,7 @@ A second pipeline existe as well to unprovision the envionment.
 
 More details on the environment provision/unprovision HERE
 
-* [02- DevOps pipeline](demo1.md)
+* [DevOps pipeline](demo1.md)
 
 
 

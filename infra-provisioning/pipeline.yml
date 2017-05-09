@@ -17,9 +17,19 @@ groups:
   - delete-azure-container-registry
   - delete-docker-vms
   - delete-kubernetes-cluster
+  - teardown-at-midnight
 
 
 resources:
+
+- name: teardown-at-midnight
+  type: time
+  source:
+    start: 10:05 AM
+    stop: 11:00 AM
+    location: Canada/Eastern
+    days: [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+
 - name: azure-ossdemos-git
   type: git
   source:
@@ -33,6 +43,54 @@ resources:
     branch: master
 
 jobs:
+- name: teardown-at-midnight
+  plan:
+  - get: teardown-at-midnight
+    trigger: true
+  - get: azure-ossdemos-git
+  - task: delete-oms-workspace
+    file: azure-ossdemos-git/infra-provisioning/oms/tasks/delete-oms-workspace.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      utility_rg: {{RG_UTILITY}}
+      oms_workspace_name: {{OMS_WORKSPACE_NAME}}
+  - task: delete-docker-vms
+    file: azure-ossdemos-git/infra-provisioning/oms/tasks/destroy-docker-vms.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      iaas_rg: {{RG_UTILITY}}
+  - task: delete-kubernetes-cluster
+    file: azure-ossdemos-git/infra-provisioning/acs/tasks/delete-k8s.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      acs_rg: {{RG_ACS_K8S}}
+      server_prefix: {{SERVER_PREFIX}}
+  - task: delete-azure-container-registry
+    file: azure-ossdemos-git/infra-provisioning/acr/tasks/delete-acr.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      utility_rg: {{RG_UTILITY}}
+  - task: delete-jumpbox
+    file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/destroy-jumpbox.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      utility_rg: {{RG_UTILITY}}
+
 - name: validate-input
   plan:
   - get: azure-ossdemos-git
@@ -109,6 +167,7 @@ jobs:
     - get: azure-ossdemos-git
       passed:
       - validate-input
+      trigger: true
     - task: create-container-registry
       file: azure-ossdemos-git/infra-provisioning/acr/tasks/create-acr.yml
       params:
