@@ -1,0 +1,22 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: 
+    repository: schabiyo/ossdemo 
+    tag: latest
+
+params:
+  service_principal_id: 
+  service_principal_secret:
+  tenant_id:
+  subscription_id:
+  location:
+  paas_rg:
+
+inputs:
+  - name: azure-ossdemos-git
+
+run:
+  path: azure-ossdemos-git/infra-provisioning/paas/tasks/delete-paas-resource.sh
