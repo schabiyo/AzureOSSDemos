@@ -47,9 +47,24 @@ You should see something similar to the folowing in your browser:
 
 A second pipeline existe as well to unprovision the envionment. The intend here is to be able to tear down the environment with a single click. In my case I alwassy needed to remind myself to deallocate the resource, which can be painful. So if you are like me, then I'm happy to let you know that I have made used of the [Concourse Time resource](https://github.com/concourse/time-resource)  that tear down the environment everyday at midnight. You can decide to change it to what ever suit you, the documentation on the time resource is self-explanatory.
 
+The current configuration of the "teardown-at-midnight" is as follow:
+
+```yaml
+resources:
+- name: teardown-at-midnight
+  type: time
+  source:
+    start: 12:00 AM
+    stop: 1:00 AM
+    location: Canada/Eastern
+    days: [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
+```
+
+
 ![Unprovision](/docs/Utility2.PNG "Unprovision")
 
-You might want to tear down only some of the provisioning resource, in that case just on the corresponding box and create a new build. In the other hand if you wan tto destroy the whole setup at once, juste run the "teardown-at-midnight" job.
+You might want to tear down only some of the provisioning resource, in that case just on the corresponding box and create a new build. In the other hand if you want to destroy the whole setup at once, juste run the "teardown-at-midnight" job, although is is a scheduled job you can still run it on demand.
+
 
 
 If you found this guide lacking please submit an issue or PR through github. We appreciate your feedback.
