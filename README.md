@@ -58,6 +58,24 @@ fly --target ossdemos sync
 Create a Service Principal
 ----------------
 
+The pipepline requires what we call in the Azure world a Service Principalee to operate. It is basically an acccount under which the resource will be created in Azure. The service principal contains the following credentials which will need to be added to the credentials.yml file.
+
+- **TENANT_ID**
+- **CLIENT_ID**
+- **CLIENT_SECRET** 
+
+If you don't already have a SP, you can use the following script to create one. The script used the lastest Azure CLI 2.0.
+After running the script yo will get an output similar to the following:
+
+  Sample output:
+  ```
+  ==============Created Serivce Principal==============
+  SUBSCRIPTION_ID: 12345678-1234-5678-1234-678912345678
+  TENANT_ID:       11111111-1234-5678-1234-678912345678
+  CLIEND_ID:       87654321-1234-5678-1234-678912345678
+  CLIENT_SECRET:   RANDOM-STRING
+  ``` 
+All you have to do now if store those in the credentials.yml file under the corresponding key names.
 
 TODO
 ----------------
