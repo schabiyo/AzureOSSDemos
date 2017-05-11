@@ -11,7 +11,7 @@ Follow the instruction on that page for a manual deployment.
 
 ## Table of contents
 
-* [Environment setup pipeline](jumpbox.md)
+* [Environment setup pipeline](/infra-provisioning/)
 
 
 ![Boostrap](/docs/Utility1.PNG "Boostrap")
