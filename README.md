@@ -59,7 +59,14 @@ Create a Service Principal
 ----------------
 
 
-```
+TODO
+----------------
+
+* Azure Key Vault integration
+* Terraform as the IaaS provisioning tool
+* ANy suggestion?
+
+
 
 If you found this guide lacking please submit an issue or PR through github. We appreciate your feedback.
 
