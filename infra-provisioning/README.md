@@ -3,7 +3,7 @@
 The pipeline automatically provisions the following for you:
 
 * A fully configured Jumpbox VM
-* An OMS Workspace: used to monitor the VMs as well as dockers containers 
+* An OMS Workspace
 * An Azure Container Registry
 * 2 CoreOS VM fully configured with Docker via Ansible and automatically registered with OMS 
 * One App Service Web Plan configured with 2 slots: DEV and STAGING
@@ -15,7 +15,6 @@ The pipeline automatically provisions the following for you:
 This section assumes the following: 
 
 * You already have a concourse instance running. Please look at the home page of this repo on how to setup one.
-This pipeline has 2 sections:
 * You have an Azure subscription with a Service Principal already created. If you havent created a Service principal yet, please refer to the home page of this repo.
 
 ## Getting started
@@ -46,9 +45,12 @@ You should see something similar to the folowing in your browser:
 ![Boostrap](/docs/Utility1.PNG "Boostrap")
 
 
-A second pipeline existe as well to unprovision the envionment.
+A second pipeline existe as well to unprovision the envionment. The intend here is to be able to tear down the environment with a single click. In my case I alwassy needed to remind myself to deallocate the resource, which can be painful. So if you are like me, then I'm happy to let you know that I have made used of the [Concourse Time resource](https://github.com/concourse/time-resource)  that tear down the environment everyday at midnight. You can decide to change it to what ever suit you, the documentation on the time resource is self-explanatory.
 
 ![Unprovision](/docs/Utility2.PNG "Unprovision")
+
+You might want to tear down only some of the provisioning resource, in that case just on the corresponding box and create a new build. In the other hand if you wan tto destroy the whole setup at once, juste run the "teardown-at-midnight" job.
+
 
 If you found this guide lacking please submit an issue or PR through github. We appreciate your feedback.
 
