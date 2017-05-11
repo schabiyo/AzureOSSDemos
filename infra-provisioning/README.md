@@ -1,12 +1,22 @@
 # Infrastructure provisioning/un-provisiomning pipelines
 
+The pipeline automatically provisions the following for you:
+
+* A fully configured Jumpbox VM
+* An OMS Workspace: used to monitor the VMs as well as dockers containers 
+* An Azure Container Registry
+* 2 CoreOS VM fully configured with Docker via Ansible and automatically registered with OMS 
+* One App Service Web Plan configured with 2 slots: DEV and STAGING
+* A Kubernetes Cluster with 1 master and 2 nodes which are automatically registered with the previous OMS Workspace 
+
+
+## Pre-Requisites
+
 This section assumes the following: 
 
 * You already have a concourse instance running. Please look at the home page of this repo on how to setup one.
 This pipeline has 2 sections:
 * You have an Azure subscription with a Service Principal already created. If you havent created a Service principal yet, please refer to the home page of this repo.
-
-* Environment setup pipeline
 
 ## Getting started
 
