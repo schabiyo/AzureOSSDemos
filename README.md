@@ -62,9 +62,6 @@ You need 2 things before you can deploy the infra pipeline
 * Modify the infra-provisioning/deloy-pipeline.sh file to reflect your concourse alias previously created (argument no 2)
 * Modify the infra-provisioning/credentials.yml with your own information. The content is self explanatory.
 
-```
-cd infra-provisioning
-./deploy-pipeline.sh
 
 ```
 
