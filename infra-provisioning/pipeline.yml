@@ -25,8 +25,8 @@ resources:
 - name: teardown-at-midnight
   type: time
   source:
-    start: 10:05 AM
-    stop: 11:00 AM
+    start: 12:00 AM
+    stop: 1:00 AM
     location: Canada/Eastern
     days: [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
 
