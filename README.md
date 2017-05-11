@@ -22,7 +22,7 @@ A second pipeline existe as well to unprovision the envionment.
 
 More details on the environment provision/unprovision HERE
 
-* [DevOps pipeline](demo1.md)
+* [DevOps pipeline](/devops/)
 
 
 
