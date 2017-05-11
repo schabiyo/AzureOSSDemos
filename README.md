@@ -1,7 +1,7 @@
 # A series of demos showcasing OSS, DevOps and Container on Azure 
 
 Concourse is used as Pipeline to automate the deployment of the demos. If you are not familir with Concourse (http://concourse.ci), do not worry, the actual demo scripts
-has no dependency with concource and can be ran using your favorite CICD pipeline tool. Some parts of these demos are based on the Skylab project by Microsoft that can be found here:
+has little dependency with concource and can be ran using your favorite CICD pipeline tool. Some parts of these demos are based on the Skylab project by Microsoft that can be found here:
 https://blogs.technet.microsoft.com/msuspartner/2017/04/13/open-source-partners-open-source-demos-microsoft-azure/
 
 My pipelines are hosted here if you want to take look: http://ci.syolab.io/
@@ -64,6 +64,8 @@ The pipepline requires what we call in the Azure world a Service Principalee to 
 - **CLIENT_ID**
 - **CLIENT_SECRET** 
 
+More information on service principal can be found [here](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authenticate-service-principal/).
+
 If you don't already have a SP, you can use the following script to create one. The script used the lastest Azure CLI 2.0.
 After running the script yo will get an output similar to the following:
 
@@ -90,6 +92,7 @@ The above command with generate a private and public key files that you will nee
 TODO
 ----------------
 
+* Complete SP generation script
 * Azure Key Vault integration
 * Terraform as the IaaS provisioning tool
 * Any suggestion?
