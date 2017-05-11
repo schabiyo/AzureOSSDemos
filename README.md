@@ -11,7 +11,7 @@ Follow the instruction on that page for a manual deployment.
 
 ## Table of contents
 
-* [Environment setup pipeline](/infra-provisioning/)
+* [Environment provisioning/unprovisioning pipeline](/infra-provisioning/)
 
 
 ![Boostrap](/docs/Utility1.PNG "Boostrap")
@@ -42,7 +42,7 @@ vagrant up
 Open http://192.168.100.5:8080/ in your browser:
 
 
-Target Concourse
+Setup Concourse
 ----------------
 
 In the spirit of declaring absolutely everything you do to get absolutely the same result every time, the `fly` CLI requires that you specify the target API for every `fly` request.
@@ -55,12 +55,8 @@ fly --target ossdemos sync
 
 ```
 
-Deploy the infra Pipeline
+Create a Service Principal
 ----------------
-You need 2 things before you can deploy the infra pipeline
-
-* Modify the infra-provisioning/deloy-pipeline.sh file to reflect your concourse alias previously created (argument no 2)
-* Modify the infra-provisioning/credentials.yml with your own information. The content is self explanatory.
 
 
 ```
