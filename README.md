@@ -77,12 +77,22 @@ After running the script yo will get an output similar to the following:
   ``` 
 All you have to do now if store those in the credentials.yml file under the corresponding key names.
 
+Generate an SSH Key private and publicc keys
+----------------
+
+If you have a Linux based system, please continue with the commands below, otherwise you can simply install Bash for Windows if you are under Windows.
+
+```
+ssh-keygen -f ossdemo -t rsa -P ''
+```
+The above command with generate a private and public key files that you will need to add to the credentials.yml file
+
 TODO
 ----------------
 
 * Azure Key Vault integration
 * Terraform as the IaaS provisioning tool
-* ANy suggestion?
+* Any suggestion?
 
 
 
