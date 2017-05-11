@@ -95,8 +95,6 @@ jobs:
       - task: build-and-test
         file: api-nodejs/ci/tasks/build-and-test.yml
         params:
-          - GIT_EMAIL: {{git-email}}
-          - GIT_NAME: {{git-name}}
 
   - name: web-unit-test
     serial: true
@@ -110,8 +108,6 @@ jobs:
       - task: unit-test
         file: web-asp-dotnet/ci/tasks/build-and-test.yml
         params:
-          - GIT_EMAIL: {{git-email}}
-          - GIT_NAME: {{git-name}}
 
   - name: dev-rc
     serial_groups: [version]
@@ -182,16 +178,28 @@ jobs:
   - name: dev-deploy-k8s
     serial_groups: [version]
     plan:
-      - get: api-nodejs
-        passed: [dev-rc]
-        trigger: false
-      - get: api-version
-      - get: api-nodejs-image
-        trigger: true
-        passed: [dev-rc]
+      - aggregate:
+        - get: api-nodejs
+          passed: [dev-rc]
+          trigger: true
+        - get: api-version
+          passed: [dev-rc]
+          trigger: true
       - task: deploy-to-dev-k8s
         file: api-nodejs/ci/tasks/deploy-to-dev-k8s.yml
-      
+        params:
+          - service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+          - service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+          - tenant_id: {{TENANT_ID}}
+          - subscription_id: {{SUBSCRIPTION_ID}}
+          - acs_rg: {{RG_ACS_K8S}}
+          - server_prefix: {{SERVER-PREFIX}}
+          - acr_username: {{ACR-USERNAME}}
+          - acr_password: {{ACR-PASSWORD}}
+          - acr_endpoint: {{ACR-ENDPOINT}}
+          - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
+          - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
+
   - name: web-dev-deploy
     serial_groups: [version]
     plan:
@@ -309,17 +317,29 @@ jobs:
   - name: staging-deploy-k8s
     serial_groups: [version]
     plan:
+#      aggregate:
       - get: api-nodejs
         passed: [staging-rc]
-        trigger: false
-      - get: api-nodejs-image
         trigger: true
-        passed: [staging-rc]
       - get: api-version
+        passed: [staging-rc]
+        trigger: true
       - put: api-version
         params: {file: api-version/number}
       - task: deploy-to-staging-k8s
         file: api-nodejs/ci/tasks/deploy-to-staging-k8s.yml
+        params:
+          - service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+          - service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+          - tenant_id: {{TENANT_ID}}
+          - subscription_id: {{SUBSCRIPTION_ID}}
+          - acs_rg: {{RG_ACS_K8S}}
+          - server_prefix: {{SERVER-PREFIX}}
+          - acr_username: {{ACR-USERNAME}}
+          - acr_password: {{ACR-PASSWORD}}
+          - acr_endpoint: {{ACR-ENDPOINT}}
+          - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
+          - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
 
   - name: stage-e2e
     serial_groups: [version]

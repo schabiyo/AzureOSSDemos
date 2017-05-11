@@ -48,48 +48,58 @@ jobs:
   - get: teardown-at-midnight
     trigger: true
   - get: azure-ossdemos-git
-  - task: delete-oms-workspace
-    file: azure-ossdemos-git/infra-provisioning/oms/tasks/delete-oms-workspace.yml
-    params:
-      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
-      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
-      tenant_id: {{TENANT_ID}}
-      subscription_id: {{SUBSCRIPTION_ID}}
-      utility_rg: {{RG_UTILITY}}
-      oms_workspace_name: {{OMS_WORKSPACE_NAME}}
-  - task: delete-docker-vms
-    file: azure-ossdemos-git/infra-provisioning/oms/tasks/destroy-docker-vms.yml
-    params:
-      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
-      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
-      tenant_id: {{TENANT_ID}}
-      subscription_id: {{SUBSCRIPTION_ID}}
-      iaas_rg: {{RG_UTILITY}}
-  - task: delete-kubernetes-cluster
-    file: azure-ossdemos-git/infra-provisioning/acs/tasks/delete-k8s.yml
-    params:
-      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
-      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
-      tenant_id: {{TENANT_ID}}
-      subscription_id: {{SUBSCRIPTION_ID}}
-      acs_rg: {{RG_ACS_K8S}}
-      server_prefix: {{SERVER_PREFIX}}
-  - task: delete-azure-container-registry
-    file: azure-ossdemos-git/infra-provisioning/acr/tasks/delete-acr.yml
-    params:
-      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
-      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
-      tenant_id: {{TENANT_ID}}
-      subscription_id: {{SUBSCRIPTION_ID}}
-      utility_rg: {{RG_UTILITY}}
-  - task: delete-jumpbox
-    file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/destroy-jumpbox.yml
-    params:
-      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
-      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
-      tenant_id: {{TENANT_ID}}
-      subscription_id: {{SUBSCRIPTION_ID}}
-      utility_rg: {{RG_UTILITY}}
+  - aggregate:
+    - task: delete-oms-workspace
+      file: azure-ossdemos-git/infra-provisioning/oms/tasks/delete-oms-workspace.yml
+      params:
+        service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+        service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+        tenant_id: {{TENANT_ID}}
+        subscription_id: {{SUBSCRIPTION_ID}}
+        utility_rg: {{RG_UTILITY}}
+        oms_workspace_name: {{OMS_WORKSPACE_NAME}}
+    - task: delete-docker-vms
+      file: azure-ossdemos-git/infra-provisioning/iaas/tasks/destroy-docker-vms.yml
+      params:
+        service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+        service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+        tenant_id: {{TENANT_ID}}
+        subscription_id: {{SUBSCRIPTION_ID}}
+        iaas_rg: {{RG_APPDEV_IAAS}}
+    - task: delete-paas-resource
+      file: azure-ossdemos-git/infra-provisioning/paas/tasks/delete-paas-resource.yml
+      params:
+        service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+        service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+        tenant_id: {{TENANT_ID}}
+        subscription_id: {{SUBSCRIPTION_ID}}
+        paas_rg: {{RG_PAAS}}
+    - task: delete-kubernetes-cluster
+      file: azure-ossdemos-git/infra-provisioning/acs/tasks/delete-k8s.yml
+      params:
+        service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+        service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+        tenant_id: {{TENANT_ID}}
+        subscription_id: {{SUBSCRIPTION_ID}}
+        acs_rg: {{RG_ACS_K8S}}
+        server_prefix: {{SERVER_PREFIX}}
+    - task: delete-azure-container-registry
+      file: azure-ossdemos-git/infra-provisioning/acr/tasks/delete-acr.yml
+      params:
+        service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+        service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+        tenant_id: {{TENANT_ID}}
+        subscription_id: {{SUBSCRIPTION_ID}}
+        utility_rg: {{RG_UTILITY}}
+        registry_name: {{ACR_NAME}}
+    - task: delete-jumpbox
+      file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/destroy-jumpbox.yml
+      params:
+        service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+        service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+        tenant_id: {{TENANT_ID}}
+        subscription_id: {{SUBSCRIPTION_ID}}
+        utility_rg: {{RG_UTILITY}}
 
 - name: validate-input
   plan:
@@ -144,7 +154,7 @@ jobs:
         location: {{LOCATION}} 
 
 - name: create-oms-workspace
-  serial: true
+#  serial: true
   plan:
     - get: azure-ossdemos-git
       triggered: true
@@ -162,7 +172,7 @@ jobs:
         oms_workspace_sku: {{OMS_WORKSPACE_SKU}}
 
 - name: create-container-registry
-  serial: true
+#  serial: true
   plan:
     - get: azure-ossdemos-git
       passed:
@@ -341,6 +351,7 @@ jobs:
       tenant_id: {{TENANT_ID}}
       subscription_id: {{SUBSCRIPTION_ID}}
       utility_rg: {{RG_UTILITY}}
+      registry_name: {{ACR_NAME}}
 
 - name: delete-docker-vms
   serial_groups: [unprovision]
