@@ -64,7 +64,7 @@ The pipepline requires what we call in the Azure world a Service Principalee to 
 - **CLIENT_ID**
 - **CLIENT_SECRET** 
 
-More information on service principal can be found [here](https://azure.microsoft.com/en-us/documentation/articles/resource-group-authenticate-service-principal/).
+More information on service principal can be found [here](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli?toc=%2fazure%2fazure-resource-manager%2ftoc.json).
 
 If you don't already have a SP, you can use the following script to create one. The script used the lastest Azure CLI 2.0.
 After running the script yo will get an output similar to the following:
