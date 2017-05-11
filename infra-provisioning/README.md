@@ -3,13 +3,13 @@
 The pipeline automatically provisions the following for you:
 
 * A fully configured Jumpbox VM
-* An OMS Workspace
+* An OMS Workspace for full monitoring of the VMS and any future deployed Docker container
 * An Azure Container Registry
 * 2 CentOS VMs fully configured with Docker
 * One App Service Web Plan configured with 2 slots: DEV and STAGING
 * A Kubernetes Cluster with 1 master and 2 nodes which are automatically registered with the previous OMS Workspace 
 
-Under teh cover the following are happening:
+Under the cover the following are happening:
 
 * The Azure REST API is used to automatically provision an OMS Workspace
 * Use of Ansible to configure Docker on the IaaS VMs
