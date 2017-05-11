@@ -52,6 +52,18 @@ First, alias it with a name `ossdemos` (you can pick whatener name yopu want):
 ```
 fly --target ossdemos login -c http://192.168.100.5:8080
 fly --target ossdemos sync
+
+
+Deploy the infra Pipeline
+----------------
+You need 2 things before you can deploy the infra pipeline
+
+* Modify the infra-provisioning/deloy-pipeline.sh file to reflect your concourse alias previously created (argument no 2)
+* Modify the infra-provisioning/credentials.yml with your own information. The content is self explanatory.
+```
+cd infra-provisioning
+./deploy-pipeline.sh
+
 ```
 
 
