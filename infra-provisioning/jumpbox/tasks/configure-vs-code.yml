@@ -19,4 +19,4 @@ inputs:
   - name: ansible-configs
 
 run:
-  path: azure-ossdemos-git/infra-provisioning/jumpboxg/tasks/configure-vs-code.sh
+  path: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/configure-vs-code.sh

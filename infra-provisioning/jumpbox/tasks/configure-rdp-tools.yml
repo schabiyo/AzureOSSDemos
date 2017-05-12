@@ -19,4 +19,4 @@ inputs:
   - name: ansible-configs
 
 run:
-  path: azure-ossdemos-git/infra-provisioning/jumpboxg/tasks/configure-rdp-tools.sh
+  path: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/configure-rdp-tools.sh
