@@ -23,7 +23,7 @@ MESSAGE="==>Public IP for DEV successfully created"; simple_green_echo
 az network nic create -g $iaas_rg --name dev-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
   --location $location \
   --public-ip-address devpip \
-  --network-security-group nsg-iaas-demo &> /dev/null
+  --network-security-group nsg-iaas-demo
 MESSAGE="==>NIC for the DEV VM successfully created"; simple_green_echo
 # Init ssh folder and Copy ssh key file 
 #Get the SSH key from the configs adn add it to the ssh folder
