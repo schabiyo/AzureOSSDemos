@@ -28,13 +28,23 @@ More details on the environment provision/unprovision HERE
 
 ## Getting started
 
-Install Vagrant/Virtualbox.
+If you don/t already have a concourse instance, here are 2 options to get an instance up and running:
 
+* Concourse ARM template on Azure
+
+You can install Concourse on Azure with a on click deploy using the ARM template available here: https://azure.microsoft.com/en-us/resources/templates/concourse-ci/
+
+* Local concourse with Vagrant
+
+You also havethe option to use Vagrant to install Concourse localy if you wish to. follow the instruction below for that:
+
+- **Install Vagrant/Virtual Box**
+
+
+- **Start a local concourse server** 
 Fetch this tutorial and start a local Concourse server:
 
 ```
-git clone https://github.com/schabiyo/azure-oss-demos.git
-cd azure-oss-demos
 vagrant box add concourse/lite --box-version $(cat VERSION)
 vagrant up
 ```
