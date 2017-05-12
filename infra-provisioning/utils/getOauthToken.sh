@@ -18,7 +18,7 @@ getToken(){
 
   NEW_CURL_COMMAND=$(sed  "s@TENANT-ID@${tenant_id}@g" <<< $CURL_COMMAND)
   NEW_CURL_COMMAND=$(sed  "s@CLIENT-ID@${client_id}@g" <<< $NEW_CURL_COMMAND)
-  NEW_CURL_COMMAND=$(sed  "s@CLIENT-SECRET@${client_secret}@g" <<< $NEW_CURL_COMMAND)
+  NEW_CURL_COMMAND=$(sed  "s~CLIENT-SECRET~${client_secret}~g" <<< $NEW_CURL_COMMAND)
 
   result=$(eval curl $NEW_CURL_COMMAND)
   if [[ $result == *"error"* ]]; then
