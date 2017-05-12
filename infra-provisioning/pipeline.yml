@@ -118,7 +118,7 @@ jobs:
   plan:
   - get: azure-ossdemos-git
     passed: [validate-input]
-    triggered: true
+    trigger: true
   - get: azure-oss-demos
   - task: build-jumpbox
     file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/create-jumpbox.yml
@@ -157,8 +157,8 @@ jobs:
 #  serial: true
   plan:
     - get: azure-ossdemos-git
-      triggered: true
       passed: [validate-input]
+      trigger: true
     - task: create-oms-workspace
       file: azure-ossdemos-git/infra-provisioning/oms/tasks/create-oms-workspace.yml
       params:
