@@ -108,24 +108,24 @@ ssh -t -o BatchMode=yes -o StrictHostKeyChecking=no ${jumpbox_admin}@jumpbox-${j
 MESSAGE="SSH keys successfully copied to the jumpbox" ; simple_green_echo
 
 # Prepare the Ansible scripts
-sed -i -e "s@JUMPBOXSERVER-REPLACE.eastus.cloudapp.azure.com@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com@g" azure-ossdemos-git/ansible/hosts
-sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/ansible/playbook-configure-basics.yml
-sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/ansible/playbook-configure-dotnet-core.yml
-sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/ansible/playbook-configure-vs-code.yml
-sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/ansible/playbook-configure-rdp-tools.yml
+sed -i -e "s@JUMPBOXSERVER-REPLACE.eastus.cloudapp.azure.com@jumpbox-${jumpbox_prefix}.${location}.cloudapp.azure.com@g" azure-ossdemos-git/infra-provisioning/ansible/hosts
+sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-configure-basics.yml
+sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-configure-dotnet-core.yml
+sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-configure-vs-code.yml
+sed -i -e "s@VALUEOF_DEMO_ADMIN_USER@${jumpbox_admin}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-configure-rdp-tools.yml
 
 MESSAGE="Installing and configuring Ansible on the Jumpbox" ; simple_blue_echo
 
-cp azure-ossdemos-git/ansible/hosts ansible-configs/
-cp azure-ossdemos-git/ansible/playbook-configure-basics.yml ansible-configs/
-cp azure-ossdemos-git/ansible/playbook-configure-dotnet-core.yml ansible-configs/
-cp azure-ossdemos-git/ansible/playbook-configure-vs-code.yml ansible-configs/
-cp azure-ossdemos-git/ansible/playbook-configure-rdp-tools.yml ansible-configs/
+cp azure-ossdemos-git/infra-provisioning/ansible/hosts ansible-configs/
+cp azure-ossdemos-git/infra-provisioning/ansible/playbook-configure-basics.yml ansible-configs/
+cp azure-ossdemos-git/infra-provisioning/ansible/playbook-configure-dotnet-core.yml ansible-configs/
+cp azure-ossdemos-git/infra-provisioning/ansible/playbook-configure-vs-code.yml ansible-configs/
+cp azure-ossdemos-git/infra-provisioning/ansible/playbook-configure-rdp-tools.yml ansible-configs/
 
 ansiblecommand=" -i hosts ../../ansible-configs/playbook-configure-basics.yml --private-key ~/.ssh/jumpbox_${jumpbox_prefix}_id_rsa"
 echo ".Calling command: ansible-playbook ${ansiblecommand}"
 #we need to run ansible-playbook in the same directory as the CFG file.  Go to that directory then back out...
-cd azure-ossdemos-git/ansible
+cd azure-ossdemos-git/infra-provisioning/ansible
     ansible-playbook ${ansiblecommand}
 cd ..
 
