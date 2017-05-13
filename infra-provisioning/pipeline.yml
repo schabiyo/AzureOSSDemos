@@ -17,6 +17,7 @@ groups:
   - delete-azure-container-registry
   - delete-docker-vms
   - delete-kubernetes-cluster
+  - delete-paas-webplan
   - teardown-at-midnight
 
 
@@ -322,6 +323,20 @@ jobs:
       tenant_id: {{TENANT_ID}}
       subscription_id: {{SUBSCRIPTION_ID}}
       utility_rg: {{RG_UTILITY}}
+
+- name: delete-paas-webplan
+  serial_groups: [unprovision]
+  plan:
+  - get: azure-ossdemos-git
+    trigger: false
+  - task: destroy-paas-resources
+    file: azure-ossdemos-git/infra-provisioning/paas/tasks/delete-paas-resource.yml
+    params:
+      service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+      service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+      tenant_id: {{TENANT_ID}}
+      subscription_id: {{SUBSCRIPTION_ID}}
+      paas_rg: {{RG_PAAS}}
 
 - name: delete-oms-workspace
   serial_groups: [unprovision]

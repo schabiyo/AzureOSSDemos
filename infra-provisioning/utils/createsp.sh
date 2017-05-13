@@ -1,34 +1,13 @@
 #!/bin/bash
 #  Helper for creating a service principal
 #
-
+set -e -x
 # Parse the parameters
+
 subscriptionName=$1
 servicePrincipalName=$2
-servicePrincipalIdUri='http://'$2
-servicePrincipalPwd=$3
-skipLogin=$4
-
-echo ''
-echo '----------------------------------------'
-echo 'Running with parameters:'
-echo '----------------------------------------'
-echo 'subscription = ' $subscriptionName
-echo 'servicePrincipalName = ' $servicePrincipalName
-echo 'servicePrincipalIdUri = ' $servicePrincipalIdUri
-
-
-# Login and select the subscription
-echo ''
-echo '----------------------------------------'
-echo 'Logging into Azure...'
-echo '----------------------------------------'
-echo ''
-
-az config mode arm
-if [[ -z "$skipLogin" ]]; then
-  az login
-fi
+servicePrincipalIdUri='http://'$3
+servicePrincipalPwd=$4
 
 echo ''
 echo '----------------------------------------'
@@ -36,13 +15,13 @@ echo 'Selecting Subscription / Account...'
 echo '----------------------------------------'
 echo ''
 
-accountsJson=$(azure account list --json)
-subId=$(echo $accountsJson | jq --raw-output --arg pSubName $subscriptionName '.[] | select(.name == $pSubName) | .id')
-tenantId=$(echo $accountsJson | jq --raw-output --arg pSubName $subscriptionName '.[] | select(.name == $pSubName) | .tenantId')
+accountsJson=$(az account list -o json)
+subId=$subscriptionName
+tenantId=$(echo $accountsJson | jq --raw-output --arg pSubName $subscriptionName '.[] | select(.id == $pSubName) | .tenantId')
 
-az account set $subId
+az account set -s $subId
 
-echo 'Selected Subscription $subscriptionName with id=$subId and tenantId=$tenantId!'
+echo "Selected Subscription with id=$subId and tenantId=$tenantId!"
 
 echo ''
 echo '----------------------------------------'
@@ -52,8 +31,8 @@ echo '----------------------------------------'
 echo ''
 echo 'Creating the app...'
 
-az ad app create --name "$servicePrincipalName" \
-                    --home-page "$servicePrincipalIdUri" \
+az ad app create --display-name "$servicePrincipalName" \
+                    --homepage "$servicePrincipalIdUri" \
                     --identifier-uris "$servicePrincipalIdUri" \
                     --reply-urls "$servicePrincipalIdUri" \
                     --password $servicePrincipalPwd
@@ -90,7 +69,7 @@ echo 'Creating a Service Principal on the App...'
 sleep 20
 
 # Create the actual SP on-top of the app with Azure CLI
-az ad sp create --applicationId "$createdAppId"
+az ad sp create --id "$createdAppId"
 if [ $? != "0" ]; then
     echo 'Failed creating Service Principal on Azure AD App created earlier... cancelling setup!'
     exit 10
@@ -123,18 +102,16 @@ echo 'Assigning Subscription Read permissions to the Service Principal...'
 sleep 20
 
 # Finally perform the role assignment
-az role assignment create --objectId "$createSpObjectId" \
-                                --roleName Reader \
-                                --subscription "$subId" 
+az role assignment create --assignee "$createSpObjectId" \
+                                --role Contributor \
+                                --scope /subscriptions/"$subId" 
 if [ $? != "0" ]; then
     echo 'Failed assigning roles to created service principal! You could still create the role assignment and continue from there...'
     exit 10
 fi 
 
 echo ''
-echo '----------------------------------------'
-echo 'Summary'
-echo '----------------------------------------'
+echo '==============Created Service Principal=============='
 echo ''
 echo 'Created the following App & Service Principal:'
 echo 'App Name = '$servicePrincipalName
@@ -142,18 +119,9 @@ echo 'App ID URI = '$servicePrincipalIdUri
 echo 'SP Object ID = '$createSpObjectId
 echo 'SPN = '$servicePrincipalIdUri
 echo ''
-echo 'Update the following parameters in the armdeploy.parameters.json as follows:'
+echo 'Update your credentials.yml file with those values'
 echo 'azureAdTenantId='$tenantId
 echo 'azureAdAppId='$createdAppId
 echo 'azureAdAppSecret=<<the password you have passed in>>'
 echo ''
-echo 'You can test the service principal as follows:'
-echo "azure login --username $appId --service-principal --tenant $tenantId --password <<password passed in as parameter>>"
-echo ''
-echo 'You can also use the included deploy.sh script to start a deployment and test the metadata script right away:'
-echo "tenantId=\"$tenantId\""
-echo "appId=\"$createdAppId\""
-echo "appSecret=\"<<the password you have passed in>>\""
-echo "deploy.sh resourceGroupName \"your region\" deploymentName publicDnsName storageAccountName rootUserName rootPassword \$tenantId \$appId \$appSecret"
-echo '' 
 
