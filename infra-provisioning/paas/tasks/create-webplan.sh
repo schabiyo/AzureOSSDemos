@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e -x
+set -e
 
 # Including the utility for echo
 source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
@@ -37,7 +37,3 @@ MESSAGE="==>Deployment slot successfully created for Staging" ; simple_green_ech
 # Configure the deployment slots for dev staging and production
 az appservice web deployment slot create -n  $server_prefix-web-nodejs -g $paas_rg -s dev
 MESSAGE="==>Developement Deployment slot successfully created for WEB-NodeJS" ; simple_green_echo
-az appservice web deployment slot create -n  $server_prefix-web-nodejs -g $paas_rg -s staging
-MESSAGE="==>Staging Deployment slot successfully created for WEB-NodeJS" ; simple_green_echo
-
-#TODO Configure a real MySQL DB for the production slot and use MYSQL in APP for the dev slot

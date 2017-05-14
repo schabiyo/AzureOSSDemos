@@ -74,4 +74,8 @@ sed -i -e "s@VALUEOF-REPLACE-OMS-WORKSPACE@${omsid}@g" azure-ossdemos-git/infra-
 sed -i -e "s@VALUEOF-REPLACE-OMS-PRIMARYKEY@${omskey}@g" azure-ossdemos-git/infra-provisioning/acs/config/OMSDaemonset.yml
 
 ~/kubectl create -f azure-ossdemos-git/infra-provisioning/acs/config/OMSDaemonset.yml
- 
+
+#Create 2 namespace ossdemo-dev and ossdemo-production
+
+~/kubectl create namespace ossdemo-dev
+~/kubectl create namespace ossdemo-production 
