@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -x
 
 source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
 source azure-ossdemos-git/infra-provisioning/utils/getOauthToken.sh
@@ -46,6 +46,10 @@ getACRCredentials acr_username acr_password
 
 echo $acr_username $acr_password
 docker_server="${registry_name}.azurerc.io"
+
+~/kubectl create namespace ossdemo-dev
+~/kubectl create namespace ossdemo-production
+
 ~/kubectl create secret docker-registry ossdemoregistrykey \
         --docker-server="${registry_name}.azurecr.io:443" \
         --docker-username=$acr_username \
@@ -86,6 +90,3 @@ sed -i -e "s@VALUEOF-REPLACE-OMS-PRIMARYKEY@${omskey}@g" azure-ossdemos-git/infr
 ~/kubectl create -f azure-ossdemos-git/infra-provisioning/acs/config/OMSDaemonset.yml
 
 #Create 2 namespace ossdemo-dev and ossdemo-production
-
-~/kubectl create namespace ossdemo-dev
-~/kubectl create namespace ossdemo-production 
