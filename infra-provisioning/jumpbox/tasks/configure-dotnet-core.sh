@@ -1,14 +1,9 @@
 #!/bin/sh
-set -e -x
+set -e
 
 #Script Formatting
-RESET="\e[0m"
-INPUT="\e[7m"
-BOLD="\e[4m"
-
 echo "--------------------------------------------"
 
-echo "Creating ssh directory"
 mkdir  ~/.ssh/
 
 cp keys-folder/* ~/.ssh/

@@ -1,8 +1,5 @@
 #!/bin/sh
-set -e -x
-
-GREEN='\033[0;32m'
-RESET="\e[0m"
+set -e
 
 # Including the utility for echo
 source azure-ossdemos-git/infra-provisioning/utils/pretty-echo.sh
