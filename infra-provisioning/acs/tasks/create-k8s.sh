@@ -50,7 +50,17 @@ docker_server="${registry_name}.azurerc.io"
         --docker-server="${registry_name}.azurecr.io:443" \
         --docker-username=$acr_username \
         --docker-password=$acr_password \
-        --docker-email=$demo_admin_email
+        --docker-email=$demo_admin_email --namespace ossdemo-dev
+
+MESSAGE="ACR Secret successfully created in the DEV namespace" ; simple_green_echo
+
+~/kubectl create secret docker-registry ossdemoregistrykey \
+        --docker-server="${registry_name}.azurecr.io:443" \
+        --docker-username=$acr_username \
+        --docker-password=$acr_password \
+        --docker-email=$demo_admin_email --namespace ossdemo-production
+
+MESSAGE="ACR Secret successfully created in the Production namespace" ; simple_green_echo
 
 echo "create storage account for persistent volumes"
 az storage account create --location $location \
