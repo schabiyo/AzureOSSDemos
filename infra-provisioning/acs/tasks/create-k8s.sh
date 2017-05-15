@@ -48,7 +48,7 @@ echo $acr_username $acr_password
 docker_server="${registry_name}.azurerc.io"
 
 ~/kubectl create namespace ossdemo-dev
-~/kubectl create namespace ossdemo-production
+~/kubectl create namespace ossdemo-prod
 
 ~/kubectl create secret docker-registry ossdemoregistrykey \
         --docker-server="${registry_name}.azurecr.io:443" \
@@ -62,7 +62,7 @@ MESSAGE="ACR Secret successfully created in the DEV namespace" ; simple_green_ec
         --docker-server="${registry_name}.azurecr.io:443" \
         --docker-username=$acr_username \
         --docker-password=$acr_password \
-        --docker-email=$demo_admin_email --namespace ossdemo-production
+        --docker-email=$demo_admin_email --namespace ossdemo-prod
 
 MESSAGE="ACR Secret successfully created in the Production namespace" ; simple_green_echo
 
