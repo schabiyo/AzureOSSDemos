@@ -29,7 +29,7 @@ groups:
   - api-shipit
   - api-major
   - api-minor
-  - api-patch
+#  - api-patch
   - api-production-deploy
    
 
@@ -507,11 +507,11 @@ jobs:
 #    - put: web-version
 #      params: {bump: patch, pre: rc}
 
-  - name: api-patch
-    serial_groups: [version]
-    plan:
-    - get: api-version
-      passed: [api-shipit]
-      trigger: true
-    - put: api-version
-      params: {bump: patch, pre: rc}
+#  - name: api-patch
+#    serial_groups: [version]
+#    plan:
+#    - get: api-version
+#      passed: [api-shipit]
+#      trigger: true
+#    - put: api-version
+#      params: {bump: patch, pre: rc}
