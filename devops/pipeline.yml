@@ -9,7 +9,7 @@ groups:
   - web-dev-deploy-paas
   - web-dev-deploy-k8s
   - web-integration
-  - web-shipit
+  - web-shipit-final
   - web-major
   - web-minor
 #  - web-patch
@@ -26,7 +26,7 @@ groups:
   - api-dev-deploy-paas
   - api-dev-deploy-k8s
   - api-integration
-  - api-shipit
+  - api-shipit-final
   - api-major
   - api-minor
 #  - api-patch
@@ -223,17 +223,17 @@ jobs:
   - name: web-dev-deploy-paas
     serial_groups: [web-version]
     plan:
-      - aggregate:
-#         - get: api-nodejs-image
-#           trigger: true
-#           passed: [web-dev-deploy-paas]
-         - get: web-nodejs
-           passed: [web-dev-rc]
-           trigger: true
-         - get: web-version
-           resource: web-version
-           passed: [web-dev-rc]
-           trigger: true
+#      - aggregate:
+#      - get: api-nodejs-image
+#        trigger: true
+#        passed: [web-dev-deploy-paas]
+      - get: web-nodejs
+        passed: [web-dev-rc]
+        trigger: true
+      - get: web-version
+        resource: web-version
+        passed: [web-dev-rc]
+        trigger: true
       - task: deploy-to-dev-paas
         file: web-nodejs/ci/tasks/deploy-to-dev-paas.yml
         params:
@@ -320,10 +320,11 @@ jobs:
   - name: web-integration
     serial: true
     plan:
+#      - aggreagate:
 #      - get: api-nodejs-image
 #        trigger: true
 #        passed: [web-dev-deploy-paas]
-      - get: web-wersion
+      - get: web-version
         resource: web-version
         trigger: true
         passed: [web-dev-deploy-paas]
@@ -335,7 +336,7 @@ jobs:
 
        
 
-  - name: api-shipit
+  - name: api-shipit-final
     serial_groups: [version]
     plan:
       - aggregate:
@@ -355,7 +356,7 @@ jobs:
       - put: api-version
         params: {file: api-version/number}
 
-  - name: web-shipit
+  - name: web-shipit-final
     serial_groups: [web-version]
     plan:
       - aggregate:
@@ -408,7 +409,7 @@ jobs:
     - get: api-version
       params: {bump: final}
     - get: api-nodejs
-      passed: [api-shipit]
+      passed: [api-shipit-final]
     - task: deploy-to-production
       file: api-nodejs/ci/tasks/deploy-to-prod-k8s.yml
       params:
@@ -423,6 +424,9 @@ jobs:
         - acr_endpoint: {{ACR-ENDPOINT}}
         - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
         - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
+    - put: api-version
+      params: {bump: patch}
+         
 
   - name: web-production-deploy
     serial_groups: [web-version]
@@ -430,7 +434,7 @@ jobs:
     - get: web-version
       params: {bump: final}
     - get: web-nodejs
-      passed: [web-shipit]
+      passed: [web-shipit-final]
   
   - name: web-paas-deploy
     serial_groups: [web-version]
@@ -450,8 +454,13 @@ jobs:
         - tenant_id: {{TENANT_ID}}
         - subscription_id: {{SUBSCRIPTION_ID}}
         - server_prefix: {{SERVER-PREFIX}}
+        - location: {{LOCATION}}
         - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
         - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
+        - paas_rg: {{RG_PAAS}}
+        - acr_username: {{ACR-USERNAME}}
+        - acr_password: {{ACR-PASSWORD}}
+        - acr_endpoint: {{ACR-ENDPOINT}}
  
   - name: web-iaas-deploy
     serial_groups: [web-version]
@@ -463,16 +472,17 @@ jobs:
       - get: web-nodejs
         passed: [web-production-deploy]
         trigger: true
-    - task: deploy-to-production
-      file: web-nodejs/ci/tasks/deploy-to-prod-iaas.yml
-      params:
-        - service_principal_id: {{SERVICE_PRINCIPAL_ID}}
-        - service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
-        - tenant_id: {{TENANT_ID}}
-        - subscription_id: {{SUBSCRIPTION_ID}}
-        - server_prefix: {{SERVER-PREFIX}}
-        - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
-        - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
+      - task: deploy-to-production
+        file: web-nodejs/ci/tasks/deploy-to-prod-iaas.yml
+        params:
+          - service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+          - service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+          - tenant_id: {{TENANT_ID}}
+          - subscription_id: {{SUBSCRIPTION_ID}}
+          - location: {{LOCATION}}
+          - server_prefix: {{SERVER-PREFIX}}
+          - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
+          - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
 
   - name: web-k8s-deploy
     serial_groups: [web-version]
