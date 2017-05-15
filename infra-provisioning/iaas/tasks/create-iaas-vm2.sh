@@ -16,13 +16,13 @@ az group create --name $iaas_rg --location $location &> /dev/null
 #Create public IP for VM2
 az network public-ip create -g $iaas_rg -n prodpip --dns-name prod-$server_prefix --allocation-method Static -l $location &> /dev/null
 
-MESSAGE="==>Public IP for the STAGING VM successfully created"; simple_green_echo
+MESSAGE="==>Public IP for the PRODUCTION VM successfully created"; simple_green_echo
 #Create NICs for the VM2
 az network nic create -g $iaas_rg --name prod-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
   --location $location \
   --public-ip-address prodpip \
   --network-security-group nsg-iaas-demo  &> /dev/null
-MESSAGE="==>NIC for the STAGING VM successfully created"; simple_green_echo
+MESSAGE="==>NIC for the PRODUCTION VM successfully created"; simple_green_echo
 # Create a new virtual machine, this creates SSH keys if not present. 
 
 # Init ssh folder and Copy ssh key file 
@@ -45,7 +45,7 @@ az vm create \
   --storage-sku 'Premium_LRS' \
   --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" &> /dev/null
 
-MESSAGE="==>VM for Staging successfully created"; simple_green_echo
+MESSAGE="==>VM for Production successfully created"; simple_green_echo
 # Install and configure the OMS agent.
 
 az vm extension set \
@@ -55,9 +55,9 @@ az vm extension set \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
   --settings '{"workspaceId": "'"$omsid"'"}'
-MESSAGE="==>OMS agent successfully added to the VM2"; simple_green_echo
+MESSAGE="==>OMS agent successfully added to the PRODUCTION VM"; simple_green_echo
 
-MESSAGE=" Installing Docker on the VM2 using ansible" ; simple_blue_echo
+MESSAGE=" Installing Docker on the PRODUCTION VM using ansible" ; simple_blue_echo
 # Updatethe Host file with the 2 server host
 # we need to make sure we run the ansible playbook from this directory to pick up the cfg file
 #May be just create the hosts file on the fly

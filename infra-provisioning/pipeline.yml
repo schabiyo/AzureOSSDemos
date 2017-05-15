@@ -217,7 +217,7 @@ jobs:
         server_ssh_public_key: {{SERVER_SSH_PUBLIC_KEY}}
         server_prefix: {{SERVER_PREFIX}}
     - aggregate:
-      - task: create-iaas-vm1
+      - task: create-iaas-dev
         file: azure-ossdemos-git/infra-provisioning/iaas/tasks/create-iaas-vm1.yml
         params:
           service_principal_id: {{SERVICE_PRINCIPAL_ID}}
@@ -233,7 +233,7 @@ jobs:
           server_ssh_private_key: {{SERVER_SSH_PRIVATE_KEY}}
           server_ssh_public_key: {{SERVER_SSH_PUBLIC_KEY}}
           server_prefix: {{SERVER_PREFIX}}
-      - task: create-iaas-vm2
+      - task: create-iaas-prod
         file:  azure-ossdemos-git/infra-provisioning/iaas/tasks/create-iaas-vm2.yml
         params:
           service_principal_id: {{SERVICE_PRINCIPAL_ID}}
