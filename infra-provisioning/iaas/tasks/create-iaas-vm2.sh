@@ -14,13 +14,13 @@ az account set --subscription "$subscription_id" &> /dev/null
 # Create a resource group.
 az group create --name $iaas_rg --location $location &> /dev/null
 #Create public IP for VM2
-az network public-ip create -g $iaas_rg -n stagingpip --dns-name staging-$server_prefix --allocation-method Static -l $location &> /dev/null
+az network public-ip create -g $iaas_rg -n prodpip --dns-name prod-$server_prefix --allocation-method Static -l $location &> /dev/null
 
 MESSAGE="==>Public IP for the STAGING VM successfully created"; simple_green_echo
 #Create NICs for the VM2
-az network nic create -g $iaas_rg --name staging-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
+az network nic create -g $iaas_rg --name prod-nic-be --vnet-name  ossdemo-iaas-vnet --subnet WebSubnet \
   --location $location \
-  --public-ip-address stagingpip \
+  --public-ip-address prodpip \
   --network-security-group nsg-iaas-demo  &> /dev/null
 MESSAGE="==>NIC for the STAGING VM successfully created"; simple_green_echo
 # Create a new virtual machine, this creates SSH keys if not present. 
@@ -34,13 +34,13 @@ cp keys-out/* ~/.ssh/
 
 az vm create \
   --resource-group $iaas_rg \
-  --name "staging-${server_prefix}" \
-  --os-disk-name 'staging-disk' \
-  --public-ip-address-dns-name "staging-${server_prefix}" \
+  --name "prod-${server_prefix}" \
+  --os-disk-name 'prod-disk' \
+  --public-ip-address-dns-name "prod-${server_prefix}" \
   --size Standard_DS1_v2 \
   --admin-username $server_admin_username \
   --location $location \
-  --nics staging-nic-be \
+  --nics prod-nic-be \
   --image "OpenLogic:CentOS:7.2:latest" \
   --storage-sku 'Premium_LRS' \
   --ssh-key-value "~/.ssh/${server_prefix}_id_rsa.pub" &> /dev/null
@@ -50,7 +50,7 @@ MESSAGE="==>VM for Staging successfully created"; simple_green_echo
 
 az vm extension set \
   --resource-group $iaas_rg \
-  --vm-name "staging-${server_prefix}" \
+  --vm-name "prod-${server_prefix}" \
   --name OmsAgentForLinux \
   --publisher Microsoft.EnterpriseCloud.Monitoring \
   --version 1.0 --protected-settings '{"workspaceKey": "'"$omskey"'"}' \
@@ -63,7 +63,7 @@ MESSAGE=" Installing Docker on the VM2 using ansible" ; simple_blue_echo
 #May be just create the hosts file on the fly
 touch azure-ossdemos-git/infra-provisioning/ansible/docker-host-vm2
 printf "%s\n" "[dockerhosts]" >> azure-ossdemos-git/infra-provisioning/ansible/docker-host-vm2
-printf "%s\n" "staging-${server_prefix}.${location}.cloudapp.azure.com" >> azure-ossdemos-git/infra-provisioning/ansible/docker-host-vm2
+printf "%s\n" "prod-${server_prefix}.${location}.cloudapp.azure.com" >> azure-ossdemos-git/infra-provisioning/ansible/docker-host-vm2
 sed -i -e "s@VALUEOF-DEMO-ADMIN-USER-NAME@${server_admin_username}@g" azure-ossdemos-git/infra-provisioning/ansible/playbook-deploy-dockerengine.yml
 
 cd azure-ossdemos-git/infra-provisioning/ansible/ 

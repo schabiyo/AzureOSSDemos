@@ -85,7 +85,7 @@ printf "%s" "-----END RSA PRIVATE KEY-----" >> ~/.ssh/${server_prefix}_id_rsa
 echo $server_ssh_public_key >> ~/.ssh/${server_prefix}_id_rsa.pub
 # Add this to the config file
 echo -e "Host=dev-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
-echo -e "Host=staging-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
+echo -e "Host=prod-${server_prefix}.${location}.cloudapp.azure.com\nIdentityFile=~/.ssh/${server_prefix}_id_rsa\nUser=${server_admin_username}" >> ~/.ssh/config
 chmod 600 ~/.ssh/config
 chmod 600 ~/.ssh/*_id_rsa*
 
