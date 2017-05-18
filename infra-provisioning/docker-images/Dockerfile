@@ -4,4 +4,7 @@ RUN apk update && apk add  \
         git \
         openssl-dev libffi-dev python-dev \
         ansible \
-        curl 
+        curl \
+        lftp \
+        nodejs \
+        apache2-utils 
