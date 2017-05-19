@@ -119,7 +119,7 @@ jobs:
   plan:
   - get: azure-ossdemos-git
     passed: [validate-input]
-    trigger: true
+    trigger: false
   - get: azure-oss-demos
   - task: build-jumpbox
     file: azure-ossdemos-git/infra-provisioning/jumpbox/tasks/create-jumpbox.yml
