@@ -8,17 +8,33 @@
       "metadata": {
         "description":  "Name of the App Insight instance"
       }
+    },
+    "type": {
+      "type": "String",
+      "defaultValue": "Node.JS"
+    },
+    "hockeyAppToken": {
+      "type": "String",
+      "defaultValue": ""
+    },
+    "hockeyAppId": {
+      "type": "String",
+      "defaultValue": ""
+    },
+    "requestSource": {
+      "type": "String",
+      "defaultValue": "IbizaAIExtension"
+
     }
+
   },
   "variables": {
   },
 
   "resources": [
     {
-      "apiVersion": "2014-04-01",
-
+      "apiVersion": "2014-08-01",
       "name": "[parameters('appInsightName')]",
-
       "type": "Microsoft.Insights/components",
       "location": "East US",
       "dependsOn": [ ],
@@ -27,7 +43,11 @@
       },
       "properties": {
         "applicationId": "[parameters('appInsightName')]",
-        "Application_Type": "Node.JS"
+        "Application_Type": "[parameters('type')]",
+        "HockeyAppToken": "[parameters('hockeyAppToken')]",
+        "HockeyAppId": "[parameters('hockeyAppId')]",
+        "Flow_Type": "Redfield",
+        "Request_Source": "[parameters('requestSource')]"
       }
     }
   ]
