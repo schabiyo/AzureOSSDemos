@@ -19,7 +19,7 @@ echo "Validating the template...."
 (
 az group deployment validate \
     --resource-group $utility_rg \
-    --template-file azure-ossdemo-git/infra-provisioning/appinsight/tasks/deploy.json \
+    --template-file azure-ossdemos-git/infra-provisioning/appinsight/tasks/deploy.json \
     --parameters "{\"appInsightName\":{\"value\":\"$server_prefix\"}}"
 )
 
@@ -28,7 +28,7 @@ az group deployment validate \
 echo "Starting deployment..."
 (
 	set -x
-	az group deployment create --name appinsight-deployment  -g $utility_rg --template-file azure-ossdemo-git/infra-provisioning/appinsight/tasks/deploy.json \
+	az group deployment create --name appinsight-deployment  -g $utility_rg --template-file azure-ossdemos-git/infra-provisioning/appinsight/tasks/deploy.json \
              --parameters "{\"appInsightName\":{\"value\":\"$server_prefix\"}}" --verbose
 )
 
