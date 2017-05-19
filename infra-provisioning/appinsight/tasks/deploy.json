@@ -5,7 +5,9 @@
     "appInsightName": {
       "type": "string",
       "minLength": 1,
+      "metadata": {
         "description":  "Name of the App Insight instance"
+      }
     }
   },
   "variables": {
