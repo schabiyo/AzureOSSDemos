@@ -18,7 +18,7 @@ set -x
 echo "Validating the template...."
 (
 az group deployment validate \
-    --resource-group $utility_name \
+    --resource-group $utility_rg \
     --template-file azure-ossdemo-git/infra-provisioning/appinsight/tasks/deploy.json \
     --parameters "{\"appInsightName\":{\"value\":\"$server_prefix\"}}"
 )
@@ -28,8 +28,8 @@ az group deployment validate \
 echo "Starting deployment..."
 (
 	set -x
-	az group deployment create --name web-nodejs  -g $rg_name --template-file web-nodejs/ci/infra/arm/appservice-template.json \
-             --parameters "{\"appInsightName\":{\"value\":\"$webapp_name\"}}" --verbose
+	az group deployment create --name appinsight-deployment  -g $utility_rg --template-file azure-ossdemo-git/infra-provisioning/appinsight/tasks/deploy.json \
+             --parameters "{\"appInsightName\":{\"value\":\"$server_prefix\"}}" --verbose
 )
 
 if [ $?  == 0 ]; 
