@@ -26,7 +26,8 @@
         "displayName": "AppInsightsComponent"
       },
       "properties": {
-        "applicationId": "[parameters('appInsightName')]"
+        "applicationId": "[parameters('appInsightName')]",
+        "Application_Type": "Node.JS"
       }
     }
   ]
