@@ -5,6 +5,7 @@ groups:
   - validate-input
   - create-configure-jumpbox
   - create-oms-workspace
+  - create-app-insight
   - create-container-registry
   - create-docker-vms
   - create-acs-kubernetes
@@ -26,8 +27,8 @@ resources:
 - name: teardown-at-midnight
   type: time
   source:
-    start: 12:00 AM
-    stop: 1:00 AM
+    start: 3:00 AM
+    stop: 2:00 AM
     location: Canada/Eastern
     days: [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]
 
@@ -172,6 +173,22 @@ jobs:
         oms_workspace_name: {{OMS_WORKSPACE_NAME}}
         oms_workspace_sku: {{OMS_WORKSPACE_SKU}}
 
+- name: create-app-insight
+  plan:
+    - get: azure-ossdemos-git
+      passed: [validate-input]
+      trigger: true
+    - task: create-app-insight
+      file: azure-ossdemos-git/infra-provisioning/appinsight/tasks/create-appinsight.yml
+      params:
+        service_principal_id: {{SERVICE_PRINCIPAL_ID}}
+        service_principal_secret: {{SERVICE_PRINCIPAL_SECRET}}
+        tenant_id: {{TENANT_ID}}
+        subscription_id: {{SUBSCRIPTION_ID}}
+        location: {{LOCATION}}
+        utility_rg: {{RG_UTILITY}}
+        server_prefix: {{SERVER_PREFIX}}
+
 - name: create-container-registry
 #  serial: true
   plan:
@@ -200,6 +217,7 @@ jobs:
     - get: azure-ossdemos-git
       passed:
       - create-oms-workspace
+      trigger: true
     - task: create-iaa-vms-init
       file: azure-ossdemos-git/infra-provisioning/iaas/tasks/create-networking-resources.yml
       params:
@@ -257,6 +275,7 @@ jobs:
       passed:
       - create-oms-workspace
       - create-container-registry
+      trigger: true
     - task: create-kubernetes-cluster
       file: azure-ossdemos-git/infra-provisioning/acs/tasks/create-k8s.yml
       params:
@@ -282,6 +301,7 @@ jobs:
     - get: azure-ossdemos-git
       passed:
       - create-oms-workspace
+      trigger: true
     - task: create-configure-webplan
       file: azure-ossdemos-git/infra-provisioning/paas/tasks/create-webplan.yml
       params:

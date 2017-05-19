@@ -157,7 +157,7 @@ jobs:
     plan:
       - get: api-nodejs
         passed: [api-dev-rc]
-        trigger: false
+        trigger: true
       - get: api-version
       - put: api-version
         params: {file: api-version/number}
@@ -172,13 +172,14 @@ jobs:
           - server_location: {{SERVER-LOCATION}}
           - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
           - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
+          - appinsight_key: {{APPINSIGHTS_INSTRUMENTATIONKEY}}
  
   - name: web-dev-deploy-iaas
     serial_groups: [web-version]
     plan:
       - get: web-nodejs
         passed: [web-dev-rc]
-        trigger: false
+        trigger: true
       - get: web-version
       - put: web-version
         params: {file: web-version/number}
@@ -194,6 +195,7 @@ jobs:
           - server_location: {{SERVER-LOCATION}}
           - server_ssh_private_key: {{SERVER-SSH-PRIVATE-KEY}}
           - server_ssh_public_key: {{SERVER-SSH-PUBLIC-KEY}}
+          - appinsight_key: {{APPINSIGHTS_INSTRUMENTATIONKEY}}
 
 
   - name: api-dev-deploy-paas
